@@ -442,10 +442,10 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 /* ==============================================================
    WELCOME SCREEN (shown on first load, full-screen)
 ============================================================== */
-#welcome-screen{position:absolute;inset:0;background:rgba(2,5,16,0.97);display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:all;z-index:20;padding:20px}
+#welcome-screen{position:fixed;inset:0;background:rgba(2,5,16,0.97);display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:all;z-index:20;padding:20px}
 /* -- TITLE SCREEN STARFIELD ------------------------------------- */
-#title-starfield{position:absolute;inset:0;pointer-events:none;z-index:0}
-#welcome-screen,#name-screen{position:relative}
+#title-starfield{position:fixed;inset:0;pointer-events:none;z-index:0}
+/* Remove the conflicting position:relative override — fixed positioning handles stacking correctly */
 #welcome-screen>*,#name-screen>*{position:relative;z-index:1}
 #welcome-screen h1{font-size:32px;letter-spacing:10px;color:#a0c8ff;margin-bottom:4px;text-align:center;text-shadow:0 0 40px rgba(100,160,255,0.4)}
 #welcome-screen .wt{font-size:11px;color:#5080a0;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;text-align:center}
@@ -549,7 +549,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 .lang-btn:hover{border-color:#6080c0;color:#8090d0;background:rgba(20,45,100,0.9)}
 .lang-btn.active{border-color:#5090ff;color:#90b8ff;background:rgba(15,35,100,0.85)}
 
-#name-screen{position:absolute;inset:0;background:rgba(2,5,16,0.82);display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:all;z-index:25;padding:20px;isolation:isolate}
+#name-screen{position:fixed;inset:0;background:rgba(2,5,16,0.82);display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:all;z-index:25;padding:20px;isolation:isolate}
 #name-screen h1{font-size:48px;letter-spacing:10px;color:#c0d8ff;margin-bottom:6px;text-align:center;font-family:'Share Tech Mono','Courier New',monospace;font-weight:400;text-shadow:0 0 40px rgba(100,160,255,0.4)}
 #name-screen .ns-sub{font-size:14px;color:#3a5878;letter-spacing:4px;text-transform:uppercase;margin-bottom:36px;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-weight:300}
 #name-screen .ns-label{font-size:13px;color:#5070a0;letter-spacing:1px;margin-bottom:10px;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
@@ -1158,16 +1158,16 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
        NAME ENTRY — shown before welcome screen
   ========================================================== -->
   <div id="name-screen">
-    <canvas id="nebula-canvas" style="position:absolute;inset:0;pointer-events:none;z-index:0"></canvas>
+    <canvas id="nebula-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:0"></canvas>
 
     <!-- Language selector — top right corner, unobtrusive -->
-    <div id="lang-selector" style="position:absolute;top:18px;right:20px;z-index:10;display:flex;gap:6px">
+    <div id="lang-selector" style="position:fixed;top:18px;right:20px;z-index:30;display:flex;gap:6px">
       <button class="lang-btn active" data-lang="en" style="font-size:11px;padding:5px 12px">🇺🇸 EN</button>
       <button class="lang-btn" data-lang="es" style="font-size:11px;padding:5px 12px">🇪🇸 ES</button>
     </div>
 
     <!-- Music toggle — top left corner, clearly visible -->
-    <div style="position:absolute;top:18px;left:20px;z-index:10;display:flex;align-items:center;gap:8px">
+    <div style="position:fixed;top:18px;left:20px;z-index:30;display:flex;align-items:center;gap:8px">
       <button id="title-music-btn" style="background:rgba(10,30,80,0.85);border:1px solid rgba(80,130,220,0.5);border-radius:5px;color:#5080c0;font-family:system-ui,sans-serif;font-size:12px;padding:6px 14px;cursor:pointer;letter-spacing:0.5px;min-width:100px">♪ Music on</button>
       <input type="range" id="title-music-vol" min="0" max="100" value="50" style="width:70px;accent-color:#3060a0" title="Music volume">
     </div>
@@ -1186,7 +1186,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
     <div class="ns-note" id="ns-note-text" style="position:relative;z-index:2">Use any name or callsign · no personal data is stored</div>
 
     <!-- Photosensitivity notice — bottom of screen, minimal -->
-    <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:10;text-align:center;max-width:420px">
+    <div style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:30;text-align:center;max-width:420px">
       <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:11px;color:#3a3020;font-family:system-ui,sans-serif">
         <input type="checkbox" id="reduce-motion-check" style="accent-color:#80c060;cursor:pointer">
         <span>⚠ Reduce Motion — disable flashing effects</span>
@@ -1223,7 +1223,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
        WELCOME SCREEN — shown after name entry
   ========================================================== -->
   <div id="welcome-screen">
-    <canvas id="title-starfield" style="position:absolute;inset:0;pointer-events:none"></canvas>
+    <canvas id="title-starfield" style="position:fixed;inset:0;pointer-events:none"></canvas>
     <div id="class-mode-banner"></div>
     <h1>SPECTRA EXPLORER</h1>
     <div class="wt" id="ws-sub">A stellar science adventure</div>
@@ -8342,6 +8342,28 @@ function initNebula(){
   // Galaxy — cached star field
   const galaxy = {x:0.21, y:0.25, ang:-0.38};
 
+  // S-stars — realistic fast elliptical orbits around the BH
+  // Based loosely on actual S-star parameters (S1, S2, S5, S8)
+  // Each has a semi-major axis, eccentricity, orbital period, and current angle
+  const SSTARS = [
+    {a:0.095, ecc:0.87, period:4200,  ang:0.8,  col:'#c8e0ff', r:1.6}, // fast, tight eccentric
+    {a:0.140, ecc:0.65, period:8800,  ang:2.3,  col:'#ffd2a1', r:1.4},
+    {a:0.175, ecc:0.78, period:14000, ang:4.1,  col:'#ffffff',  r:1.3},
+    {a:0.210, ecc:0.50, period:22000, ang:1.1,  col:'#b0d0ff', r:1.2},
+  ];
+
+  // Tidal stream — arc of stars pulled from galaxy toward BH
+  // Pre-computed positions along a bezier arc from galaxy to BH
+  const TIDAL_STREAM = Array.from({length:55}, (_, i) => ({
+    t: i/54,            // 0=galaxy end, 1=BH end
+    r: 0.5 + Math.random()*1.2,
+    a: 0.05 + Math.random()*0.20,
+    scatter: (Math.random()-0.5)*0.028,
+    scatterY: (Math.random()-0.5)*0.015,
+    twinkle: Math.random()*Math.PI*2,
+    col: Math.random()<0.4 ? '#b0d0ff' : Math.random()<0.5 ? '#ffd2a1' : '#ffffff',
+  }));
+
   let t=0, running=true;
 
   function drawNebula(){
@@ -8350,6 +8372,14 @@ function initNebula(){
     const W=cvs.width, H=cvs.height;
     const SX=W*0.5, SY=H*0.46;
     const BH_R=Math.min(W,H)*0.062;
+
+    // Pre-compute TDE position — used by both the TDE drawing and ship orbit
+    const _gx = galaxy._gCX || galaxy.x*W;
+    const _gy = galaxy._gCY || galaxy.y*H;
+    const _cpx = W*0.36, _cpy = H*0.32;
+    const _tt  = 0.38;
+    const tdeBX = (1-_tt)*(1-_tt)*_gx + 2*(1-_tt)*_tt*_cpx + _tt*_tt*SX;
+    const tdeBY = (1-_tt)*(1-_tt)*_gy + 2*(1-_tt)*_tt*_cpy + _tt*_tt*SY;
 
     ctx.clearRect(0,0,W,H);
     ctx.fillStyle='#01020a'; ctx.fillRect(0,0,W,H);
@@ -8444,6 +8474,126 @@ function initNebula(){
       ctx.beginPath(); ctx.arc(sx,sy,s.r,0,Math.PI*2); ctx.fill();
     });
 
+    // ── TIDAL DISRUPTION EVENT ───────────────────────────────
+    {
+      const gx=_gx, gy=_gy, cpx=_cpx, cpy=_cpy;
+
+      // ── TDE NEBULA GAS CLOUDS — emission clouds around disruption ──
+      // Hot ionised gas expanding outward from the shredded star.
+      // Multiple overlapping radial gradients in TDE colours.
+      const tdeSize = Math.min(W,H)*0.09;
+      const tdeBreath = 0.5+0.5*Math.sin(t*0.018);
+      const tdeBreath2 = 0.5+0.5*Math.sin(t*0.025+1.4);
+      // Main amber-orange cloud
+      const tdeCloud1 = ctx.createRadialGradient(
+        tdeBX-tdeSize*0.08, tdeBY+tdeSize*0.05, 0,
+        tdeBX-tdeSize*0.08, tdeBY+tdeSize*0.05, tdeSize*(1.0+tdeBreath*0.15));
+      tdeCloud1.addColorStop(0,   `rgba(255,160,40,${(0.18+tdeBreath*0.08).toFixed(2)})`);
+      tdeCloud1.addColorStop(0.35,`rgba(220,80,20,${(0.10+tdeBreath*0.04).toFixed(2)})`);
+      tdeCloud1.addColorStop(0.70,`rgba(140,20,80,${(0.05+tdeBreath*0.02).toFixed(2)})`);
+      tdeCloud1.addColorStop(1,   'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(tdeBX-tdeSize*0.08,tdeBY+tdeSize*0.05,tdeSize*(1.0+tdeBreath*0.15),0,Math.PI*2);
+      ctx.fillStyle=tdeCloud1; ctx.fill();
+
+      // Secondary blue-violet cloud (offset) — ionised gas at different temperature
+      const tdeCloud2 = ctx.createRadialGradient(
+        tdeBX+tdeSize*0.12, tdeBY-tdeSize*0.08, 0,
+        tdeBX+tdeSize*0.12, tdeBY-tdeSize*0.08, tdeSize*(0.75+tdeBreath2*0.12));
+      tdeCloud2.addColorStop(0,   `rgba(160,80,255,${(0.14+tdeBreath2*0.07).toFixed(2)})`);
+      tdeCloud2.addColorStop(0.4, `rgba(80,40,200,${(0.08+tdeBreath2*0.03).toFixed(2)})`);
+      tdeCloud2.addColorStop(1,   'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(tdeBX+tdeSize*0.12,tdeBY-tdeSize*0.08,tdeSize*(0.75+tdeBreath2*0.12),0,Math.PI*2);
+      ctx.fillStyle=tdeCloud2; ctx.fill();
+
+      // Ejecta cloud — the half of the star flung outward (away from BH)
+      const ejectaAng = Math.atan2(tdeBY-SY, tdeBX-SX); // away from BH
+      const ejectaX = tdeBX+Math.cos(ejectaAng)*tdeSize*0.55;
+      const ejectaY = tdeBY+Math.sin(ejectaAng)*tdeSize*0.55;
+      const tdeCloud3 = ctx.createRadialGradient(ejectaX,ejectaY,0,ejectaX,ejectaY,tdeSize*0.65);
+      tdeCloud3.addColorStop(0,   `rgba(255,220,120,${(0.12+tdeBreath*0.06).toFixed(2)})`);
+      tdeCloud3.addColorStop(0.5, `rgba(200,100,40,${(0.06+tdeBreath*0.03).toFixed(2)})`);
+      tdeCloud3.addColorStop(1,   'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(ejectaX,ejectaY,tdeSize*0.65,0,Math.PI*2);
+      ctx.fillStyle=tdeCloud3; ctx.fill();
+
+      // ── STREAM SPINE ───────────────────────────────────────
+      const spineSteps=80;
+      for(let i=0;i<spineSteps-1;i++){
+        const tt1=i/spineSteps, tt2=(i+1)/spineSteps;
+        const bx1=(1-tt1)*(1-tt1)*gx+2*(1-tt1)*tt1*cpx+tt1*tt1*SX;
+        const by1=(1-tt1)*(1-tt1)*gy+2*(1-tt1)*tt1*cpy+tt1*tt1*SY;
+        const bx2=(1-tt2)*(1-tt2)*gx+2*(1-tt2)*tt2*cpx+tt2*tt2*SX;
+        const by2=(1-tt2)*(1-tt2)*gy+2*(1-tt2)*tt2*cpy+tt2*tt2*SY;
+        const heat=Math.pow(tt1,1.4);
+        const pulse=0.85+0.15*Math.sin(t*0.04+tt1*8);
+        const alpha=(0.12+heat*0.55)*pulse;
+        const width=0.8+heat*3.2;
+        const rr2=Math.floor(255*(1-heat*0.4));
+        const gg2=Math.floor(200+heat*55);
+        ctx.beginPath(); ctx.moveTo(bx1,by1); ctx.lineTo(bx2,by2);
+        ctx.strokeStyle=`rgba(${rr2},${gg2},255,${alpha.toFixed(2)})`;
+        ctx.lineWidth=width; ctx.stroke();
+      }
+
+      // ── STREAM STARS ───────────────────────────────────────
+      TIDAL_STREAM.forEach(s=>{
+        const tt=s.t;
+        const bx=(1-tt)*(1-tt)*gx+2*(1-tt)*tt*cpx+tt*tt*SX;
+        const by=(1-tt)*(1-tt)*gy+2*(1-tt)*tt*cpy+tt*tt*SY;
+        const tangX=2*(1-tt)*(cpx-gx)+2*tt*(SX-cpx);
+        const tangY=2*(1-tt)*(cpy-gy)+2*tt*(SY-cpy);
+        const tangAng=Math.atan2(tangY,tangX)+Math.PI/2;
+        const scatterWidth=(1-tt*0.75);
+        const px2=bx+Math.cos(tangAng)*s.scatter*W*scatterWidth;
+        const py2=by+Math.sin(tangAng)*s.scatter*H*scatterWidth;
+        const heat=Math.pow(Math.max(0,tt-0.3)/0.7,1.2);
+        const alpha=0.25+tt*0.55+(heat*0.55)*(0.7+0.3*Math.sin(t*0.005+s.twinkle));
+        const rad=s.r*(0.7+tt*0.9)*(1+heat*0.8);
+        const rr3=Math.floor(255*(1-heat*0.3));
+        const gg3=Math.floor(Math.min(255,210+heat*45));
+        ctx.fillStyle=`rgba(${rr3},${gg3},255,${Math.min(0.92,alpha).toFixed(2)})`;
+        ctx.beginPath(); ctx.arc(px2,py2,rad,0,Math.PI*2); ctx.fill();
+        if(alpha>0.5&&rad>1.2){
+          const sg=ctx.createRadialGradient(px2,py2,0,px2,py2,rad*4);
+          sg.addColorStop(0,`rgba(${rr3},${gg3},255,${(alpha*0.25).toFixed(2)})`);
+          sg.addColorStop(1,'rgba(0,0,0,0)');
+          ctx.beginPath(); ctx.arc(px2,py2,rad*4,0,Math.PI*2);
+          ctx.fillStyle=sg; ctx.fill();
+        }
+      });
+
+      // ── DISRUPTION FLASH ───────────────────────────────────
+      const tdePulse=0.5+0.5*Math.sin(t*0.022);
+      const tdeAlpha=0.55+tdePulse*0.35;
+      const tdeG=ctx.createRadialGradient(tdeBX,tdeBY,0,tdeBX,tdeBY,Math.min(W,H)*0.035);
+      tdeG.addColorStop(0,`rgba(255,240,180,${tdeAlpha.toFixed(2)})`);
+      tdeG.addColorStop(0.3,`rgba(255,180,60,${(tdeAlpha*0.6).toFixed(2)})`);
+      tdeG.addColorStop(0.7,`rgba(180,100,255,${(tdeAlpha*0.2).toFixed(2)})`);
+      tdeG.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(tdeBX,tdeBY,Math.min(W,H)*0.035,0,Math.PI*2);
+      ctx.fillStyle=tdeG; ctx.fill();
+      const tdeCore=ctx.createRadialGradient(tdeBX,tdeBY,0,tdeBX,tdeBY,Math.min(W,H)*0.008);
+      tdeCore.addColorStop(0,`rgba(255,255,255,${(tdeAlpha*0.95).toFixed(2)})`);
+      tdeCore.addColorStop(0.5,`rgba(255,230,150,${(tdeAlpha*0.6).toFixed(2)})`);
+      tdeCore.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(tdeBX,tdeBY,Math.min(W,H)*0.008,0,Math.PI*2);
+      ctx.fillStyle=tdeCore; ctx.fill();
+      for(let sp=0;sp<4;sp++){
+        const spAng=(sp/4)*Math.PI;
+        const spLen=Math.min(W,H)*0.028*(0.8+tdePulse*0.4);
+        const spG=ctx.createLinearGradient(tdeBX,tdeBY,
+          tdeBX+Math.cos(spAng)*spLen,tdeBY+Math.sin(spAng)*spLen);
+        spG.addColorStop(0,`rgba(255,240,180,${(tdeAlpha*0.7).toFixed(2)})`);
+        spG.addColorStop(1,'rgba(255,240,180,0)');
+        ctx.beginPath(); ctx.moveTo(tdeBX,tdeBY);
+        ctx.lineTo(tdeBX+Math.cos(spAng)*spLen,tdeBY+Math.sin(spAng)*spLen);
+        ctx.strokeStyle=spG; ctx.lineWidth=1.5; ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(tdeBX,tdeBY);
+        ctx.lineTo(tdeBX-Math.cos(spAng)*spLen*0.6,tdeBY-Math.sin(spAng)*spLen*0.6);
+        ctx.strokeStyle=spG; ctx.lineWidth=0.8; ctx.stroke();
+      }
+    }
+
     // ── PHOTON RING ──────────────────────────────────────────
     const pR=BH_R*2.05;
     const ringW=BH_R*0.18;
@@ -8520,6 +8670,49 @@ function initNebula(){
       });
     };
 
+    // ── S-STARS — fast elliptical orbits around the BH ───────
+    // Modelled on real Galactic Centre S-stars.
+    // Kepler: r = a(1-e²)/(1+e·cos θ) where θ is true anomaly.
+    // We approximate by advancing the angle with speed ∝ 1/r²
+    // (angular momentum conservation — stars speed up at periapsis).
+    SSTARS.forEach(ss=>{
+      // Advance angle — faster at closest approach
+      const rAU = ss.a*(1-ss.ecc*ss.ecc)/(1+ss.ecc*Math.cos(ss.ang));
+      ss.ang += (0.0018/ss.period*1e4) / (rAU*rAU); // dt/r² gives Kepler speed
+      // Convert polar orbit to screen coords (tilted 25° for depth)
+      const rx = rAU * Math.cos(ss.ang) * Math.min(W,H);
+      const ry = rAU * Math.sin(ss.ang) * Math.min(W,H) * 0.42;
+      const px = SX + rx;
+      const py = SY + ry;
+      // Skip if inside event horizon shadow
+      if(Math.hypot(rx,ry) < BH_R*0.9) return;
+      const rr2=parseInt(ss.col.slice(1,3),16);
+      const gg2=parseInt(ss.col.slice(3,5),16);
+      const bb2=parseInt(ss.col.slice(5,7),16);
+      // Glow — S-stars are bright
+      const glowG=ctx.createRadialGradient(px,py,0,px,py,ss.r*4);
+      glowG.addColorStop(0,`rgba(${rr2},${gg2},${bb2},0.35)`);
+      glowG.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(px,py,ss.r*4,0,Math.PI*2);
+      ctx.fillStyle=glowG; ctx.fill();
+      // Star point
+      ctx.fillStyle=`rgba(${rr2},${gg2},${bb2},0.92)`;
+      ctx.beginPath(); ctx.arc(px,py,ss.r,0,Math.PI*2); ctx.fill();
+      // Faint orbit trail — draw partial ellipse behind it
+      ctx.beginPath();
+      const trailSteps=40;
+      for(let ti=0;ti<trailSteps;ti++){
+        const tAng=ss.ang-(ti/trailSteps)*Math.PI*0.6;
+        const tR=ss.a*(1-ss.ecc*ss.ecc)/(1+ss.ecc*Math.cos(tAng));
+        const tx2=SX+tR*Math.cos(tAng)*Math.min(W,H);
+        const ty2=SY+tR*Math.sin(tAng)*Math.min(W,H)*0.42;
+        const al=(1-ti/trailSteps)*0.12;
+        if(ti===0) ctx.moveTo(tx2,ty2); else ctx.lineTo(tx2,ty2);
+      }
+      ctx.strokeStyle=`rgba(${rr2},${gg2},${bb2},0.10)`;
+      ctx.lineWidth=0.8; ctx.stroke();
+    });
+
     // ── INFALLING STARS ──────────────────────────────────────
     infallStars.forEach(s=>{
       s.ang  += s.wSpd*(1+Math.max(0,0.3-s.dist)*10);
@@ -8574,25 +8767,26 @@ function initNebula(){
 
     drawHalf(true);
 
-    // ── SPACECRAFT ───────────────────────────────────────────
-    ship.ang+=ship.spd;
-    const orbitOffY=-H*0.18;
-    const orbitRx=ship.orbitR*Math.min(W,H);
-    const orbitRy=ship.orbitR*Math.min(W,H)*0.28;
-    const orbitX=SX+Math.cos(ship.ang)*orbitRx;
-    const orbitY=(SY+orbitOffY)+Math.sin(ship.ang)*orbitRy;
-    const shipDist=Math.hypot(orbitX-SX,orbitY-SY);
+    // ── SPACECRAFT — orbiting the TDE to study it ────────────
+    // Research vessel stationed at the disruption point.
+    // Small tight orbit around tdeBX/tdeBY — clearly purposeful.
+    ship.ang += 0.010; // ~10s per full orbit — clearly visible as circular motion
+    const shipOrbitR = Math.min(W,H)*0.055;
+    const orbitX = tdeBX + Math.cos(ship.ang)*shipOrbitR;
+    const orbitY = tdeBY + Math.sin(ship.ang)*shipOrbitR*0.45;
+    const shipDist = Math.hypot(orbitX-SX, orbitY-SY);
 
-    if(shipDist>BH_R*2.5){
-      const S=Math.min(W,H)*0.005;
-      const nextX=SX+Math.cos(ship.ang+0.01)*orbitRx;
-      const nextY=(SY+orbitOffY)+Math.sin(ship.ang+0.01)*orbitRy;
-      const heading=Math.atan2(nextY-orbitY,nextX-orbitX);
+    if(shipDist>BH_R*1.2){
+      const S=Math.min(W,H)*0.003; // 40% smaller than before (was 0.005)
+      const nextX=tdeBX+Math.cos(ship.ang+0.10)*shipOrbitR;
+      const nextY=tdeBY+Math.sin(ship.ang+0.10)*shipOrbitR*0.45;
+      const heading=Math.atan2(nextY-orbitY,nextX-orbitX) + Math.PI/2;
 
+      // Faint orbit circle around the TDE point
       ctx.beginPath();
-      ctx.ellipse(SX,SY+orbitOffY,orbitRx,orbitRy,0,Math.PI*1.05,Math.PI*2.1);
-      ctx.strokeStyle='rgba(80,120,200,0.06)'; ctx.lineWidth=0.6;
-      ctx.setLineDash([2,9]); ctx.stroke(); ctx.setLineDash([]);
+      ctx.ellipse(tdeBX,tdeBY,shipOrbitR,shipOrbitR*0.45,0,0,Math.PI*2);
+      ctx.strokeStyle='rgba(200,180,100,0.10)'; ctx.lineWidth=0.7;
+      ctx.setLineDash([2,6]); ctx.stroke(); ctx.setLineDash([]);
 
       ctx.save(); ctx.translate(orbitX,orbitY); ctx.rotate(heading);
       const pulse=0.5+0.5*Math.sin(t*0.14);
