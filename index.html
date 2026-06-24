@@ -2163,7 +2163,13 @@ function loadSector(sectorId){
 /* ================================================================
    DRAW LOOP
 ================================================================ */
+let _lastMainFrame = 0;
 function drawMain(t){
+  requestAnimationFrame(drawMain);
+  // Cap at 60fps — skip frame if less than 16ms since last draw
+  if(t - _lastMainFrame < 16) return;
+  _lastMainFrame = t;
+
   const W=mainCanvas.width, H=mainCanvas.height;
   mainCtx.clearRect(0,0,W,H);
 
@@ -2184,9 +2190,12 @@ function drawMain(t){
     }
 
     mainCtx.beginPath(); mainCtx.arc(sx,sy,s.size*pulse*2.5,0,Math.PI*2);
-    const g=mainCtx.createRadialGradient(sx,sy,0,sx,sy,s.size*pulse*2.5);
-    g.addColorStop(0,'#ffffff'); g.addColorStop(0.25,s.cls.color); g.addColorStop(1,s.cls.color+'00');
-    mainCtx.fillStyle=g; mainCtx.fill();
+    // Solid alpha fill instead of radialGradient — avoids creating gradient objects 60x/sec per star
+    mainCtx.fillStyle=s.cls.color+'22'; mainCtx.fill();
+    mainCtx.beginPath(); mainCtx.arc(sx,sy,s.size*pulse,0,Math.PI*2);
+    mainCtx.fillStyle=s.cls.color+'aa'; mainCtx.fill();
+    mainCtx.beginPath(); mainCtx.arc(sx,sy,s.size*pulse*0.4,0,Math.PI*2);
+    mainCtx.fillStyle='#ffffff'; mainCtx.fill();
 
     if(s.discovered){
       mainCtx.fillStyle='#7090c0bb';
@@ -2213,7 +2222,6 @@ function drawMain(t){
   });
 
   drawMinimap(stars);
-  requestAnimationFrame(drawMain);
 }
 
 /* ================================================================
@@ -2515,6 +2523,11 @@ function openAct1(star){
   if(hasEvent){
     showSpecialEventBadge(pendingEvent);
     pendingEvent = null;
+  } else if(star._telescopeNote && loreEl){
+    loreEl.style.display     = 'block';
+    loreEl.style.color       = '#c09040';
+    loreEl.style.borderColor = 'rgba(200,140,40,0.5)';
+    loreEl.textContent       = '🔭 Deep field object — ' + star._telescopeNote;
   } else if(loreEl){
     loreEl.style.display     = 'block';
     loreEl.style.color       = '#3a5878';
@@ -3008,16 +3021,15 @@ function drawSystemMap(star,civOption){
     ctx.strokeStyle='rgba(60,120,80,0.25)'; ctx.lineWidth=1;
     ctx.setLineDash([4,6]); ctx.stroke(); ctx.setLineDash([]);
     const sp=Math.sin(el*0.002)*0.15+1;
-    const sg=ctx.createRadialGradient(cx,cy,0,cx,cy,18*sp*3);
-    sg.addColorStop(0,'#ffffff'); sg.addColorStop(0.2,star.cls.color); sg.addColorStop(0.6,star.cls.color+'44'); sg.addColorStop(1,star.cls.color+'00');
-    ctx.beginPath(); ctx.arc(cx,cy,18*sp*3,0,Math.PI*2); ctx.fillStyle=sg; ctx.fill();
-    ctx.beginPath(); ctx.arc(cx,cy,18*sp,0,Math.PI*2); ctx.fillStyle='#ffffff'; ctx.fill();
+    // Replace per-frame gradients with solid layered circles — much faster, same visual effect
+    ctx.beginPath(); ctx.arc(cx,cy,18*sp*3,0,Math.PI*2); ctx.fillStyle=star.cls.color+'18'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,18*sp*1.5,0,Math.PI*2); ctx.fillStyle=star.cls.color+'44'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,18*sp,0,Math.PI*2); ctx.fillStyle=star.cls.color+'cc'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,7*sp,0,Math.PI*2); ctx.fillStyle='#ffffff'; ctx.fill();
     const ang=(el/8000)*Math.PI*2-Math.PI*0.5;
     const px=cx+Math.cos(ang)*orbitRx, py=cy+Math.sin(ang)*orbitRy;
     const behind=Math.sin(ang)>0, pa=behind?0.55:1;
-    const pg=ctx.createRadialGradient(px,py,0,px,py,18);
-    pg.addColorStop(0,`rgba(100,220,140,${pa*0.6})`); pg.addColorStop(1,'rgba(100,220,140,0)');
-    ctx.beginPath(); ctx.arc(px,py,18,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+    ctx.beginPath(); ctx.arc(px,py,12,0,Math.PI*2); ctx.fillStyle=`rgba(100,220,140,${pa*0.2})`; ctx.fill();
     ctx.beginPath(); ctx.arc(px,py,6,0,Math.PI*2);
     ctx.fillStyle=`rgba(80,200,120,${pa})`; ctx.fill();
     ctx.strokeStyle=`rgba(120,255,160,${pa*0.6})`; ctx.lineWidth=1; ctx.stroke();
@@ -3120,6 +3132,86 @@ function openSectorPanel(){
 let scopeAnim=null;
 let scopeSignal=0;
 
+/* ================================================================
+   DEEP FIELD TELESCOPE — REDESIGNED
+   The telescope now finds curated rare targets rather than random
+   procedural stars. Each find is either a historically significant
+   named object, a mystery object, or a special event star.
+   An acquisition animation builds anticipation before the reveal.
+================================================================ */
+
+// Curated deep field targets — objects genuinely harder to find in the regular map
+const DEEP_FIELD_TARGETS = [
+  // Extreme O-type and exotic massive stars
+  {name:'WR 104',          cls:'O', note:'Wolf-Rayet binary — spiral dust structure visible. Candidate gamma-ray burst source.'},
+  {name:'VY Canis Majoris',cls:'M', note:'One of the largest known stars — ~1,400 solar radii. Surrounded by asymmetric nebula.'},
+  {name:'R136a1',          cls:'O', note:'Most massive star known — ~265 solar masses. Located in the Tarantula Nebula, LMC.'},
+  {name:'Eta Carinae B',   cls:'O', note:'Companion to Eta Carinae in a 5.5-year binary orbit. Detected only through X-ray eclipses.'},
+  {name:'HD 93129A',       cls:'O', note:'One of the most luminous stars in the Milky Way. Estimated 100+ solar masses.'},
+  // Ancient metal-poor halo stars
+  {name:'HE 0107-5240',    cls:'G', note:'One of the most metal-poor stars known — iron abundance 1/200,000 of solar. A relic of the early universe.'},
+  {name:'SMSS J031300',    cls:'G', note:'The most iron-poor star discovered as of 2014. Contains no detectable iron — formed from Big Bang material.'},
+  {name:'Kapteyn\'s Star', cls:'M', note:'Second-fastest proper motion star. A halo star visiting the galactic disc — likely captured from a disrupted dwarf galaxy.'},
+  // Interesting binaries and variables
+  {name:'SS Cygni',        cls:'K', note:'Dwarf nova — mass transfer from K-dwarf onto white dwarf causes unpredictable outbursts brightening by 4 magnitudes.'},
+  {name:'Mira (o Ceti)',   cls:'M', note:'Prototype long-period variable. Brightens and dims over 332 days — one of the most studied variable stars.'},
+  {name:'Epsilon Aurigae', cls:'F', note:'Eclipsed by a mysterious dark companion every 27 years. The nature of the companion remained unknown for 200 years.'},
+  {name:'V838 Monocerotis',cls:'M', note:'Underwent a spectacular outburst in 2002 creating a visible light echo — but was not a nova. Cause still debated.'},
+  // Exoplanet hosts of note
+  {name:'51 Pegasi',       cls:'G', note:'First Sun-like star confirmed to host a planet (1995 — Nobel Prize 2019). 51 Peg b was the first hot Jupiter discovered.'},
+  {name:'HD 209458',       cls:'G', note:'First transiting exoplanet detected. Its atmosphere was the first observed to be evaporating — a "hot Jupiter" being stripped.'},
+  {name:'Kepler-442',      cls:'K', note:'Host to one of the most Earth-like confirmed exoplanets. Kepler-442b — 33% larger than Earth, 112-day year.'},
+  // Neutron star and black hole companions
+  {name:'Cygnus X-1',      cls:'B', note:'First confirmed black hole. The visible B supergiant HDE 226868 feeds matter into the unseen ~21 solar mass black hole.'},
+  {name:'Sco X-1',         cls:'B', note:'Brightest X-ray source after the Sun. A neutron star accreting from a B-type companion — first discovered X-ray binary.'},
+  // Galactic centre vicinity
+  {name:'S62',             cls:'O', note:'Star orbiting Sagittarius A* with a 9.9-year period and 17-hour closest approach — currently the closest-orbiting known star.'},
+  {name:'IRS 16SW',        cls:'O', note:'Eclipsing binary in the Galactic Centre. Two O supergiant stars orbiting each other in 19.45 days at ~8 light-hours separation.'},
+];
+
+// Track which targets have been found this session to avoid repeats
+if(!state._deepFieldFound) state._deepFieldFound = new Set();
+
+function getDeepFieldTarget(){
+  // Pick a target not yet found this session
+  const remaining = DEEP_FIELD_TARGETS.filter(t => !state._deepFieldFound.has(t.name));
+  if(remaining.length === 0){ state._deepFieldFound.clear(); } // reset if all found
+  const pool = remaining.length > 0 ? remaining : DEEP_FIELD_TARGETS;
+  // 30% chance of mystery object instead of named target
+  if(Math.random() < 0.30){
+    return null; // caller will generate a mystery object
+  }
+  const picked = pool[Math.floor(Math.random() * pool.length)];
+  state._deepFieldFound.add(picked.name);
+  return picked;
+}
+
+function playTelescopeRevealSound(){
+  if(!audioCtx || !masterGain) return;
+  const now = audioCtx.currentTime;
+  // Ascending shimmer: five quick notes rising then a sustained tone
+  const notes = [
+    {freq:440, t:0,    dur:0.12},
+    {freq:554, t:0.10, dur:0.12},
+    {freq:659, t:0.20, dur:0.12},
+    {freq:880, t:0.30, dur:0.12},
+    {freq:1109,t:0.40, dur:0.5},
+  ];
+  const vol = (state.musicVolume || 0.7) * 0.15;
+  notes.forEach(n => {
+    const osc  = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = n.freq;
+    const t = now + n.t;
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(vol, t + 0.04);
+    gain.gain.linearRampToValueAtTime(0, t + n.dur);
+    osc.connect(gain); gain.connect(masterGain);
+    osc.start(t); osc.stop(t + n.dur + 0.05);
+  });
+}
+
 function openTelescope(){
   showOverlay();
   document.getElementById('telescope-panel').style.display='block';
@@ -3130,24 +3222,24 @@ function openTelescope(){
 }
 
 function aimTelescope(){
-  // Generate random sky coordinates
   state.scopeRA=Math.floor(Math.random()*24);
   const raM=Math.floor(Math.random()*60);
   const dec=Math.floor(Math.random()*180)-90;
   const decM=Math.floor(Math.random()*60);
   document.getElementById('scope-coords').textContent=
     `RA: ${state.scopeRA}h ${raM}m  /  DEC: ${dec>0?'+':''}${dec}°  ${decM}'`;
-  // Simulate signal build-up
   scopeSignal=0;
   document.getElementById('scope-signal-fill').style.width='0%';
   document.getElementById('scope-scan').disabled=true;
   document.getElementById('scope-cost').textContent=t('scope_building');
+
+  // Acquisition animation: signal bar builds up with realistic noise
   let tick=0;
   const build=setInterval(()=>{
     tick++;
-    scopeSignal=Math.min(100,tick*4+Math.random()*8);
+    scopeSignal=Math.min(100,tick*3.5+Math.random()*12-2);
     document.getElementById('scope-signal-fill').style.width=scopeSignal+'%';
-    if(scopeSignal>=60){
+    if(scopeSignal>=70){
       clearInterval(build);
       document.getElementById('scope-cost').textContent=
         state.credits>=50?t('scope_ready')(50,state.credits):t('scope_no_cr')(50,state.credits);
@@ -3159,28 +3251,48 @@ function aimTelescope(){
 
 function animateScopeView(){
   const canvas=document.getElementById('scope-canvas');
-  canvas.width=canvas.offsetWidth||520; canvas.height=200;
-  const W=canvas.width, H=canvas.height;
+  canvas.width=520; canvas.height=200; // fixed dimensions — no offsetWidth
+  const W=520, H=200;
   const ctx=canvas.getContext('2d');
   if(scopeAnim)cancelAnimationFrame(scopeAnim);
-  // Seed some background field stars
-  const fieldStars=Array.from({length:80},()=>({
+
+  const fieldStars=Array.from({length:120},()=>({
     x:Math.random()*W, y:Math.random()*H,
-    r:0.3+Math.random()*1.5, a:0.2+Math.random()*0.8,
-    twinkle:Math.random()*Math.PI*2
+    r:0.3+Math.random()*1.8,
+    a:0.15+Math.random()*0.85,
+    twinkle:Math.random()*Math.PI*2,
+    col: Math.random()<0.2 ? '#ffd2a1' : Math.random()<0.15 ? '#9bb0ff' : '#ffffff'
   }));
+
+  let lastScopeFrame = 0;
   function frame(t){
-    ctx.fillStyle='#010208'; ctx.fillRect(0,0,W,H);
-    fieldStars.forEach(s=>{
-      const alpha=s.a*(0.7+Math.sin(t*0.002+s.twinkle)*0.3);
-      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(200,210,240,${alpha})`; ctx.fill();
-    });
-    // Subtle scan line sweep
-    const scanY=(t*0.04)%H;
-    ctx.fillStyle='rgba(200,120,40,0.03)';
-    ctx.fillRect(0,scanY,W,3);
     scopeAnim=requestAnimationFrame(frame);
+    if(t - lastScopeFrame < 16) return; // 60fps cap
+    lastScopeFrame = t;
+
+    ctx.fillStyle='#010208'; ctx.fillRect(0,0,W,H);
+
+    // Draw field stars — no gradients
+    fieldStars.forEach(s=>{
+      const alpha=s.a*(0.65+Math.sin(t*0.0015+s.twinkle)*0.35);
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=s.col.replace(')',`,${alpha})`).replace('#','rgba(').replace(/([0-9a-f]{2})/gi,
+        (_,h)=>parseInt(h,16)+',').replace(/,$/,`,${ alpha})`);
+      // Simpler: just use rgba directly
+      const hex = s.col;
+      ctx.fillStyle = `rgba(${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)},${alpha.toFixed(2)})`;
+      ctx.fill();
+    });
+
+    // Scan line sweep — very subtle
+    const scanY=(t*0.03)%H;
+    ctx.fillStyle='rgba(200,100,30,0.025)';
+    ctx.fillRect(0,scanY,W,2);
+
+    // Vignette edges — pure CSS would be better but this works
+    ctx.fillStyle='rgba(1,2,8,0.35)';
+    ctx.fillRect(0,0,W,20);
+    ctx.fillRect(0,H-20,W,20);
   }
   scopeAnim=requestAnimationFrame(frame);
 }
@@ -3188,32 +3300,119 @@ function animateScopeView(){
 function executeTelescope(){
   if(state.credits<50)return;
   state.credits-=50; updateHUD();
-  // Pick a random class — deep field slightly biased toward rare types
-  const rareBias=['O','O','B','B','A','F','G','K','M','M','M'];
-  const clsType=rareBias[Math.floor(Math.random()*rareBias.length)];
-  const cls=STELLAR_CLASSES.find(c=>c.type===clsType);
-  const prefix=PROC_PREFIXES[Math.floor(Math.random()*PROC_PREFIXES.length)];
-  const name=`${prefix}-${1000+Math.floor(Math.random()*9000)} (Deep Field)`;
+
+  const target = getDeepFieldTarget();
+  let cls, name, note, isMystery=false, mysteryObj=null;
+
+  if(target){
+    cls  = STELLAR_CLASSES.find(c=>c.type===target.cls) || STELLAR_CLASSES[4];
+    name = target.name;
+    note = target.note;
+  } else {
+    // Mystery object
+    mysteryObj = MYSTERY_OBJECTS[Math.floor(Math.random()*MYSTERY_OBJECTS.length)];
+    cls  = mysteryObj.cls;
+    name = generateMysteryStarName(mysteryObj);
+    note = mysteryObj.explanation.slice(0,120)+'...';
+    isMystery = true;
+  }
+
   const star={
-    x:mainCanvas.width/2, y:mainCanvas.height/2,
+    x: 100 + Math.random() * (mainCanvas.width - 200),
+    y: 100 + Math.random() * (mainCanvas.height - 200),
     name, cls,
     size:(({O:5,B:4,A:3.2,F:2.8,G:2.5,K:2.2,M:1.8}[cls.type])||2.5)+Math.random()*1.2,
     discovered:false,
     pulseT:Math.random()*Math.PI*2,
     sectorId:state.currentSectorId,
-    telescope:true
+    telescope:true,
+    _telescopeNote: note,
+    _mystery: isMystery ? mysteryObj : null,
+    specMode: isMystery ? 'emission' : (Math.random()<0.5?'emission':'absorption'),
   };
-  // Add to current sector stars
+
   if(!state.sectorStars[state.currentSectorId]) state.sectorStars[state.currentSectorId]=[];
   state.sectorStars[state.currentSectorId].push(star);
-  closeAllPanels();
-  // Flash notice
-  setTimeout(()=>{ showFlash(t('scope_detected'),'#f0a040'); },300);
-  setTimeout(()=>{
-    state.selected=state.sectorStars[state.currentSectorId].length-1;
-    document.getElementById('scan-btn').disabled=false;
-    document.getElementById('info-bar').textContent=t('info_deep')(star.name);
-  },600);
+
+  // Play reveal sound
+  playTelescopeRevealSound();
+
+  // Dramatic acquisition sequence in the scope view
+  const canvas=document.getElementById('scope-canvas');
+  const ctx=canvas.getContext('2d');
+  const W=520, H=200;
+  let phase=0;
+
+  if(scopeAnim)cancelAnimationFrame(scopeAnim);
+
+  // Acquisition flash sequence — 3 phases over ~2 seconds
+  const acqStart = performance.now();
+  function acqFrame(t){
+    const el = t - acqStart;
+    ctx.fillStyle='#010208'; ctx.fillRect(0,0,W,H);
+
+    if(el < 600){
+      // Phase 1: rapid static flicker
+      for(let i=0;i<60;i++){
+        ctx.fillStyle=`rgba(200,180,100,${Math.random()*0.4})`;
+        ctx.fillRect(Math.random()*W,Math.random()*H,2,1);
+      }
+      ctx.fillStyle='rgba(200,130,40,0.08)';
+      ctx.fillRect(0,(el*0.5)%H,W,3);
+    } else if(el < 1200){
+      // Phase 2: target lock — crosshair zeroing in
+      const progress = (el-600)/600;
+      const cx=W*0.5, cy=H*0.5;
+      const size=80*(1-progress)+20;
+      ctx.strokeStyle=`rgba(200,130,40,${0.3+progress*0.5})`;
+      ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(cx-size,cy); ctx.lineTo(cx+size,cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx,cy-size); ctx.lineTo(cx,cy+size); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx,cy,size*0.8,0,Math.PI*2); ctx.stroke();
+      ctx.fillStyle=`rgba(${cls.color.slice(1,3)?parseInt(cls.color.slice(1,3),16):255},200,100,${progress*0.6})`;
+      ctx.beginPath(); ctx.arc(cx,cy,size*0.1+3,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='rgba(200,130,40,0.7)';
+      ctx.font='9px monospace'; ctx.textAlign='center';
+      ctx.fillText('ACQUIRING TARGET...', cx, cy-size-8);
+    } else {
+      // Phase 3: target acquired — show star name
+      const cx=W*0.5, cy=H*0.5;
+      ctx.strokeStyle='rgba(200,220,100,0.8)';
+      ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(cx-25,cy); ctx.lineTo(cx-8,cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx+8,cy);  ctx.lineTo(cx+25,cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx,cy-25); ctx.lineTo(cx,cy-8); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx,cy+8);  ctx.lineTo(cx,cy+25); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx,cy,8,0,Math.PI*2);
+      ctx.fillStyle=star.cls.color; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx,cy,3,0,Math.PI*2);
+      ctx.fillStyle='#ffffff'; ctx.fill();
+      ctx.fillStyle='rgba(180,220,80,0.9)';
+      ctx.font='bold 11px monospace'; ctx.textAlign='center';
+      ctx.fillText('DEEP FIELD TARGET ACQUIRED', cx, 24);
+      ctx.fillStyle='rgba(220,200,100,0.85)';
+      ctx.font='10px monospace';
+      ctx.fillText(name, cx, cy-18);
+      ctx.fillStyle=star.cls.color+'cc';
+      ctx.font='9px monospace';
+      ctx.fillText(`Type ${cls.type} · ${cls.tempLabel}`, cx, cy+22);
+      if(el > 1800){
+        // Done — close and reveal
+        cancelAnimationFrame(scopeAnim);
+        closeAllPanels();
+        setTimeout(()=>{
+          showFlash('🔭 DEEP FIELD TARGET ACQUIRED', '#f0c040');
+          state.selected=state.sectorStars[state.currentSectorId].length-1;
+          document.getElementById('scan-btn').disabled=false;
+          document.getElementById('info-bar').textContent=
+            `Deep field object: ${name} — click SCAN to analyse`;
+        },200);
+        return;
+      }
+    }
+    scopeAnim=requestAnimationFrame(acqFrame);
+  }
+  scopeAnim=requestAnimationFrame(acqFrame);
 }
 
 /* ================================================================
@@ -3726,89 +3925,96 @@ function autoSelectKeplerChoice(data, studentA){
 
 function drawKeplerDiagram(star, data){
   const canvas = document.getElementById('kepler-canvas');
-  canvas.width  = canvas.offsetWidth || 580;
+  // Fixed buffer dimensions — never measure offsetWidth (causes layout reflow + wrong value)
+  canvas.width  = 560;
   canvas.height = 120;
-  const W = canvas.width, H = canvas.height;
+  const W = 560, H = 120;
   const ctx = canvas.getContext('2d');
 
   if(keplerAnim) cancelAnimationFrame(keplerAnim);
 
-  // Scale: fit the outer HZ edge + some buffer into the canvas
-  const maxAU    = data.hzOuter * 2.2;
-  const auToPx   = (W * 0.42) / maxAU;
+  const maxAU   = data.hzOuter * 2.2;
+  const auToPx  = (W * 0.42) / maxAU;
   const cx = W * 0.28, cy = H / 2;
+  const orbitPx = data.semiMajorAU * auToPx;
+  const hzInPx  = data.hzInner * auToPx;
+  const hzOutPx = data.hzOuter * auToPx;
 
-  // Planet orbit radius in pixels
-  const orbitPx  = data.semiMajorAU * auToPx;
-  const hzInPx   = data.hzInner * auToPx;
-  const hzOutPx  = data.hzOuter * auToPx;
+  // Pre-compute gradients ONCE — never inside the frame loop
+  const starGrad = ctx.createRadialGradient(cx,cy,0,cx,cy,22);
+  starGrad.addColorStop(0,'#ffffff');
+  starGrad.addColorStop(0.2, star.cls.color);
+  starGrad.addColorStop(0.7, star.cls.color+'44');
+  starGrad.addColorStop(1,   star.cls.color+'00');
 
-  let startTime = null;
+  // Pre-draw static background layer onto an offscreen canvas
+  // so each frame only redraws the moving planet — not everything
+  const bgCanvas  = document.createElement('canvas');
+  bgCanvas.width  = W; bgCanvas.height = H;
+  const bgCtx     = bgCanvas.getContext('2d');
+
+  bgCtx.fillStyle = '#02040e'; bgCtx.fillRect(0,0,W,H);
+  [[40,20],[90,55],[130,15],[200,70],[250,28],[300,60],[350,10],[400,80]].forEach(([bx,by])=>{
+    bgCtx.beginPath(); bgCtx.arc(bx,by,0.7,0,Math.PI*2);
+    bgCtx.fillStyle='rgba(180,190,220,0.4)'; bgCtx.fill();
+  });
+  // HZ band
+  bgCtx.beginPath(); bgCtx.arc(cx,cy,hzOutPx,0,Math.PI*2);
+  bgCtx.fillStyle='rgba(40,180,60,0.08)'; bgCtx.fill();
+  bgCtx.beginPath(); bgCtx.arc(cx,cy,hzInPx,0,Math.PI*2);
+  bgCtx.fillStyle='#02040e'; bgCtx.fill();
+  [hzInPx,hzOutPx].forEach(r=>{
+    bgCtx.beginPath(); bgCtx.arc(cx,cy,r,0,Math.PI*2);
+    bgCtx.strokeStyle='rgba(40,180,60,0.3)'; bgCtx.lineWidth=1;
+    bgCtx.setLineDash([3,4]); bgCtx.stroke(); bgCtx.setLineDash([]);
+  });
+  // Planet orbit path
+  bgCtx.beginPath(); bgCtx.arc(cx,cy,orbitPx,0,Math.PI*2);
+  bgCtx.strokeStyle='rgba(100,140,220,0.3)'; bgCtx.lineWidth=1;
+  bgCtx.setLineDash([3,5]); bgCtx.stroke(); bgCtx.setLineDash([]);
+  // Star
+  bgCtx.beginPath(); bgCtx.arc(cx,cy,22,0,Math.PI*2);
+  bgCtx.fillStyle=starGrad; bgCtx.fill();
+  bgCtx.beginPath(); bgCtx.arc(cx,cy,7,0,Math.PI*2);
+  bgCtx.fillStyle='#ffffff'; bgCtx.fill();
+  // Labels
+  bgCtx.textAlign='left'; bgCtx.font='8px Share Tech Mono,Courier New';
+  bgCtx.fillStyle='rgba(40,180,60,0.6)';
+  bgCtx.fillText(`HZ: ${data.hzInner}–${data.hzOuter} AU`, W*0.58, cy-14);
+  bgCtx.fillStyle='rgba(100,140,220,0.7)';
+  bgCtx.fillText(`Orbit: ${data.semiMajorAU} AU`, W*0.58, cy+2);
+  bgCtx.fillStyle='rgba(180,160,100,0.6)';
+  bgCtx.fillText(`T = ${data.periodYears} yr`, W*0.58, cy+18);
+  bgCtx.fillStyle = star.cls.color+'99';
+  bgCtx.fillText(star.name, cx, cy+26);
+
+  // Frame loop — only draws the moving planet on top of the static background
+  // 60fps cap: skip frame if less than 16ms since last draw
+  const FPS_CAP   = 1000 / 60;
+  let lastFrame   = 0;
+  let startTime   = null;
+  const angSpeed  = (Math.PI*2) / (data.periodYears * 4000);
+
   function frame(t){
+    keplerAnim = requestAnimationFrame(frame);
+    if(t - lastFrame < FPS_CAP) return; // cap at 60fps
+    lastFrame = t;
     if(!startTime) startTime = t;
-    const el = t - startTime;
+    const el  = t - startTime;
 
-    ctx.clearRect(0,0,W,H);
-    ctx.fillStyle = '#02040e'; ctx.fillRect(0,0,W,H);
+    // Blit pre-rendered background — one drawImage call instead of 20+ draw ops
+    ctx.drawImage(bgCanvas, 0, 0);
 
-    // Background dots
-    [[40,20],[90,55],[130,15],[200,70],[250,28],[300,60],[350,10],[400,80]].forEach(([bx,by])=>{
-      ctx.beginPath(); ctx.arc(bx,by,0.7,0,Math.PI*2);
-      ctx.fillStyle='rgba(180,190,220,0.4)'; ctx.fill();
-    });
-
-    // Habitable zone ring (shaded band)
-    ctx.beginPath(); ctx.arc(cx,cy,hzOutPx,0,Math.PI*2);
-    ctx.fillStyle = 'rgba(40,180,60,0.08)'; ctx.fill();
-    ctx.beginPath(); ctx.arc(cx,cy,hzInPx,0,Math.PI*2);
-    ctx.fillStyle = '#02040e'; ctx.fill(); // punch out inner
-
-    // HZ border rings
-    [hzInPx, hzOutPx].forEach(r=>{
-      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
-      ctx.strokeStyle='rgba(40,180,60,0.3)'; ctx.lineWidth=1;
-      ctx.setLineDash([3,4]); ctx.stroke(); ctx.setLineDash([]);
-    });
-
-    // Planet orbit ellipse
-    ctx.beginPath(); ctx.arc(cx,cy,orbitPx,0,Math.PI*2);
-    ctx.strokeStyle='rgba(100,140,220,0.3)'; ctx.lineWidth=1;
-    ctx.setLineDash([3,5]); ctx.stroke(); ctx.setLineDash([]);
-
-    // Star glow
-    const sg = ctx.createRadialGradient(cx,cy,0,cx,cy,22);
-    sg.addColorStop(0,'#ffffff'); sg.addColorStop(0.2,star.cls.color);
-    sg.addColorStop(0.7,star.cls.color+'44'); sg.addColorStop(1,star.cls.color+'00');
-    ctx.beginPath(); ctx.arc(cx,cy,22,0,Math.PI*2);
-    ctx.fillStyle=sg; ctx.fill();
-    ctx.beginPath(); ctx.arc(cx,cy,7,0,Math.PI*2);
-    ctx.fillStyle='#ffffff'; ctx.fill();
-
-    // Orbiting planet — period determines angular speed
-    const angularSpeed = (Math.PI*2) / (data.periodYears * 4000); // px ms scaling
-    const angle = el * angularSpeed - Math.PI/2;
+    // Planet only
+    const angle = el * angSpeed - Math.PI/2;
     const px = cx + Math.cos(angle) * orbitPx;
     const py = cy + Math.sin(angle) * orbitPx;
 
-    // Planet glow
-    const pg = ctx.createRadialGradient(px,py,0,px,py,12);
-    pg.addColorStop(0,'rgba(100,200,255,0.5)'); pg.addColorStop(1,'transparent');
-    ctx.beginPath(); ctx.arc(px,py,12,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+    // Simple planet glow — single fillRect is faster than createRadialGradient
+    ctx.beginPath(); ctx.arc(px,py,10,0,Math.PI*2);
+    ctx.fillStyle='rgba(100,200,255,0.18)'; ctx.fill();
     ctx.beginPath(); ctx.arc(px,py,4,0,Math.PI*2);
     ctx.fillStyle='#80c8ff'; ctx.fill();
-
-    // Labels (right side)
-    ctx.textAlign='left'; ctx.font='8px Share Tech Mono,Courier New';
-    ctx.fillStyle='rgba(40,180,60,0.6)';
-    ctx.fillText(`HZ: ${data.hzInner}–${data.hzOuter} AU`, W*0.58, cy-14);
-    ctx.fillStyle='rgba(100,140,220,0.7)';
-    ctx.fillText(`Orbit: ${data.semiMajorAU} AU`, W*0.58, cy+2);
-    ctx.fillStyle='rgba(180,160,100,0.6)';
-    ctx.fillText(`T = ${data.periodYears} yr`, W*0.58, cy+18);
-    ctx.fillStyle = star.cls.color+'99';
-    ctx.fillText(star.name, cx, cy + 26);
-
-    keplerAnim = requestAnimationFrame(frame);
   }
   keplerAnim = requestAnimationFrame(frame);
 }
