@@ -1127,6 +1127,16 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
     <input id="name-input" type="text" maxlength="20" placeholder="Your name or callsign" autocomplete="off" spellcheck="false" style="position:relative;z-index:2">
     <button id="name-submit" disabled style="position:relative;z-index:2">Begin Mission →</button>
     <div class="ns-note" id="ns-note-text" style="position:relative;z-index:2">This name appears on the global leaderboard · Use any name or callsign — no personal data is stored</div>
+
+    <!-- Photosensitivity notice — inline, subtle, below name entry -->
+    <div style="position:relative;z-index:2;margin-top:18px;padding:10px 16px;border:1px solid rgba(80,60,20,0.35);border-radius:5px;background:rgba(10,8,2,0.5);max-width:400px;text-align:left">
+      <div style="font-size:9px;color:#706030;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px">⚠ Photosensitivity</div>
+      <div style="font-size:10px;color:#504020;line-height:1.7">Contains flashing lights and motion effects. If you are photosensitive, enable Reduce Motion below.</div>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:7px;cursor:pointer;font-size:10px;color:#706030">
+        <input type="checkbox" id="reduce-motion-check" style="accent-color:#80c060;cursor:pointer">
+        Reduce Motion — disables flashing effects
+      </label>
+    </div>
   </div>
 
   <!-- ==========================================================
@@ -2143,9 +2153,8 @@ function generateSectorStars(sectorId){
   }
 }
 function loadSector(sectorId){
-  // Hyperspace animation when jumping to a different sector
   const isJump = state.currentSectorId && state.currentSectorId !== sectorId;
-  if(isJump && document.getElementById('hyperspace-canvas')){
+  if(isJump && !reduceMotion && document.getElementById('hyperspace-canvas')){
     playHyperspaceJump(sectorId, ()=> _doLoadSector(sectorId));
   } else {
     _doLoadSector(sectorId);
@@ -2542,7 +2551,7 @@ function openAct1(star){
     showSpecialEventBadge(pendingEvent);
     pendingEvent = null;
     // Glitch effect specifically for mystery objects
-    if(star._mystery) setTimeout(playGlitchEffect, 400);
+    if(star._mystery && !reduceMotion) setTimeout(playGlitchEffect, 400);
   } else if(star._telescopeNote && loreEl){
     loreEl.style.display     = 'block';
     loreEl.style.color       = '#c09040';
@@ -2973,8 +2982,9 @@ function openAct4(star){
       state.score   += raw.bonus;
       state.credits += raw.credits || 30;
       state.colonies++;
-      // Colony pulse animation
-      playColonyPulse(state.currentStar);
+      // Colony pulse fires after debrief button appears — use centre of screen
+      // so it's visible regardless of panel position or map scroll
+      setTimeout(()=> playColonyPulse(null), 650);
       // Apply tradeoffs
       if(raw.streakReset)  state.streak = 0;
       if(raw.streakBoost)  state._civStreakBoost = (state._civStreakBoost||0) + raw.streakBoost;
@@ -9425,7 +9435,6 @@ function playConstellationDraw(sectorId){
    Sonar-style expanding ring from the selected star on confirm.
 ================================================================ */
 function playColonyPulse(star){
-  if(!star) return;
   const cvs = document.getElementById('hyperspace-canvas');
   cvs.width  = window.innerWidth;
   cvs.height = window.innerHeight;
@@ -9433,9 +9442,9 @@ function playColonyPulse(star){
   const ctx = cvs.getContext('2d');
   const W = cvs.width, H = cvs.height;
 
-  // Convert star world coords to screen coords
-  const sx = star.x - state.camX;
-  const sy = star.y - state.camY;
+  // Use screen centre — pulse is a celebration, not tied to map position
+  const sx = W / 2;
+  const sy = H / 2;
 
   const start = performance.now();
   const TOTAL = 700;
@@ -9545,6 +9554,7 @@ function playGlitchEffect(){
 ================================================================ */
 let _lastStreakBurst = 0;
 function maybePlayScoreBurst(streak){
+  if(reduceMotion) return; // skip in reduce motion mode
   if(streak < 5 || streak % 5 !== 0) return;
   if(streak === _lastStreakBurst) return;
   _lastStreakBurst = streak;
@@ -9656,13 +9666,41 @@ function playResearchAurora(){
 }
 
 /* ================================================================
+   PHOTOSENSITIVITY / REDUCE MOTION SYSTEM
+   Checkbox on name screen. Preference persists via localStorage.
+   When active: hyperspace bars, mystery glitch, and score burst
+   are disabled. All slow animations (constellation, aurora,
+   sweep, pulse) continue — they have no rapid brightness changes.
+================================================================ */
+let reduceMotion = false;
+
+function initEpilepsyWarning(){
+  // Apply saved preference immediately
+  try {
+    reduceMotion = localStorage.getItem('spectra-reduce-motion') === 'true';
+  } catch(e){}
+
+  const check = document.getElementById('reduce-motion-check');
+  if(!check) return;
+
+  // Pre-tick if preference already saved
+  check.checked = reduceMotion;
+
+  // Save preference whenever toggled
+  check.addEventListener('change', ()=>{
+    reduceMotion = check.checked;
+    try { localStorage.setItem('spectra-reduce-motion', reduceMotion); } catch(e){}
+  });
+}
+
+/* ================================================================
    STARTUP
 ================================================================ */
 applyLanguage('en');
 snapshotEnglishGuideContent();
 detectClassMode();
 initFontSize();
-// Restore research tab if already unlocked from a previous save
+initEpilepsyWarning();
 if(state.researchUnlocked) addResearchGuideTab();
 // Safety reset
 document.getElementById('overlay').style.display = 'none';
