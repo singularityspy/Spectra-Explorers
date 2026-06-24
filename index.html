@@ -331,6 +331,12 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 #ui.font-large  .tip-box { font-size:13px !important }
 #ui.font-large  .score-table td { font-size:13px !important; padding:6px 10px !important }
 #ui.font-large  .gloss-word { font-size:14px !important }
+/* ── HYPERSPACE / AURORA / SCORE BURST ───────────────────────── */
+#hyperspace-canvas{position:absolute;inset:0;pointer-events:none;z-index:50;display:none}
+#aurora-canvas{position:absolute;inset:0;pointer-events:none;z-index:8;display:none;opacity:0;transition:opacity 0.5s}
+.score-burst{position:absolute;pointer-events:none;font-size:11px;font-family:inherit;font-weight:bold;color:#f0c040;animation:scoreBurst 0.6s ease-out forwards;z-index:100}
+@keyframes scoreBurst{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-200%) scale(0.5)}}
+
 /* -- GLOSSARY PANEL --------------------------------------------- */
 #glossary-panel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;max-width:96vw;max-height:90vh;overflow-y:auto;padding:0;display:none;z-index:30;scrollbar-width:thin;scrollbar-color:rgba(60,100,160,0.3) transparent}
 .gloss-tab{background:rgba(8,18,50,0.7);border:none;border-bottom:2px solid transparent;color:#304060;font-family:inherit;font-size:10px;letter-spacing:1px;padding:8px 16px;cursor:pointer;transition:all 0.15s;text-transform:uppercase}
@@ -567,6 +573,8 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 <body>
 <canvas id="bg"></canvas>
 <canvas id="main"></canvas>
+<canvas id="hyperspace-canvas"></canvas>
+<canvas id="aurora-canvas"></canvas>
 <div id="ui">
 
   <!-- HUD — stats on left, title in centre, action buttons on right, all one bar -->
@@ -2632,6 +2640,7 @@ function confirmAct1(){
     recordCorrect('emission');
     state.streak++;state.score+=pts;state.credits+=20;showFlash(t('act1_flash_correct')(pts),'#38e060');
     if(sprintActive) sprintStarCompleted();
+    maybePlayScoreBurst(state.streak);
   } else {
     recordError('emission');
     state.streak=0;state.score=Math.max(0,state.score+pts);showFlash(t('act1_flash_wrong'),'#e03030');
@@ -2950,6 +2959,8 @@ function openAct4(star){
       state.score   += raw.bonus;
       state.credits += raw.credits || 30;
       state.colonies++;
+      // Colony pulse animation
+      playColonyPulse(state.currentStar);
       // Apply tradeoffs
       if(raw.streakReset)  state.streak = 0;
       if(raw.streakBoost)  state._civStreakBoost = (state._civStreakBoost||0) + raw.streakBoost;
@@ -9143,9 +9154,524 @@ function playSectorCompleteChime(tier, sectorName){
     osc.stop(t + note.dur + 0.05);
   });
 
-  // Show sector complete toast
+  // Show constellation draw when sector is complete
   const totalStars = (state.sectorStars[state.currentSectorId]||[]).length;
   showUnlockToast(`✦ ${sectorName} fully surveyed — ${totalStars} stars discovered!`);
+  setTimeout(()=> playConstellationDraw(state.currentSectorId), 1400);
+}
+
+/* ================================================================
+   ANIMATION SYSTEM 1 — HYPERSPACE SECTOR JUMP
+   Classic streaking star lines compress to a point then the new
+   sector fades in. Runs over ~1.8 seconds, 60fps capped.
+   Real constellation overlay appears for the destination sector.
+================================================================ */
+
+// Each sector maps to a real IAU constellation that fits its character
+const SECTOR_CONSTELLATIONS = {
+  home:         { name:'Orion',        stars:[[0.3,0.5],[0.42,0.35],[0.55,0.5],[0.42,0.65],[0.35,0.78],[0.5,0.78],[0.28,0.42],[0.58,0.42]], lines:[[0,1],[1,2],[2,3],[3,4],[3,5],[0,6],[2,7]] },
+  habitable:    { name:'Cancer',       stars:[[0.3,0.4],[0.5,0.3],[0.7,0.4],[0.5,0.65],[0.4,0.55],[0.6,0.55]], lines:[[0,4],[4,1],[1,5],[5,2],[4,3],[5,3]] },
+  inner:        { name:'Scorpius',     stars:[[0.5,0.2],[0.4,0.35],[0.35,0.5],[0.3,0.62],[0.25,0.72],[0.22,0.82],[0.3,0.88],[0.4,0.88],[0.6,0.35],[0.65,0.48],[0.6,0.6]], lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[1,8],[8,9],[9,10]] },
+  redfield:     { name:'Ursa Minor',   stars:[[0.5,0.2],[0.45,0.35],[0.4,0.5],[0.38,0.62],[0.5,0.7],[0.62,0.62],[0.68,0.5]], lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6]] },
+  whitering:    { name:'Lyra',         stars:[[0.5,0.25],[0.35,0.45],[0.42,0.6],[0.58,0.6],[0.65,0.45]], lines:[[0,1],[0,2],[0,3],[0,4],[1,2],[3,4]] },
+  deepfield:    { name:'Centaurus',    stars:[[0.3,0.3],[0.5,0.25],[0.7,0.3],[0.65,0.5],[0.5,0.55],[0.35,0.5],[0.3,0.7],[0.5,0.75],[0.7,0.7]], lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[3,8],[4,7],[5,6]] },
+  graveyard:    { name:'Corvus',       stars:[[0.35,0.3],[0.55,0.25],[0.65,0.45],[0.5,0.65],[0.3,0.55]], lines:[[0,1],[1,2],[2,3],[3,4],[4,0]] },
+  voidmargin:   { name:'Ursa Major',   stars:[[0.25,0.35],[0.38,0.3],[0.52,0.32],[0.62,0.4],[0.55,0.55],[0.42,0.58],[0.28,0.52],[0.15,0.6],[0.1,0.45]], lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,0],[6,7],[7,8]] },
+  forbiddenzone:{ name:'Ophiuchus',    stars:[[0.5,0.15],[0.35,0.3],[0.5,0.45],[0.65,0.3],[0.28,0.55],[0.42,0.65],[0.58,0.65],[0.72,0.55]], lines:[[0,1],[0,3],[1,2],[3,2],[1,4],[4,5],[5,6],[6,7],[7,3]] },
+  heliopause:   { name:'Aquarius',     stars:[[0.5,0.2],[0.4,0.35],[0.6,0.35],[0.35,0.52],[0.5,0.5],[0.65,0.52],[0.3,0.68],[0.5,0.72],[0.7,0.68]], lines:[[0,1],[0,2],[1,3],[1,4],[2,4],[2,5],[3,6],[4,7],[5,8]] },
+};
+
+function playHyperspaceJump(sectorId, onDone){
+  const cvs = document.getElementById('hyperspace-canvas');
+  cvs.width  = window.innerWidth;
+  cvs.height = window.innerHeight;
+  cvs.style.display = 'block';
+  const W = cvs.width, H = cvs.height;
+  const ctx = cvs.getContext('2d');
+
+  // Generate streaking stars — lines from centre point outward
+  const CX = W/2, CY = H/2;
+  const streaks = Array.from({length:220}, ()=>{
+    const angle = Math.random() * Math.PI * 2;
+    const dist  = 30 + Math.random() * Math.max(W,H);
+    return {
+      angle, dist,
+      speed: 0.8 + Math.random() * 1.4,
+      len:   20 + Math.random() * 60,
+      width: 0.3 + Math.random() * 1.2,
+      col:   Math.random() < 0.15 ? '#ffd2a1' : Math.random() < 0.1 ? '#9bb0ff' : '#ffffff'
+    };
+  });
+
+  const dest = SECTOR_CONSTELLATIONS[sectorId];
+  const FPS_CAP = 16;
+  let last = 0;
+  const start = performance.now();
+  const TOTAL = 1800; // ms
+
+  function frame(t){
+    if(t - last < FPS_CAP){ requestAnimationFrame(frame); return; }
+    last = t;
+    const el = t - start;
+    const prog = Math.min(1, el / TOTAL);
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = `rgba(1,2,10,${prog < 0.6 ? 0.25 : 0.5})`;
+    ctx.fillRect(0,0,W,H);
+
+    if(prog < 0.55){
+      // Streaking phase — lines grow outward from centre
+      const stretch = Math.pow(prog / 0.55, 1.8);
+      streaks.forEach(s => {
+        const tipDist  = s.dist * stretch;
+        const tailDist = Math.max(0, tipDist - s.len * stretch * s.speed);
+        const tipX     = CX + Math.cos(s.angle) * tipDist;
+        const tipY     = CY + Math.sin(s.angle) * tipDist;
+        const tailX    = CX + Math.cos(s.angle) * tailDist;
+        const tailY    = CY + Math.sin(s.angle) * tailDist;
+        if(tipDist < 10) return;
+        const alpha = Math.min(1, stretch * 2) * 0.85;
+        ctx.beginPath();
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(tipX, tipY);
+        ctx.strokeStyle = s.col.replace('#','rgba(')
+          .replace(/([0-9a-f]{2})/gi,(_,h)=>parseInt(h,16)+',')
+          .replace(/,$/,`,${alpha.toFixed(2)})`);
+        ctx.lineWidth = s.width;
+        ctx.stroke();
+      });
+    } else if(prog < 0.65){
+      // Compression flash — everything collapses to white point
+      const flashProg = (prog - 0.55) / 0.10;
+      ctx.fillStyle = `rgba(255,255,255,${flashProg * 0.9})`;
+      ctx.fillRect(0,0,W,H);
+    } else {
+      // Fade out — new sector fades in underneath, constellation draws
+      const fadeProg = (prog - 0.65) / 0.35;
+      ctx.fillStyle = `rgba(1,2,10,${1 - fadeProg})`;
+      ctx.fillRect(0,0,W,H);
+
+      // Draw constellation over fade
+      if(dest && fadeProg > 0.3){
+        const conAlpha = Math.min(1, (fadeProg - 0.3) / 0.4);
+        drawConstellationOverlay(ctx, W, H, dest, conAlpha, (fadeProg - 0.3) / 0.7);
+      }
+    }
+
+    if(prog >= 1){
+      ctx.clearRect(0,0,W,H);
+      cvs.style.display = 'none';
+      if(onDone) onDone();
+      return;
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ================================================================
+   ANIMATION SYSTEM 6 — CONSTELLATION DRAW
+   Lines connect stars one by one, then labels fade in.
+   Used both during hyperspace transition and on sector complete.
+================================================================ */
+function drawConstellationOverlay(ctx, W, H, constellation, alpha, progress){
+  const stars  = constellation.stars;
+  const lines  = constellation.lines;
+  const linesTo = Math.floor(progress * lines.length);
+
+  ctx.save();
+  ctx.globalAlpha = alpha * 0.7;
+
+  // Draw completed lines
+  lines.slice(0, linesTo).forEach(([a,b]) => {
+    const s1 = stars[a], s2 = stars[b];
+    ctx.beginPath();
+    ctx.moveTo(s1[0]*W, s1[1]*H);
+    ctx.lineTo(s2[0]*W, s2[1]*H);
+    ctx.strokeStyle = 'rgba(160,200,255,0.6)';
+    ctx.lineWidth = 0.8;
+    ctx.setLineDash([4,4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  });
+
+  // Partially draw the current line
+  if(linesTo < lines.length){
+    const lineProgress = (progress * lines.length) - linesTo;
+    const [a,b] = lines[linesTo];
+    const s1 = stars[a], s2 = stars[b];
+    ctx.beginPath();
+    ctx.moveTo(s1[0]*W, s1[1]*H);
+    ctx.lineTo(
+      s1[0]*W + (s2[0]-s1[0])*W*lineProgress,
+      s1[1]*H + (s2[1]-s1[1])*H*lineProgress
+    );
+    ctx.strokeStyle = 'rgba(160,200,255,0.4)';
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+  }
+
+  // Stars as dots
+  stars.forEach(([sx,sy]) => {
+    ctx.beginPath();
+    ctx.arc(sx*W, sy*H, 2.5, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(200,220,255,0.9)';
+    ctx.fill();
+  });
+
+  // Constellation name — fades in after lines complete
+  if(progress > 0.8){
+    const nameAlpha = (progress - 0.8) / 0.2;
+    ctx.globalAlpha = alpha * nameAlpha;
+    ctx.font = 'bold 18px Share Tech Mono, Courier New';
+    ctx.fillStyle = 'rgba(160,200,255,0.9)';
+    ctx.textAlign = 'center';
+    ctx.fillText(constellation.name, W*0.5, H*0.88);
+    ctx.font = '11px Share Tech Mono, Courier New';
+    ctx.fillStyle = 'rgba(100,140,200,0.7)';
+    ctx.fillText('— sector mapped —', W*0.5, H*0.93);
+  }
+
+  ctx.restore();
+}
+
+function playConstellationDraw(sectorId){
+  const cvs = document.getElementById('hyperspace-canvas');
+  cvs.width  = window.innerWidth;
+  cvs.height = window.innerHeight;
+  cvs.style.display = 'block';
+  const W = cvs.width, H = cvs.height;
+  const ctx = cvs.getContext('2d');
+  const dest = SECTOR_CONSTELLATIONS[sectorId];
+  if(!dest){ cvs.style.display='none'; return; }
+
+  const start = performance.now();
+  const TOTAL = 2800; // ms — slower, more ceremonial
+  let last = 0;
+
+  function frame(t){
+    if(t - last < 16){ requestAnimationFrame(frame); return; }
+    last = t;
+    const prog = Math.min(1, (t - start) / TOTAL);
+
+    // Semi-transparent overlay so map is still visible underneath
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = 'rgba(2,4,16,0.55)';
+    ctx.fillRect(0,0,W,H);
+
+    drawConstellationOverlay(ctx, W, H, dest, 1, prog);
+
+    if(prog >= 1){
+      // Fade out
+      let fadeOut = 0;
+      const fadeStart = performance.now();
+      function fade(t2){
+        fadeOut = Math.min(1,(t2-fadeStart)/600);
+        ctx.clearRect(0,0,W,H);
+        ctx.fillStyle=`rgba(2,4,16,${0.55*(1-fadeOut)})`;
+        ctx.fillRect(0,0,W,H);
+        drawConstellationOverlay(ctx,W,H,dest,1-fadeOut,1);
+        if(fadeOut<1) requestAnimationFrame(fade);
+        else{ ctx.clearRect(0,0,W,H); cvs.style.display='none'; }
+      }
+      requestAnimationFrame(fade);
+      return;
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ================================================================
+   ANIMATION SYSTEM 2 — COLONY PLANET PULSE
+   Sonar-style expanding ring from the selected star on confirm.
+================================================================ */
+function playColonyPulse(star){
+  if(!star) return;
+  const cvs = document.getElementById('hyperspace-canvas');
+  cvs.width  = window.innerWidth;
+  cvs.height = window.innerHeight;
+  cvs.style.display = 'block';
+  const ctx = cvs.getContext('2d');
+  const W = cvs.width, H = cvs.height;
+
+  // Convert star world coords to screen coords
+  const sx = star.x - state.camX;
+  const sy = star.y - state.camY;
+
+  const start = performance.now();
+  const TOTAL = 700;
+
+  function frame(t){
+    const prog = Math.min(1,(t-start)/TOTAL);
+    ctx.clearRect(0,0,W,H);
+    const r     = prog * 120;
+    const alpha = (1-prog) * 0.7;
+    ctx.beginPath();
+    ctx.arc(sx, sy, r, 0, Math.PI*2);
+    ctx.strokeStyle = `rgba(80,220,120,${alpha})`;
+    ctx.lineWidth   = 2 * (1-prog);
+    ctx.stroke();
+    // Second ring slightly behind
+    if(prog > 0.2){
+      const r2 = (prog-0.2)*100;
+      ctx.beginPath(); ctx.arc(sx,sy,r2,0,Math.PI*2);
+      ctx.strokeStyle = `rgba(120,255,160,${(1-prog)*0.4})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    if(prog < 1) requestAnimationFrame(frame);
+    else{ ctx.clearRect(0,0,W,H); cvs.style.display='none'; }
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ================================================================
+   ANIMATION SYSTEM 3 — FIRST DISCOVERY SCAN SWEEP
+   Radar sweep expanding from the first found star,
+   briefly illuminating undiscovered stars.
+================================================================ */
+function playFirstDiscoverySweep(star){
+  const cvs = document.getElementById('hyperspace-canvas');
+  cvs.width  = window.innerWidth;
+  cvs.height = window.innerHeight;
+  cvs.style.display = 'block';
+  const ctx = cvs.getContext('2d');
+  const W = cvs.width, H = cvs.height;
+  const sx = star.x - state.camX;
+  const sy = star.y - state.camY;
+
+  const start = performance.now();
+  const TOTAL = 1800;
+
+  function frame(t){
+    const prog = Math.min(1,(t-start)/TOTAL);
+    ctx.clearRect(0,0,W,H);
+    const r = prog * Math.max(W,H) * 1.5;
+
+    // Draw sweep ring
+    ctx.beginPath();
+    ctx.arc(sx,sy,r,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(80,180,255,${(1-prog)*0.5})`;
+    ctx.lineWidth=2;
+    ctx.stroke();
+
+    // Illuminate stars just inside the sweep ring
+    const stars = state.sectorStars[state.currentSectorId]||[];
+    stars.forEach(s=>{
+      if(s.discovered) return;
+      const ex = s.x - state.camX;
+      const ey = s.y - state.camY;
+      const d  = Math.hypot(ex-sx, ey-sy);
+      if(d < r && d > r-60){
+        const alpha = (1-(r-d)/60)*0.6*(1-prog);
+        ctx.beginPath(); ctx.arc(ex,ey,s.size+3,0,Math.PI*2);
+        ctx.fillStyle=`rgba(80,180,255,${alpha})`; ctx.fill();
+      }
+    });
+
+    if(prog<1) requestAnimationFrame(frame);
+    else{ ctx.clearRect(0,0,W,H); cvs.style.display='none'; }
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ================================================================
+   ANIMATION SYSTEM 4 — MYSTERY OBJECT GLITCH
+   Brief spectrum panel flicker when anomalous badge appears.
+================================================================ */
+function playGlitchEffect(){
+  const panel = document.getElementById('spectra-panel');
+  if(!panel || panel.style.display==='none') return;
+  let count = 0;
+  const glitchInterval = setInterval(()=>{
+    count++;
+    if(count % 2 === 0){
+      panel.style.filter='invert(1) hue-rotate(90deg)';
+      panel.style.transform='translateX(2px)';
+    } else {
+      panel.style.filter='';
+      panel.style.transform='translateX(-2px)';
+    }
+    if(count >= 7){
+      clearInterval(glitchInterval);
+      panel.style.filter='';
+      panel.style.transform='';
+    }
+  },60);
+}
+
+/* ================================================================
+   ANIMATION SYSTEM 5 — SCORE BURST
+   Particle numbers fly off the score display at streak milestones.
+================================================================ */
+let _lastStreakBurst = 0;
+function maybePlayScoreBurst(streak){
+  if(streak < 5 || streak % 5 !== 0) return;
+  if(streak === _lastStreakBurst) return;
+  _lastStreakBurst = streak;
+
+  const scoreEl = document.getElementById('score-val');
+  if(!scoreEl) return;
+  const rect = scoreEl.getBoundingClientRect();
+  const cx   = rect.left + rect.width/2;
+  const cy   = rect.top  + rect.height/2;
+
+  // Spawn 8 floating numbers
+  for(let i=0;i<8;i++){
+    const el = document.createElement('div');
+    el.className = 'score-burst';
+    el.textContent = '+' + (streak * 20);
+    el.style.left = (cx + (Math.random()-0.5)*60) + 'px';
+    el.style.top  = cy + 'px';
+    el.style.animationDelay = (i*0.06)+'s';
+    el.style.fontSize = (9+Math.random()*4)+'px';
+    el.style.opacity  = (0.5+Math.random()*0.5).toFixed(2);
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 800);
+  }
+
+  // Brief gold flash on the score val
+  scoreEl.style.color='#f0c040';
+  scoreEl.style.transform='scale(1.3)';
+  scoreEl.style.transition='all 0.15s';
+  setTimeout(()=>{
+    scoreEl.style.color='';
+    scoreEl.style.transform='';
+  },300);
+}
+
+/* ================================================================
+   ANIMATION SYSTEM 7 — RESEARCH MODE AURORA
+   Green-purple aurora sweeps across the map background once.
+   Only plays once ever — on first Research Mode unlock.
+================================================================ */
+function playResearchAurora(){
+  const cvs = document.getElementById('aurora-canvas');
+  cvs.width  = window.innerWidth;
+  cvs.height = window.innerHeight;
+  cvs.style.display = 'block';
+  const W = cvs.width, H = cvs.height;
+  const ctx = cvs.getContext('2d');
+
+  // Aurora bands — horizontal sinusoidal waves
+  const bands = [
+    {y:0.15, amp:0.08, freq:1.8, col:'rgba(40,200,80,',  phase:0},
+    {y:0.28, amp:0.06, freq:2.2, col:'rgba(80,120,220,', phase:1.2},
+    {y:0.18, amp:0.10, freq:1.5, col:'rgba(140,60,200,', phase:0.6},
+    {y:0.35, amp:0.05, freq:2.8, col:'rgba(20,180,140,', phase:2.1},
+  ];
+
+  let opacity = 0;
+  const start = performance.now();
+  const TOTAL = 4000;
+  let last = 0;
+
+  // Fade in aurora canvas
+  cvs.style.opacity = '0';
+  cvs.style.transition = 'opacity 0.5s';
+  requestAnimationFrame(()=>{ cvs.style.opacity = '1'; });
+
+  function frame(t){
+    if(t-last < 16){ requestAnimationFrame(frame); return; }
+    last = t;
+    const prog = Math.min(1,(t-start)/TOTAL);
+
+    ctx.clearRect(0,0,W,H);
+
+    // Sweep position — aurora moves left to right
+    const sweep = prog;
+
+    bands.forEach(b=>{
+      for(let x=0;x<W;x++){
+        const localProg = (x/W - sweep + 0.3);
+        if(localProg<0||localProg>0.6) continue;
+        const alpha = Math.sin(localProg/0.6*Math.PI) * 0.25;
+        const yOff  = Math.sin(x/W*b.freq*Math.PI*2+b.phase+prog*2)*b.amp*H;
+        const yBase = b.y*H + yOff;
+
+        ctx.fillStyle = b.col+alpha.toFixed(3)+')';
+        ctx.fillRect(x,yBase-30,1,60);
+      }
+    });
+
+    // Rays — vertical streaks of light
+    if(prog > 0.1 && prog < 0.9){
+      for(let r=0;r<6;r++){
+        const rx = ((prog+r*0.15)%1)*W;
+        const ralpha = Math.sin((prog*6+r)%Math.PI)*0.12;
+        ctx.fillStyle=`rgba(80,200,120,${ralpha})`;
+        ctx.fillRect(rx-1,0,3,H*0.4);
+      }
+    }
+
+    if(prog>=1){
+      // Fade out
+      cvs.style.transition='opacity 1s';
+      cvs.style.opacity='0';
+      setTimeout(()=>{ cvs.style.display='none'; ctx.clearRect(0,0,W,H); },1100);
+      return;
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ================================================================
+   WIRE ALL ANIMATIONS INTO GAME EVENTS
+================================================================ */
+
+// 1. Hyperspace on sector jump
+const _origLoadSector = loadSector;
+function loadSector(sectorId){
+  const isFirstLoad = !state.currentSectorId || state.currentSectorId === sectorId;
+  if(!isFirstLoad && document.getElementById('hyperspace-canvas')){
+    playHyperspaceJump(sectorId, ()=> _origLoadSector(sectorId));
+  } else {
+    _origLoadSector(sectorId);
+  }
+}
+
+// 3 & 4. Scan sweep on first sector discovery + glitch on mystery objects
+// Hooked into confirmAct1 — check after star.discovered is set
+const _origCheckSectorComplete = checkSectorComplete;
+function checkSectorComplete(){
+  const stars = state.sectorStars[state.currentSectorId]||[];
+  const prevFound = stars.filter(s=>s.discovered).length;
+  _origCheckSectorComplete();
+  // If this is the first discovery in the sector, play sweep
+  if(prevFound === 0 && state.currentStar){
+    setTimeout(()=> playFirstDiscoverySweep(state.currentStar), 500);
+  }
+}
+
+// 4. Glitch — hooked into openAct1 via state._mystery check
+// (called inside openAct1 already — just need to trigger after badge shows)
+const _origShowSpecialEventBadge = showSpecialEventBadge;
+function showSpecialEventBadge(event){
+  _origShowSpecialEventBadge(event);
+  // Glitch only on actual mystery object anomaly — not regular special events
+  if(state.currentStar && state.currentStar._mystery){
+    setTimeout(playGlitchEffect, 400);
+  }
+}
+
+// 5. Score burst at streak milestones — hooked into confirmAct1
+// (called after streak is updated)
+
+// 2. Colony pulse — hooked into civ button click (after state.colonies++)
+// 6. Constellation draw — hooked into checkSectorComplete
+// 7. Research aurora — hooked into addResearchGuideTab
+
+const _origAddResearchGuideTab = addResearchGuideTab;
+function addResearchGuideTab(){
+  _origAddResearchGuideTab();
+  // Play aurora only on first unlock (not on save restore)
+  if(!state._auroraPlayed){
+    state._auroraPlayed = true;
+    setTimeout(playResearchAurora, 800);
+  }
 }
 
 /* ================================================================
