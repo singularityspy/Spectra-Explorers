@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
   -================================================================-
-  |              SPECTRA EXPLORER — v3.0                             |
+  |              SPECTRA EXPLORERS — v3.0                             |
   |                                                                  |
   |  PROGRESSION:                                                    |
   |  Start     — Pannable galaxy map, 32 stars                      |
@@ -610,7 +610,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
     <div id="hud-stats">
       <div class="stat"><div class="label">Score</div><div class="val" id="score-val">0</div></div>
       <div class="stat"><div class="label">Stars Found</div><div class="val" id="found-val">0</div></div>
-      <div id="game-title">✦ SPECTRA EXPLORER ✦</div>
+      <div id="game-title">✦ SPECTRA EXPLORERS ✦</div>
       <div class="stat"><div class="label">Credits</div><div class="val" id="credit-val">0</div></div>
       <div class="stat"><div class="label">Colonies</div><div class="val" id="colonies-val">0</div></div>
     </div>
@@ -1175,7 +1175,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
     <!-- Title + animated canvas overlay -->
     <div style="position:relative;z-index:2;text-align:center;margin-bottom:8px">
       <canvas id="title-anim-canvas" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:3"></canvas>
-      <h1 id="title-h1" style="position:relative;z-index:2">SPECTRA EXPLORER</h1>
+      <h1 id="title-h1" style="position:relative;z-index:2">SPECTRA EXPLORERS</h1>
     </div>
 
     <div class="ns-sub" id="ns-sub-text" style="position:relative;z-index:2">Map the cosmos. Decode the light.</div>
@@ -1225,7 +1225,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
   <div id="welcome-screen">
     <canvas id="title-starfield" style="position:fixed;inset:0;pointer-events:none"></canvas>
     <div id="class-mode-banner"></div>
-    <h1>SPECTRA EXPLORER</h1>
+    <h1>SPECTRA EXPLORERS</h1>
     <div class="wt" id="ws-sub">A stellar science adventure</div>
     <div class="wtag" id="ws-tag">Real physics. Real elements. Real discoveries.</div>
     <div class="wcurr" id="ws-curr">Explore stellar spectroscopy · planetary habitability · OBAFGKM classification</div>
@@ -5838,7 +5838,7 @@ function showSessionSummary(star){
   document.getElementById('ff-source').textContent   = 'Source: ' + fact.source;
 
   // Shareable report
-  let report = `SPECTRA EXPLORER v${GAME_VERSION} — Session Report\n`;
+  let report = `SPECTRA EXPLORERS v${GAME_VERSION} — Session Report\n`;
   report += `Player: ${playerName || 'Unknown'}\n`;
   report += `Date: ${new Date().toLocaleDateString()}\n`;
   report += `Time played: ${elapsed} minutes\n`;
@@ -7270,7 +7270,7 @@ const T = {
     ns_note:   'This name appears on the global leaderboard',
 
     // -- Welcome screen ---------------------------------------
-    ws_title:  'SPECTRA EXPLORER',
+    ws_title:  'SPECTRA EXPLORERS',
     ws_sub:    'A stellar classification game',
     ws_intro:  'Scan stars across the galaxy, analyse their light signatures,\nsurvey candidate planets, and build a civilisation among the stars.\nChoose your experience level to get started:',
     ws_footer: 'You can reopen this guide anytime using the ? button',
@@ -7286,7 +7286,7 @@ const T = {
     hud_found:    'Stars Found',
     hud_credits:  'Credits',
     hud_colonies: 'Colonies',
-    hud_title:    '✦ SPECTRA EXPLORER ✦',
+    hud_title:    '✦ SPECTRA EXPLORERS ✦',
     btn_lb:       '⬡ Leaderboard',
     btn_save:     '↓ Save',
     btn_help:     '?',
@@ -7495,7 +7495,7 @@ const T = {
     ns_note:   'Este nombre aparece en la tabla de clasificación global',
 
     // -- Welcome screen ---------------------------------------
-    ws_title:  'SPECTRA EXPLORER',
+    ws_title:  'SPECTRA EXPLORERS',
     ws_sub:    'Un juego de clasificación estelar',
     ws_intro:  'Escanea estrellas por la galaxia, analiza sus firmas de luz,\nexplora planetas candidatos y construye una civilización entre las estrellas.\nElige tu nivel de experiencia para comenzar:',
     ws_footer: 'Puedes volver a abrir esta guía en cualquier momento usando el botón ?',
@@ -7511,7 +7511,7 @@ const T = {
     hud_found:    'Estrellas',
     hud_credits:  'Créditos',
     hud_colonies: 'Colonias',
-    hud_title:    '✦ SPECTRA EXPLORER ✦',
+    hud_title:    '✦ SPECTRA EXPLORERS ✦',
     btn_lb:       '⬡ Clasificación',
     btn_save:     '↓ Guardar',
     btn_help:     '?',
@@ -8288,11 +8288,24 @@ document.getElementById('music-btn').addEventListener('click', ()=>{
 function initNebula(){
   const cvs = document.getElementById('nebula-canvas');
   if(!cvs) return;
-  function resize(){ cvs.width=window.innerWidth; cvs.height=window.innerHeight; }
-  resize(); window.addEventListener('resize', resize);
+
+  const galaxy = {x:0.14, y:0.16, ang:-0.38};
+
+  function resize(){
+    cvs.width  = window.innerWidth;
+    cvs.height = window.innerHeight;
+    if(galaxy){
+      delete galaxy._stars;
+      delete galaxy._gCX;
+      delete galaxy._gCY;
+      delete galaxy._GW;
+    }
+  }
+  resize();
+  window.addEventListener('resize', resize);
   const ctx = cvs.getContext('2d');
 
-  // Nebula colour clouds — drift slowly toward BH
+  // Nebula colour clouds
   const clouds = [
     {x:0.50,y:0.45,rx:0.75,ry:0.55,col:'rgba(120,10,40,0.13)',  drift:{x:0.000025,y:0.000018}},
     {x:0.78,y:0.28,rx:0.50,ry:0.40,col:'rgba(0,130,160,0.09)',  drift:{x:-0.00003,y:0.000022}},
@@ -8302,7 +8315,7 @@ function initNebula(){
     {x:0.82,y:0.72,rx:0.28,ry:0.24,col:'rgba(0,180,140,0.08)',  drift:{x:-0.00004,y:-0.000016}},
   ];
 
-  // Background stars — field stars that twinkle
+  // Background field stars
   const bgStars = Array.from({length:110},()=>({
     x:Math.random(), y:Math.random(),
     r:0.3+Math.random()*1.5, a:0.15+Math.random()*0.65,
@@ -8311,19 +8324,19 @@ function initNebula(){
     col:['#ffffff','#ffffff','#9bb0ff','#ffd2a1','#c0e8ff'][Math.floor(Math.random()*5)],
   }));
 
-  // Accretion disc — fewer particles, tighter, higher contrast
+  // Accretion disc particles
   const DISC = Array.from({length:180},()=>{
     const r    = 0.05 + Math.random()*0.14;
     const ang  = Math.random()*Math.PI*2;
     const spd  = (0.0005+Math.random()*0.0007)*(Math.random()<0.5?1:-1);
-    const heat = Math.pow(Math.random(),0.6); // bias toward hot end
+    const heat = Math.pow(Math.random(),0.6);
     const col  = heat>0.7
-      ? `rgba(255,${Math.floor(220+heat*35)},${Math.floor(heat*60)},`
-      : `rgba(255,${Math.floor(100+heat*130)},10,`;
+      ? 'rgba(255,'+Math.floor(220+heat*35)+','+Math.floor(heat*60)+','
+      : 'rgba(255,'+Math.floor(100+heat*130)+',10,';
     return {r,ang,spd,col,alpha:0.55+Math.random()*0.4,size:0.6+Math.random()*1.4};
   });
 
-  // Infalling stars — spiral in, brighten, vanish at horizon
+  // Infalling stars
   function spawnInfall(){ return {
     ang:  Math.random()*Math.PI*2,
     dist: 0.10 + Math.random()*0.32,
@@ -8334,470 +8347,459 @@ function initNebula(){
     col:  ['#ffffff','#c8e4ff','#ffd2a1','#ffffff'][Math.floor(Math.random()*4)],
   };}
   const infallStars = Array.from({length:20}, spawnInfall);
-  infallStars.forEach((s,i)=>{ s.dist = 0.06 + (i/20)*0.36; }); // stagger
+  infallStars.forEach((s,i)=>{ s.dist = 0.06 + (i/20)*0.36; });
 
-  // Ship
-  const ship = {ang:Math.PI*0.72, orbitR:0.28, spd:0.00008};
-
-  // Galaxy — cached star field
-  const galaxy = {x:0.21, y:0.25, ang:-0.38};
-
-  // S-stars — realistic fast elliptical orbits around the BH
-  // Based loosely on actual S-star parameters (S1, S2, S5, S8)
-  // Each has a semi-major axis, eccentricity, orbital period, and current angle
+  // S-stars — real elliptical orbits
   const SSTARS = [
-    {a:0.095, ecc:0.87, period:4200,  ang:0.8,  col:'#c8e0ff', r:1.6}, // fast, tight eccentric
+    {a:0.095, ecc:0.87, period:4200,  ang:0.8,  col:'#c8e0ff', r:1.6},
     {a:0.140, ecc:0.65, period:8800,  ang:2.3,  col:'#ffd2a1', r:1.4},
     {a:0.175, ecc:0.78, period:14000, ang:4.1,  col:'#ffffff',  r:1.3},
     {a:0.210, ecc:0.50, period:22000, ang:1.1,  col:'#b0d0ff', r:1.2},
   ];
 
-  // Tidal stream — arc of stars pulled from galaxy toward BH
-  // Pre-computed positions along a bezier arc from galaxy to BH
-  const TIDAL_STREAM = Array.from({length:55}, (_, i) => ({
-    t: i/54,            // 0=galaxy end, 1=BH end
+  // Tidal stream stars
+  const TIDAL_STREAM = Array.from({length:55}, (_,i) => ({
+    t: i/54,
     r: 0.5 + Math.random()*1.2,
     a: 0.05 + Math.random()*0.20,
     scatter: (Math.random()-0.5)*0.028,
-    scatterY: (Math.random()-0.5)*0.015,
     twinkle: Math.random()*Math.PI*2,
     col: Math.random()<0.4 ? '#b0d0ff' : Math.random()<0.5 ? '#ffd2a1' : '#ffffff',
   }));
 
-  let t=0, running=true;
+  // Ship
+  const ship = {ang: Math.PI*0.72};
+
+  // Cubic bezier helper
+  function bez(t, p0, p1, p2, p3){
+    const u=1-t;
+    return u*u*u*p0 + 3*u*u*t*p1 + 3*u*t*t*p2 + t*t*t*p3;
+  }
+
+  let frameT = 0, running = true;
 
   function drawNebula(){
-    if(!running) return;
-    t += 0.5;
-    const W=cvs.width, H=cvs.height;
-    const SX=W*0.5, SY=H*0.46;
-    const BH_R=Math.min(W,H)*0.062;
+    if(!running){ return; }
+    requestAnimationFrame(drawNebula);
+    frameT += 0.5;
 
-    // Pre-compute TDE position — used by both the TDE drawing and ship orbit
-    const _gx = galaxy._gCX || galaxy.x*W;
-    const _gy = galaxy._gCY || galaxy.y*H;
-    const _cpx = W*0.36, _cpy = H*0.32;
-    const _tt  = 0.38;
-    const tdeBX = (1-_tt)*(1-_tt)*_gx + 2*(1-_tt)*_tt*_cpx + _tt*_tt*SX;
-    const tdeBY = (1-_tt)*(1-_tt)*_gy + 2*(1-_tt)*_tt*_cpy + _tt*_tt*SY;
+    const W = cvs.width, H = cvs.height;
+    const SX = W*0.5, SY = H*0.46;
+    const BH_R = Math.min(W,H)*0.062;
+
+    // TDE bezier control points (S-curve)
+    const gx  = galaxy._gCX || galaxy.x*W;
+    const gy  = galaxy._gCY || galaxy.y*H;
+    const cp1x = W*0.12, cp1y = H*0.08;
+    const cp2x = W*0.55, cp2y = H*0.12;
+    const TT   = 0.42;
+    const tdeX = bez(TT, gx, cp1x, cp2x, SX);
+    const tdeY = bez(TT, gy, cp1y, cp2y, SY);
 
     ctx.clearRect(0,0,W,H);
     ctx.fillStyle='#01020a'; ctx.fillRect(0,0,W,H);
 
-    // ── GALAXY ───────────────────────────────────────────────
+    // ── GALAXY ──────────────────────────────────────────────
     if(!galaxy._stars){
-      const GW=Math.min(W,H)*0.17;
-      const gCX=galaxy.x*W, gCY=galaxy.y*H;
-      const stars=[];
+      const GW  = Math.min(W,H)*0.17;
+      const gCX = galaxy.x*W, gCY = galaxy.y*H;
+      const arr = [];
       for(let i=0;i<500;i++){
         const roll=Math.random();
         let sx,sy,bright,col;
         if(roll<0.18){
-          const r=Math.pow(Math.random(),1.6)*GW*0.20;
-          const a=Math.random()*Math.PI*2;
-          sx=Math.cos(a)*r; sy=Math.sin(a)*r*0.36;
+          const r2=Math.pow(Math.random(),1.6)*GW*0.20;
+          const a2=Math.random()*Math.PI*2;
+          sx=Math.cos(a2)*r2; sy=Math.sin(a2)*r2*0.36;
           bright=0.4+Math.random()*0.5; col=Math.random()<0.6?'#ffe8b0':'#ffd060';
         } else if(roll<0.65){
           const arm=Math.random()<0.5?0:Math.PI;
-          const tt=0.2+Math.random()*1.5;
-          const aa=tt*0.82+arm;
-          const rr=GW*(0.12+tt*0.35);
+          const tt2=0.2+Math.random()*1.5;
+          const aa=tt2*0.82+arm;
+          const rr2=GW*(0.12+tt2*0.35);
           const sc=(Math.random()-0.5)*GW*0.08;
-          sx=Math.cos(aa)*rr+Math.cos(aa+Math.PI/2)*sc;
-          sy=(Math.sin(aa)*rr+Math.sin(aa+Math.PI/2)*sc)*0.36;
+          sx=Math.cos(aa)*rr2+Math.cos(aa+Math.PI/2)*sc;
+          sy=(Math.sin(aa)*rr2+Math.sin(aa+Math.PI/2)*sc)*0.36;
           bright=0.12+Math.random()*0.50;
           col=Math.random()<0.5?'#b0d0ff':'#90c0ff';
         } else {
-          const r=GW*(0.08+Math.random()*0.80);
-          const a=Math.random()*Math.PI*2;
-          sx=Math.cos(a)*r; sy=Math.sin(a)*r*0.36;
+          const r2=GW*(0.08+Math.random()*0.80);
+          const a2=Math.random()*Math.PI*2;
+          sx=Math.cos(a2)*r2; sy=Math.sin(a2)*r2*0.36;
           bright=0.05+Math.random()*0.18; col='#d0d8f0';
         }
-        stars.push({sx,sy,bright,col,r:0.35+Math.random()*1.0,tw:Math.random()*Math.PI*2});
+        arr.push({sx,sy,bright,col,r:0.35+Math.random()*1.0,tw:Math.random()*Math.PI*2});
       }
-      galaxy._stars=stars; galaxy._gCX=gCX; galaxy._gCY=gCY; galaxy._GW=GW;
+
+      // Pre-compute arm blob positions for the milky wash layer
+      // Two spiral arms, sampled densely along the logarithmic spiral
+      const armBlobs = [];
+      for(let arm=0;arm<2;arm++){
+        const armOff = arm*Math.PI;
+        for(let step=0;step<60;step++){
+          const tt3 = 0.1 + (step/59)*1.55;
+          const aa  = tt3*0.82 + armOff;
+          const rr3 = GW*(0.10+tt3*0.36);
+          armBlobs.push({
+            sx: Math.cos(aa)*rr3,
+            sy: Math.sin(aa)*rr3*0.36,
+            // Width of milky blob — wider in middle of arm
+            w:  GW*(0.06 + 0.04*Math.sin(Math.PI*tt3/1.65)),
+          });
+        }
+      }
+      galaxy._stars=arr; galaxy._armBlobs=armBlobs;
+      galaxy._gCX=gCX; galaxy._gCY=gCY; galaxy._GW=GW;
     }
+
     const cosA=Math.cos(galaxy.ang), sinA=Math.sin(galaxy.ang);
-    // Halo
-    const gh=ctx.createRadialGradient(galaxy._gCX,galaxy._gCY,0,galaxy._gCX,galaxy._gCY,galaxy._GW*1.2);
-    gh.addColorStop(0,'rgba(190,170,130,0.09)'); gh.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.beginPath(); ctx.ellipse(galaxy._gCX,galaxy._gCY,galaxy._GW*1.2,galaxy._GW*0.45,galaxy.ang,0,Math.PI*2);
+    const gCX=galaxy._gCX, gCY=galaxy._gCY, GW=galaxy._GW;
+
+    // ── OUTER HALO ───────────────────────────────────────────
+    const gh=ctx.createRadialGradient(gCX,gCY,0,gCX,gCY,GW*1.3);
+    gh.addColorStop(0,'rgba(200,180,140,0.10)');
+    gh.addColorStop(0.5,'rgba(160,150,200,0.05)');
+    gh.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.ellipse(gCX,gCY,GW*1.3,GW*0.48,galaxy.ang,0,Math.PI*2);
     ctx.fillStyle=gh; ctx.fill();
-    // Stars
-    galaxy._stars.forEach(s=>{
-      const rx=cosA*s.sx-sinA*s.sy+galaxy._gCX;
-      const ry=sinA*s.sx+cosA*s.sy+galaxy._gCY;
-      const al=s.bright*(0.72+0.28*Math.sin(t*0.004+s.tw));
-      const rr=parseInt(s.col.slice(1,3),16),gg2=parseInt(s.col.slice(3,5),16),bb2=parseInt(s.col.slice(5,7),16);
-      ctx.fillStyle=`rgba(${rr},${gg2},${bb2},${al.toFixed(2)})`;
+
+    // ── MILKY ARM WASH — soft blobs along spiral arms ────────
+    // This is the "milky way" effect — overlapping low-opacity
+    // radial gradients that create a smooth luminous haze
+    galaxy._armBlobs.forEach(function(b){
+      const rx = cosA*b.sx - sinA*b.sy + gCX;
+      const ry = sinA*b.sx + cosA*b.sy + gCY;
+      // Wide outer glow (cool blue-white — young arm stars)
+      const bg1=ctx.createRadialGradient(rx,ry,0,rx,ry,b.w*2.2);
+      bg1.addColorStop(0,  'rgba(180,210,255,0.055)');
+      bg1.addColorStop(0.4,'rgba(160,195,245,0.030)');
+      bg1.addColorStop(1,  'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(rx,ry,b.w*2.2,0,Math.PI*2);
+      ctx.fillStyle=bg1; ctx.fill();
+      // Tighter inner glow (warmer — denser stellar population)
+      const bg2=ctx.createRadialGradient(rx,ry,0,rx,ry,b.w*0.9);
+      bg2.addColorStop(0,  'rgba(220,215,190,0.055)');
+      bg2.addColorStop(1,  'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(rx,ry,b.w*0.9,0,Math.PI*2);
+      ctx.fillStyle=bg2; ctx.fill();
+    });
+
+    // ── DISC WASH — diffuse glow across the whole disc ───────
+    // Gives the flattened disc its overall milky cohesion
+    const dw=ctx.createRadialGradient(gCX,gCY,0,gCX,gCY,GW*0.85);
+    dw.addColorStop(0,  'rgba(230,220,180,0.10)');
+    dw.addColorStop(0.3,'rgba(200,195,210,0.06)');
+    dw.addColorStop(0.7,'rgba(170,175,220,0.03)');
+    dw.addColorStop(1,  'rgba(0,0,0,0)');
+    ctx.save();
+    ctx.scale(1, 0.38);
+    ctx.beginPath(); ctx.arc(gCX, gCY/0.38, GW*0.85, 0, Math.PI*2);
+    ctx.fillStyle=dw; ctx.fill();
+    ctx.restore();
+
+    // ── INDIVIDUAL STARS — sparkle on top of the milky wash ──
+    galaxy._stars.forEach(function(s){
+      const rx=cosA*s.sx-sinA*s.sy+gCX;
+      const ry=sinA*s.sx+cosA*s.sy+gCY;
+      const al=s.bright*(0.72+0.28*Math.sin(frameT*0.004+s.tw));
+      const rv=parseInt(s.col.slice(1,3),16);
+      const gv=parseInt(s.col.slice(3,5),16);
+      const bv=parseInt(s.col.slice(5,7),16);
+      ctx.fillStyle='rgba('+rv+','+gv+','+bv+','+al.toFixed(2)+')';
       ctx.beginPath(); ctx.arc(rx,ry,s.r,0,Math.PI*2); ctx.fill();
     });
-    // Core
-    const gc=ctx.createRadialGradient(galaxy._gCX,galaxy._gCY,0,galaxy._gCX,galaxy._gCY,galaxy._GW*0.085);
-    gc.addColorStop(0,'rgba(255,252,215,0.92)'); gc.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.beginPath(); ctx.arc(galaxy._gCX,galaxy._gCY,galaxy._GW*0.085,0,Math.PI*2);
+
+    // ── BLAZING CORE ─────────────────────────────────────────
+    const gc=ctx.createRadialGradient(gCX,gCY,0,gCX,gCY,GW*0.10);
+    gc.addColorStop(0,'rgba(255,252,215,0.95)');
+    gc.addColorStop(0.4,'rgba(255,235,160,0.50)');
+    gc.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(gCX,gCY,GW*0.10,0,Math.PI*2);
     ctx.fillStyle=gc; ctx.fill();
 
-    // ── NEBULA CLOUDS ────────────────────────────────────────
-    clouds.forEach(c=>{
+    // ── NEBULA CLOUDS ───────────────────────────────────────
+    clouds.forEach(function(c){
       c.x+=c.drift.x; c.y+=c.drift.y;
       c.x+=(SX/W-c.x)*0.000010; c.y+=(SY/H-c.y)*0.000010;
-      const cx=c.x*W,cy=c.y*H,rx=c.rx*W,ry=c.ry*H;
+      const cx=c.x*W, cy=c.y*H, rx=c.rx*W, ry=c.ry*H;
       ctx.save(); ctx.scale(rx/Math.max(ry,1),1);
-      const scale=rx/Math.max(ry,1);
-      const cg=ctx.createRadialGradient(cx/scale,cy,0,cx/scale,cy,ry);
+      const sc2=rx/Math.max(ry,1);
+      const cg=ctx.createRadialGradient(cx/sc2,cy,0,cx/sc2,cy,ry);
       cg.addColorStop(0,c.col);
       cg.addColorStop(1,c.col.replace(/[\d.]+\)$/,'0)'));
       ctx.fillStyle=cg; ctx.beginPath();
-      ctx.ellipse(cx/scale,cy,ry,ry,0,0,Math.PI*2); ctx.fill(); ctx.restore();
+      ctx.ellipse(cx/sc2,cy,ry,ry,0,0,Math.PI*2); ctx.fill(); ctx.restore();
     });
 
-    // ── BACKGROUND STARS + TRAILS ────────────────────────────
-    bgStars.forEach(s=>{
+    // ── BACKGROUND STARS + TRAILS ───────────────────────────
+    bgStars.forEach(function(s){
       let sx=s.x*W, sy=s.y*H;
-      const dxS=sx-SX,dyS=sy-SY,dS=Math.hypot(dxS,dyS);
+      const dxS=sx-SX, dyS=sy-SY, dS=Math.hypot(dxS,dyS);
       if(dS<BH_R*7&&dS>0.1){
         const lens=(BH_R*3)/(dS*dS/BH_R+dS);
         sx+=(dxS/dS)*lens; sy+=(dyS/dS)*lens;
       }
-      const al=s.a*(0.7+0.3*Math.sin(t*s.spd+s.phase));
+      const al=s.a*(0.7+0.3*Math.sin(frameT*s.spd+s.phase));
       if(s.trailLen>0){
         const ta=Math.atan2(SY-sy,SX-sx);
-        const tx=sx+Math.cos(ta)*s.trailLen*W, ty=sy+Math.sin(ta)*s.trailLen*H;
-        const tg=ctx.createLinearGradient(sx,sy,tx,ty);
-        tg.addColorStop(0,`rgba(255,255,255,${(al*0.9).toFixed(2)})`);
+        const tx2=sx+Math.cos(ta)*s.trailLen*W, ty2=sy+Math.sin(ta)*s.trailLen*H;
+        const tg=ctx.createLinearGradient(sx,sy,tx2,ty2);
+        tg.addColorStop(0,'rgba(255,255,255,'+((al*0.9).toFixed(2))+')');
         tg.addColorStop(1,'rgba(255,255,255,0)');
-        ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(tx,ty);
+        ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(tx2,ty2);
         ctx.strokeStyle=tg; ctx.lineWidth=1.4; ctx.stroke();
       }
-      ctx.fillStyle=`rgba(255,255,255,${al.toFixed(2)})`;
+      ctx.fillStyle='rgba(255,255,255,'+al.toFixed(2)+')';
       ctx.beginPath(); ctx.arc(sx,sy,s.r,0,Math.PI*2); ctx.fill();
     });
 
-    // ── TIDAL DISRUPTION EVENT ───────────────────────────────
-    {
-      const gx=_gx, gy=_gy, cpx=_cpx, cpy=_cpy;
+    // ── TDE NEBULA CLOUDS ───────────────────────────────────
+    var tdeB1 = 0.5+0.5*Math.sin(frameT*0.018);
+    var tdeB2 = 0.5+0.5*Math.sin(frameT*0.025+1.4);
+    var tdeSize = Math.min(W,H)*0.09;
+    var tc1=ctx.createRadialGradient(tdeX-tdeSize*0.08,tdeY+tdeSize*0.05,0,tdeX-tdeSize*0.08,tdeY+tdeSize*0.05,tdeSize*(1.0+tdeB1*0.15));
+    tc1.addColorStop(0,'rgba(255,160,40,'+(0.18+tdeB1*0.08).toFixed(2)+')');
+    tc1.addColorStop(0.35,'rgba(220,80,20,'+(0.10+tdeB1*0.04).toFixed(2)+')');
+    tc1.addColorStop(0.70,'rgba(140,20,80,'+(0.05+tdeB1*0.02).toFixed(2)+')');
+    tc1.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(tdeX-tdeSize*0.08,tdeY+tdeSize*0.05,tdeSize*(1.0+tdeB1*0.15),0,Math.PI*2);
+    ctx.fillStyle=tc1; ctx.fill();
+    var tc2=ctx.createRadialGradient(tdeX+tdeSize*0.12,tdeY-tdeSize*0.08,0,tdeX+tdeSize*0.12,tdeY-tdeSize*0.08,tdeSize*(0.75+tdeB2*0.12));
+    tc2.addColorStop(0,'rgba(160,80,255,'+(0.14+tdeB2*0.07).toFixed(2)+')');
+    tc2.addColorStop(0.4,'rgba(80,40,200,'+(0.08+tdeB2*0.03).toFixed(2)+')');
+    tc2.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(tdeX+tdeSize*0.12,tdeY-tdeSize*0.08,tdeSize*(0.75+tdeB2*0.12),0,Math.PI*2);
+    ctx.fillStyle=tc2; ctx.fill();
+    var ejectAng=Math.atan2(tdeY-SY,tdeX-SX);
+    var ejectX=tdeX+Math.cos(ejectAng)*tdeSize*0.55, ejectY=tdeY+Math.sin(ejectAng)*tdeSize*0.55;
+    var tc3=ctx.createRadialGradient(ejectX,ejectY,0,ejectX,ejectY,tdeSize*0.65);
+    tc3.addColorStop(0,'rgba(255,220,120,'+(0.12+tdeB1*0.06).toFixed(2)+')');
+    tc3.addColorStop(0.5,'rgba(200,100,40,'+(0.06+tdeB1*0.03).toFixed(2)+')');
+    tc3.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(ejectX,ejectY,tdeSize*0.65,0,Math.PI*2);
+    ctx.fillStyle=tc3; ctx.fill();
 
-      // ── TDE NEBULA GAS CLOUDS — emission clouds around disruption ──
-      // Hot ionised gas expanding outward from the shredded star.
-      // Multiple overlapping radial gradients in TDE colours.
-      const tdeSize = Math.min(W,H)*0.09;
-      const tdeBreath = 0.5+0.5*Math.sin(t*0.018);
-      const tdeBreath2 = 0.5+0.5*Math.sin(t*0.025+1.4);
-      // Main amber-orange cloud
-      const tdeCloud1 = ctx.createRadialGradient(
-        tdeBX-tdeSize*0.08, tdeBY+tdeSize*0.05, 0,
-        tdeBX-tdeSize*0.08, tdeBY+tdeSize*0.05, tdeSize*(1.0+tdeBreath*0.15));
-      tdeCloud1.addColorStop(0,   `rgba(255,160,40,${(0.18+tdeBreath*0.08).toFixed(2)})`);
-      tdeCloud1.addColorStop(0.35,`rgba(220,80,20,${(0.10+tdeBreath*0.04).toFixed(2)})`);
-      tdeCloud1.addColorStop(0.70,`rgba(140,20,80,${(0.05+tdeBreath*0.02).toFixed(2)})`);
-      tdeCloud1.addColorStop(1,   'rgba(0,0,0,0)');
-      ctx.beginPath(); ctx.arc(tdeBX-tdeSize*0.08,tdeBY+tdeSize*0.05,tdeSize*(1.0+tdeBreath*0.15),0,Math.PI*2);
-      ctx.fillStyle=tdeCloud1; ctx.fill();
+    // ── TDE STREAM — soft nebula brush (no hard lines) ──────────
+    // Multiple wide low-opacity radial blobs along the bezier curve
+    // create a hazy volumetric look like a real tidal stream or nebula
+    var BLOBS = 120;
+    for(var i=0;i<BLOBS;i++){
+      var tt1 = i/BLOBS;
+      var bxC = bez(tt1,gx,cp1x,cp2x,SX);
+      var byC = bez(tt1,gy,cp1y,cp2y,SY);
+      var heat = Math.pow(tt1,1.2);
+      var pulse = 0.82+0.18*Math.sin(frameT*0.03+tt1*10);
+      // Stream width — wider in middle, narrower at ends
+      var streamW = Math.min(W,H)*(0.015 + heat*0.028 + 0.012*Math.sin(Math.PI*tt1));
+      // Colour: white-warm near galaxy, blue-white hot near BH
+      var rr2 = Math.floor(255*(1-heat*0.35));
+      var gg2 = Math.floor(190+heat*65);
+      // Two blob layers per point: outer haze + inner brighter core
+      var outerAlpha = (0.025+heat*0.055)*pulse;
+      var innerAlpha = (0.040+heat*0.090)*pulse;
+      var outer = ctx.createRadialGradient(bxC,byC,0,bxC,byC,streamW*1.8);
+      outer.addColorStop(0,'rgba('+rr2+','+gg2+',255,'+outerAlpha.toFixed(3)+')');
+      outer.addColorStop(0.5,'rgba('+rr2+','+gg2+',255,'+(outerAlpha*0.4).toFixed(3)+')');
+      outer.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(bxC,byC,streamW*1.8,0,Math.PI*2);
+      ctx.fillStyle=outer; ctx.fill();
+      var inner = ctx.createRadialGradient(bxC,byC,0,bxC,byC,streamW*0.7);
+      inner.addColorStop(0,'rgba('+rr2+','+gg2+',255,'+innerAlpha.toFixed(3)+')');
+      inner.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(bxC,byC,streamW*0.7,0,Math.PI*2);
+      ctx.fillStyle=inner; ctx.fill();
+    }
+    // ── TDE STREAM STARS ────────────────────────────────────
+    TIDAL_STREAM.forEach(function(s){
+      var tt=s.t;
+      var bx=bez(tt,gx,cp1x,cp2x,SX), by=bez(tt,gy,cp1y,cp2y,SY);
+      var u=1-tt;
+      var tgX=3*(u*u*(cp1x-gx)+2*u*tt*(cp2x-cp1x)+tt*tt*(SX-cp2x));
+      var tgY=3*(u*u*(cp1y-gy)+2*u*tt*(cp2y-cp1y)+tt*tt*(SY-cp2y));
+      var perpA=Math.atan2(tgY,tgX)+Math.PI/2;
+      var sw=1-tt*0.75;
+      var px2=bx+Math.cos(perpA)*s.scatter*W*sw;
+      var py2=by+Math.sin(perpA)*s.scatter*H*sw;
+      var heat2=Math.pow(Math.max(0,tt-0.3)/0.7,1.2);
+      var al2=0.25+tt*0.55+(heat2*0.55)*(0.7+0.3*Math.sin(frameT*0.005+s.twinkle));
+      var rad=s.r*(0.7+tt*0.9)*(1+heat2*0.8);
+      ctx.fillStyle='rgba('+Math.floor(255*(1-heat2*0.3))+','+Math.floor(Math.min(255,210+heat2*45))+',255,'+Math.min(0.92,al2).toFixed(2)+')';
+      ctx.beginPath(); ctx.arc(px2,py2,rad,0,Math.PI*2); ctx.fill();
+    });
 
-      // Secondary blue-violet cloud (offset) — ionised gas at different temperature
-      const tdeCloud2 = ctx.createRadialGradient(
-        tdeBX+tdeSize*0.12, tdeBY-tdeSize*0.08, 0,
-        tdeBX+tdeSize*0.12, tdeBY-tdeSize*0.08, tdeSize*(0.75+tdeBreath2*0.12));
-      tdeCloud2.addColorStop(0,   `rgba(160,80,255,${(0.14+tdeBreath2*0.07).toFixed(2)})`);
-      tdeCloud2.addColorStop(0.4, `rgba(80,40,200,${(0.08+tdeBreath2*0.03).toFixed(2)})`);
-      tdeCloud2.addColorStop(1,   'rgba(0,0,0,0)');
-      ctx.beginPath(); ctx.arc(tdeBX+tdeSize*0.12,tdeBY-tdeSize*0.08,tdeSize*(0.75+tdeBreath2*0.12),0,Math.PI*2);
-      ctx.fillStyle=tdeCloud2; ctx.fill();
-
-      // Ejecta cloud — the half of the star flung outward (away from BH)
-      const ejectaAng = Math.atan2(tdeBY-SY, tdeBX-SX); // away from BH
-      const ejectaX = tdeBX+Math.cos(ejectaAng)*tdeSize*0.55;
-      const ejectaY = tdeBY+Math.sin(ejectaAng)*tdeSize*0.55;
-      const tdeCloud3 = ctx.createRadialGradient(ejectaX,ejectaY,0,ejectaX,ejectaY,tdeSize*0.65);
-      tdeCloud3.addColorStop(0,   `rgba(255,220,120,${(0.12+tdeBreath*0.06).toFixed(2)})`);
-      tdeCloud3.addColorStop(0.5, `rgba(200,100,40,${(0.06+tdeBreath*0.03).toFixed(2)})`);
-      tdeCloud3.addColorStop(1,   'rgba(0,0,0,0)');
-      ctx.beginPath(); ctx.arc(ejectaX,ejectaY,tdeSize*0.65,0,Math.PI*2);
-      ctx.fillStyle=tdeCloud3; ctx.fill();
-
-      // ── STREAM SPINE ───────────────────────────────────────
-      const spineSteps=80;
-      for(let i=0;i<spineSteps-1;i++){
-        const tt1=i/spineSteps, tt2=(i+1)/spineSteps;
-        const bx1=(1-tt1)*(1-tt1)*gx+2*(1-tt1)*tt1*cpx+tt1*tt1*SX;
-        const by1=(1-tt1)*(1-tt1)*gy+2*(1-tt1)*tt1*cpy+tt1*tt1*SY;
-        const bx2=(1-tt2)*(1-tt2)*gx+2*(1-tt2)*tt2*cpx+tt2*tt2*SX;
-        const by2=(1-tt2)*(1-tt2)*gy+2*(1-tt2)*tt2*cpy+tt2*tt2*SY;
-        const heat=Math.pow(tt1,1.4);
-        const pulse=0.85+0.15*Math.sin(t*0.04+tt1*8);
-        const alpha=(0.12+heat*0.55)*pulse;
-        const width=0.8+heat*3.2;
-        const rr2=Math.floor(255*(1-heat*0.4));
-        const gg2=Math.floor(200+heat*55);
-        ctx.beginPath(); ctx.moveTo(bx1,by1); ctx.lineTo(bx2,by2);
-        ctx.strokeStyle=`rgba(${rr2},${gg2},255,${alpha.toFixed(2)})`;
-        ctx.lineWidth=width; ctx.stroke();
-      }
-
-      // ── STREAM STARS ───────────────────────────────────────
-      TIDAL_STREAM.forEach(s=>{
-        const tt=s.t;
-        const bx=(1-tt)*(1-tt)*gx+2*(1-tt)*tt*cpx+tt*tt*SX;
-        const by=(1-tt)*(1-tt)*gy+2*(1-tt)*tt*cpy+tt*tt*SY;
-        const tangX=2*(1-tt)*(cpx-gx)+2*tt*(SX-cpx);
-        const tangY=2*(1-tt)*(cpy-gy)+2*tt*(SY-cpy);
-        const tangAng=Math.atan2(tangY,tangX)+Math.PI/2;
-        const scatterWidth=(1-tt*0.75);
-        const px2=bx+Math.cos(tangAng)*s.scatter*W*scatterWidth;
-        const py2=by+Math.sin(tangAng)*s.scatter*H*scatterWidth;
-        const heat=Math.pow(Math.max(0,tt-0.3)/0.7,1.2);
-        const alpha=0.25+tt*0.55+(heat*0.55)*(0.7+0.3*Math.sin(t*0.005+s.twinkle));
-        const rad=s.r*(0.7+tt*0.9)*(1+heat*0.8);
-        const rr3=Math.floor(255*(1-heat*0.3));
-        const gg3=Math.floor(Math.min(255,210+heat*45));
-        ctx.fillStyle=`rgba(${rr3},${gg3},255,${Math.min(0.92,alpha).toFixed(2)})`;
-        ctx.beginPath(); ctx.arc(px2,py2,rad,0,Math.PI*2); ctx.fill();
-        if(alpha>0.5&&rad>1.2){
-          const sg=ctx.createRadialGradient(px2,py2,0,px2,py2,rad*4);
-          sg.addColorStop(0,`rgba(${rr3},${gg3},255,${(alpha*0.25).toFixed(2)})`);
-          sg.addColorStop(1,'rgba(0,0,0,0)');
-          ctx.beginPath(); ctx.arc(px2,py2,rad*4,0,Math.PI*2);
-          ctx.fillStyle=sg; ctx.fill();
-        }
-      });
-
-      // ── DISRUPTION FLASH ───────────────────────────────────
-      const tdePulse=0.5+0.5*Math.sin(t*0.022);
-      const tdeAlpha=0.55+tdePulse*0.35;
-      const tdeG=ctx.createRadialGradient(tdeBX,tdeBY,0,tdeBX,tdeBY,Math.min(W,H)*0.035);
-      tdeG.addColorStop(0,`rgba(255,240,180,${tdeAlpha.toFixed(2)})`);
-      tdeG.addColorStop(0.3,`rgba(255,180,60,${(tdeAlpha*0.6).toFixed(2)})`);
-      tdeG.addColorStop(0.7,`rgba(180,100,255,${(tdeAlpha*0.2).toFixed(2)})`);
-      tdeG.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.beginPath(); ctx.arc(tdeBX,tdeBY,Math.min(W,H)*0.035,0,Math.PI*2);
-      ctx.fillStyle=tdeG; ctx.fill();
-      const tdeCore=ctx.createRadialGradient(tdeBX,tdeBY,0,tdeBX,tdeBY,Math.min(W,H)*0.008);
-      tdeCore.addColorStop(0,`rgba(255,255,255,${(tdeAlpha*0.95).toFixed(2)})`);
-      tdeCore.addColorStop(0.5,`rgba(255,230,150,${(tdeAlpha*0.6).toFixed(2)})`);
-      tdeCore.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.beginPath(); ctx.arc(tdeBX,tdeBY,Math.min(W,H)*0.008,0,Math.PI*2);
-      ctx.fillStyle=tdeCore; ctx.fill();
-      for(let sp=0;sp<4;sp++){
-        const spAng=(sp/4)*Math.PI;
-        const spLen=Math.min(W,H)*0.028*(0.8+tdePulse*0.4);
-        const spG=ctx.createLinearGradient(tdeBX,tdeBY,
-          tdeBX+Math.cos(spAng)*spLen,tdeBY+Math.sin(spAng)*spLen);
-        spG.addColorStop(0,`rgba(255,240,180,${(tdeAlpha*0.7).toFixed(2)})`);
-        spG.addColorStop(1,'rgba(255,240,180,0)');
-        ctx.beginPath(); ctx.moveTo(tdeBX,tdeBY);
-        ctx.lineTo(tdeBX+Math.cos(spAng)*spLen,tdeBY+Math.sin(spAng)*spLen);
-        ctx.strokeStyle=spG; ctx.lineWidth=1.5; ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(tdeBX,tdeBY);
-        ctx.lineTo(tdeBX-Math.cos(spAng)*spLen*0.6,tdeBY-Math.sin(spAng)*spLen*0.6);
-        ctx.strokeStyle=spG; ctx.lineWidth=0.8; ctx.stroke();
-      }
+    // ── TDE DISRUPTION FLASH ────────────────────────────────
+    var tdePulse=0.5+0.5*Math.sin(frameT*0.022);
+    var tdeAlpha=0.55+tdePulse*0.35;
+    var tdeG=ctx.createRadialGradient(tdeX,tdeY,0,tdeX,tdeY,Math.min(W,H)*0.035);
+    tdeG.addColorStop(0,'rgba(255,240,180,'+tdeAlpha.toFixed(2)+')');
+    tdeG.addColorStop(0.3,'rgba(255,180,60,'+(tdeAlpha*0.6).toFixed(2)+')');
+    tdeG.addColorStop(0.7,'rgba(180,100,255,'+(tdeAlpha*0.2).toFixed(2)+')');
+    tdeG.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(tdeX,tdeY,Math.min(W,H)*0.035,0,Math.PI*2);
+    ctx.fillStyle=tdeG; ctx.fill();
+    var tdeCore=ctx.createRadialGradient(tdeX,tdeY,0,tdeX,tdeY,Math.min(W,H)*0.008);
+    tdeCore.addColorStop(0,'rgba(255,255,255,'+(tdeAlpha*0.95).toFixed(2)+')');
+    tdeCore.addColorStop(0.5,'rgba(255,230,150,'+(tdeAlpha*0.6).toFixed(2)+')');
+    tdeCore.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(tdeX,tdeY,Math.min(W,H)*0.008,0,Math.PI*2);
+    ctx.fillStyle=tdeCore; ctx.fill();
+    for(var sp=0;sp<4;sp++){
+      var spA=(sp/4)*Math.PI, spL=Math.min(W,H)*0.028*(0.8+tdePulse*0.4);
+      var spG=ctx.createLinearGradient(tdeX,tdeY,tdeX+Math.cos(spA)*spL,tdeY+Math.sin(spA)*spL);
+      spG.addColorStop(0,'rgba(255,240,180,'+(tdeAlpha*0.7).toFixed(2)+')');
+      spG.addColorStop(1,'rgba(255,240,180,0)');
+      ctx.beginPath(); ctx.moveTo(tdeX,tdeY); ctx.lineTo(tdeX+Math.cos(spA)*spL,tdeY+Math.sin(spA)*spL);
+      ctx.strokeStyle=spG; ctx.lineWidth=1.5; ctx.stroke();
     }
 
-    // ── PHOTON RING ──────────────────────────────────────────
-    const pR=BH_R*2.05;
-    const ringW=BH_R*0.18;
-    const segs=180;
-    const dopOff=t*0.005;
-
-    // Wide soft outer glow
-    for(let i=0;i<segs;i++){
-      const a1=(i/segs)*Math.PI*2,a2=((i+1.5)/segs)*Math.PI*2;
-      const mid=(a1+a2)*0.5+dopOff;
-      const dop=0.5+0.5*Math.cos(mid-Math.PI);
+    // ── PHOTON RING ─────────────────────────────────────────
+    var pR=BH_R*2.05, ringW=BH_R*0.18, segs=180, dopOff=frameT*0.005;
+    for(var i=0;i<segs;i++){
+      var a1=(i/segs)*Math.PI*2, a2=((i+1.5)/segs)*Math.PI*2;
+      var mid=(a1+a2)*0.5+dopOff;
+      var dop=0.5+0.5*Math.cos(mid-Math.PI);
       ctx.beginPath(); ctx.arc(SX,SY,pR*1.2,a1,a2);
-      ctx.strokeStyle=`rgba(255,${Math.floor(80+dop*120)},10,${(0.04+dop*0.10).toFixed(2)})`;
+      ctx.strokeStyle='rgba(255,'+Math.floor(80+dop*120)+',10,'+(0.04+dop*0.10).toFixed(2)+')';
       ctx.lineWidth=ringW*2.5; ctx.stroke();
     }
-    // Main ring
-    for(let i=0;i<segs;i++){
-      const a1=(i/segs)*Math.PI*2,a2=((i+1.5)/segs)*Math.PI*2;
-      const mid=(a1+a2)*0.5+dopOff;
-      const dop=0.5+0.5*Math.cos(mid-Math.PI);
-      const gg=Math.floor(dop>0.5?200+dop*55:80+dop*240);
-      const bb=Math.floor(dop>0.7?60+dop*80:0);
+    for(var i=0;i<segs;i++){
+      var a1=(i/segs)*Math.PI*2, a2=((i+1.5)/segs)*Math.PI*2;
+      var mid=(a1+a2)*0.5+dopOff;
+      var dop=0.5+0.5*Math.cos(mid-Math.PI);
+      var gg=Math.floor(dop>0.5?200+dop*55:80+dop*240);
+      var bb=Math.floor(dop>0.7?60+dop*80:0);
       ctx.beginPath(); ctx.arc(SX,SY,pR,a1,a2);
-      ctx.strokeStyle=`rgba(255,${gg},${bb},${(0.18+dop*0.72).toFixed(2)})`;
+      ctx.strokeStyle='rgba(255,'+gg+','+bb+','+(0.18+dop*0.72).toFixed(2)+')';
       ctx.lineWidth=ringW*(0.5+dop*1.5); ctx.stroke();
     }
-    // Inner crisp edge — approaching side only
-    for(let i=0;i<segs;i++){
-      const a1=(i/segs)*Math.PI*2,a2=((i+1.5)/segs)*Math.PI*2;
-      const mid=(a1+a2)*0.5+dopOff;
-      const dop=0.5+0.5*Math.cos(mid-Math.PI);
+    for(var i=0;i<segs;i++){
+      var a1=(i/segs)*Math.PI*2, a2=((i+1.5)/segs)*Math.PI*2;
+      var mid=(a1+a2)*0.5+dopOff;
+      var dop=0.5+0.5*Math.cos(mid-Math.PI);
       if(dop<0.5) continue;
       ctx.beginPath(); ctx.arc(SX,SY,pR*0.91,a1,a2);
-      ctx.strokeStyle=`rgba(255,255,200,${((dop-0.5)*0.6).toFixed(2)})`;
+      ctx.strokeStyle='rgba(255,255,200,'+((dop-0.5)*0.6).toFixed(2)+')';
       ctx.lineWidth=ringW*0.32; ctx.stroke();
     }
-
-    // ── LENS FLARE ───────────────────────────────────────────
-    const fAng=Math.PI+dopOff;
-    const fX=SX+Math.cos(fAng)*pR*0.97, fY=SY+Math.sin(fAng)*pR*0.97;
-    const fA=0.13+0.04*Math.sin(t*0.018);
-    for(let sp=0;sp<6;sp++){
-      const sa=(sp/6)*Math.PI, sl=pR*(0.65+sp%2*0.45);
-      const fg=ctx.createLinearGradient(fX,fY,fX+Math.cos(sa)*sl,fY+Math.sin(sa)*sl);
-      fg.addColorStop(0,`rgba(255,220,140,${fA})`); fg.addColorStop(1,'rgba(255,220,140,0)');
+    // Outer glow
+    var pg=ctx.createRadialGradient(SX,SY,pR*0.9,SX,SY,pR*2.2);
+    pg.addColorStop(0,'rgba(255,200,80,0.0)');
+    pg.addColorStop(0.3,'rgba(255,160,30,0.08)');
+    pg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(SX,SY,pR*2.2,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+    // Lens flare
+    var fAng=Math.PI+dopOff;
+    var fX=SX+Math.cos(fAng)*pR*0.97, fY=SY+Math.sin(fAng)*pR*0.97;
+    var fA=0.13+0.04*Math.sin(frameT*0.018);
+    for(var sp=0;sp<6;sp++){
+      var sa=(sp/6)*Math.PI, sl=pR*(0.65+sp%2*0.45);
+      var fg=ctx.createLinearGradient(fX,fY,fX+Math.cos(sa)*sl,fY+Math.sin(sa)*sl);
+      fg.addColorStop(0,'rgba(255,220,140,'+fA+')'); fg.addColorStop(1,'rgba(255,220,140,0)');
       ctx.beginPath(); ctx.moveTo(fX,fY); ctx.lineTo(fX+Math.cos(sa)*sl,fY+Math.sin(sa)*sl);
       ctx.strokeStyle=fg; ctx.lineWidth=1.3; ctx.stroke();
     }
-    const fd=ctx.createRadialGradient(fX,fY,0,fX,fY,pR*0.26);
-    fd.addColorStop(0,`rgba(255,245,210,${(fA*2.0).toFixed(2)})`); fd.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.beginPath(); ctx.arc(fX,fY,pR*0.26,0,Math.PI*2); ctx.fillStyle=fd; ctx.fill();
 
-    // ── ACCRETION DISC GLOW ──────────────────────────────────
-    const dg=ctx.createRadialGradient(SX,SY,BH_R*1.5,SX,SY,Math.min(W,H)*0.20);
+    // ── S-STARS ─────────────────────────────────────────────
+    SSTARS.forEach(function(ss){
+      var rAU=ss.a*(1-ss.ecc*ss.ecc)/(1+ss.ecc*Math.cos(ss.ang));
+      ss.ang += (0.0018/ss.period*1e4)/(rAU*rAU);
+      var rx2=rAU*Math.cos(ss.ang)*Math.min(W,H);
+      var ry2=rAU*Math.sin(ss.ang)*Math.min(W,H)*0.42;
+      var px=SX+rx2, py=SY+ry2;
+      if(Math.hypot(rx2,ry2)<BH_R*0.9) return;
+      var rv=parseInt(ss.col.slice(1,3),16), gv=parseInt(ss.col.slice(3,5),16), bv=parseInt(ss.col.slice(5,7),16);
+      var gg2=ctx.createRadialGradient(px,py,0,px,py,ss.r*4);
+      gg2.addColorStop(0,'rgba('+rv+','+gv+','+bv+',0.35)'); gg2.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(px,py,ss.r*4,0,Math.PI*2); ctx.fillStyle=gg2; ctx.fill();
+      ctx.fillStyle='rgba('+rv+','+gv+','+bv+',0.92)';
+      ctx.beginPath(); ctx.arc(px,py,ss.r,0,Math.PI*2); ctx.fill();
+    });
+
+    // ── INFALLING STARS ─────────────────────────────────────
+    infallStars.forEach(function(s){
+      s.ang += s.wSpd*(1+Math.max(0,0.3-s.dist)*10);
+      s.dist -= s.spd*(1+Math.max(0,0.28-s.dist)*6);
+      if(s.dist<0.038){ Object.assign(s,spawnInfall()); s.dist=0.26+Math.random()*0.14; return; }
+      var px=SX+Math.cos(s.ang)*s.dist*Math.min(W,H);
+      var py=SY+Math.sin(s.ang)*s.dist*Math.min(W,H)*0.58;
+      var tidalT=Math.max(0,1-s.dist/0.36);
+      var bright=s.a*(1+tidalT*2.2);
+      var rad=s.r*(1+tidalT*0.7);
+      var rc=Math.floor(Math.min(255,parseInt(s.col.slice(1,3),16)*(1-tidalT*0.3)+200*tidalT*0.3));
+      var gc=Math.floor(Math.min(255,parseInt(s.col.slice(3,5)||'ff',16)*(1-tidalT*0.5)+220*tidalT*0.5));
+      var toA=Math.atan2(SY-py,SX-px);
+      var stretch=1+tidalT*3.5;
+      ctx.save(); ctx.translate(px,py); ctx.rotate(toA); ctx.scale(1,1/stretch);
+      ctx.beginPath(); ctx.arc(0,0,rad*stretch,0,Math.PI*2);
+      ctx.fillStyle='rgba('+rc+','+gc+',255,'+Math.min(0.95,bright).toFixed(2)+')'; ctx.fill();
+      ctx.restore();
+    });
+
+    // ── ACCRETION DISC ──────────────────────────────────────
+    var dg=ctx.createRadialGradient(SX,SY,BH_R*1.5,SX,SY,Math.min(W,H)*0.20);
     dg.addColorStop(0,'rgba(255,100,15,0.18)');
     dg.addColorStop(0.5,'rgba(160,30,60,0.07)');
     dg.addColorStop(1,'rgba(0,0,0,0)');
     ctx.beginPath(); ctx.ellipse(SX,SY,Math.min(W,H)*0.20,Math.min(W,H)*0.20*0.26,0,0,Math.PI*2);
     ctx.fillStyle=dg; ctx.fill();
 
-    const drawHalf=(front)=>{
-      DISC.forEach(p=>{
+    function drawDiscHalf(front){
+      DISC.forEach(function(p){
         p.ang+=p.spd;
-        const sA=Math.sin(p.ang);
+        var sA=Math.sin(p.ang);
         if(front&&sA<0) return; if(!front&&sA>=0) return;
-        const ox=Math.cos(p.ang)*p.r*W*0.40;
-        const oy=sA*p.r*W*0.40*0.26;
-        const px2=SX+ox, py2=SY+oy;
-        const dist2=Math.hypot(ox,oy);
-        const fade=Math.min(1,dist2/(BH_R*1.6));
-        const al=p.alpha*fade*(front?1:0.5);
+        var ox=Math.cos(p.ang)*p.r*W*0.40, oy=sA*p.r*W*0.40*0.26;
+        var px2=SX+ox, py2=SY+oy;
+        var fade=Math.min(1,Math.hypot(ox,oy)/(BH_R*1.6));
+        var al=p.alpha*fade*(front?1:0.5);
         ctx.beginPath(); ctx.arc(px2,py2,p.size,0,Math.PI*2);
         ctx.fillStyle=p.col+al.toFixed(2)+')'; ctx.fill();
       });
-    };
+    }
+    drawDiscHalf(false);
 
-    // ── S-STARS — fast elliptical orbits around the BH ───────
-    // Modelled on real Galactic Centre S-stars.
-    // Kepler: r = a(1-e²)/(1+e·cos θ) where θ is true anomaly.
-    // We approximate by advancing the angle with speed ∝ 1/r²
-    // (angular momentum conservation — stars speed up at periapsis).
-    SSTARS.forEach(ss=>{
-      // Advance angle — faster at closest approach
-      const rAU = ss.a*(1-ss.ecc*ss.ecc)/(1+ss.ecc*Math.cos(ss.ang));
-      ss.ang += (0.0018/ss.period*1e4) / (rAU*rAU); // dt/r² gives Kepler speed
-      // Convert polar orbit to screen coords (tilted 25° for depth)
-      const rx = rAU * Math.cos(ss.ang) * Math.min(W,H);
-      const ry = rAU * Math.sin(ss.ang) * Math.min(W,H) * 0.42;
-      const px = SX + rx;
-      const py = SY + ry;
-      // Skip if inside event horizon shadow
-      if(Math.hypot(rx,ry) < BH_R*0.9) return;
-      const rr2=parseInt(ss.col.slice(1,3),16);
-      const gg2=parseInt(ss.col.slice(3,5),16);
-      const bb2=parseInt(ss.col.slice(5,7),16);
-      // Glow — S-stars are bright
-      const glowG=ctx.createRadialGradient(px,py,0,px,py,ss.r*4);
-      glowG.addColorStop(0,`rgba(${rr2},${gg2},${bb2},0.35)`);
-      glowG.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.beginPath(); ctx.arc(px,py,ss.r*4,0,Math.PI*2);
-      ctx.fillStyle=glowG; ctx.fill();
-      // Star point
-      ctx.fillStyle=`rgba(${rr2},${gg2},${bb2},0.92)`;
-      ctx.beginPath(); ctx.arc(px,py,ss.r,0,Math.PI*2); ctx.fill();
-      // Faint orbit trail — draw partial ellipse behind it
-      ctx.beginPath();
-      const trailSteps=40;
-      for(let ti=0;ti<trailSteps;ti++){
-        const tAng=ss.ang-(ti/trailSteps)*Math.PI*0.6;
-        const tR=ss.a*(1-ss.ecc*ss.ecc)/(1+ss.ecc*Math.cos(tAng));
-        const tx2=SX+tR*Math.cos(tAng)*Math.min(W,H);
-        const ty2=SY+tR*Math.sin(tAng)*Math.min(W,H)*0.42;
-        const al=(1-ti/trailSteps)*0.12;
-        if(ti===0) ctx.moveTo(tx2,ty2); else ctx.lineTo(tx2,ty2);
-      }
-      ctx.strokeStyle=`rgba(${rr2},${gg2},${bb2},0.10)`;
-      ctx.lineWidth=0.8; ctx.stroke();
-    });
-
-    // ── INFALLING STARS ──────────────────────────────────────
-    infallStars.forEach(s=>{
-      s.ang  += s.wSpd*(1+Math.max(0,0.3-s.dist)*10);
-      s.dist -= s.spd*(1+Math.max(0,0.28-s.dist)*6);
-      if(s.dist<0.038){ Object.assign(s,spawnInfall()); s.dist=0.26+Math.random()*0.14; return; }
-      const px=SX+Math.cos(s.ang)*s.dist*Math.min(W,H);
-      const py=SY+Math.sin(s.ang)*s.dist*Math.min(W,H)*0.58;
-      const tidalT=Math.max(0,1-s.dist/0.36);
-      const bright=s.a*(1+tidalT*2.2);
-      const rad=s.r*(1+tidalT*0.7);
-      // Colour toward blue-white as it heats
-      const rCol=Math.floor(Math.min(255,parseInt(s.col.slice(1,3),16)*(1-tidalT*0.3)+200*tidalT*0.3));
-      const gCol=Math.floor(Math.min(255,parseInt(s.col.slice(3,5)||'ff',16)*(1-tidalT*0.5)+220*tidalT*0.5));
-      const toA=Math.atan2(SY-py,SX-px);
-      const stretch=1+tidalT*3.5;
-      ctx.save(); ctx.translate(px,py); ctx.rotate(toA); ctx.scale(1,1/stretch);
-      ctx.beginPath(); ctx.arc(0,0,rad*stretch,0,Math.PI*2);
-      ctx.fillStyle=`rgba(${rCol},${gCol},255,${Math.min(0.95,bright).toFixed(2)})`; ctx.fill();
-      ctx.restore();
-    });
-
-    drawHalf(false);
-
-    // ── EVENT HORIZON — HIGH CONTRAST ────────────────────────
-    // Key principle: the dark region must be LARGE relative to the photon ring
-    // This creates the "void in the brightness" effect of real BH images
-
-    // 1. Large gravitational darkening — covers 7× BH radius
-    const darkR=BH_R*7;
-    const dark=ctx.createRadialGradient(SX,SY,BH_R*1.5,SX,SY,darkR);
+    // ── EVENT HORIZON ───────────────────────────────────────
+    var darkR=BH_R*7;
+    var dark=ctx.createRadialGradient(SX,SY,BH_R*1.5,SX,SY,darkR);
     dark.addColorStop(0,'rgba(0,0,0,0.96)');
     dark.addColorStop(0.22,'rgba(0,0,0,0.88)');
     dark.addColorStop(0.50,'rgba(0,0,0,0.55)');
     dark.addColorStop(0.78,'rgba(0,0,0,0.22)');
     dark.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.beginPath(); ctx.arc(SX,SY,darkR,0,Math.PI*2);
-    ctx.fillStyle=dark; ctx.fill();
-
-    // 2. Critical shadow — between event horizon and photon ring
-    // This is the distinctive dark band seen in M87* photograph
-    const critR=BH_R*1.55;
-    const crit=ctx.createRadialGradient(SX,SY,BH_R,SX,SY,critR);
+    ctx.beginPath(); ctx.arc(SX,SY,darkR,0,Math.PI*2); ctx.fillStyle=dark; ctx.fill();
+    var crit=ctx.createRadialGradient(SX,SY,BH_R,SX,SY,BH_R*1.55);
     crit.addColorStop(0,'rgba(0,0,0,1)');
     crit.addColorStop(0.75,'rgba(0,0,0,0.97)');
     crit.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.beginPath(); ctx.arc(SX,SY,critR,0,Math.PI*2);
-    ctx.fillStyle=crit; ctx.fill();
+    ctx.beginPath(); ctx.arc(SX,SY,BH_R*1.55,0,Math.PI*2); ctx.fillStyle=crit; ctx.fill();
+    ctx.beginPath(); ctx.arc(SX,SY,BH_R,0,Math.PI*2); ctx.fillStyle='#000000'; ctx.fill();
+    drawDiscHalf(true);
 
-    // 3. Absolute black event horizon
-    ctx.beginPath(); ctx.arc(SX,SY,BH_R,0,Math.PI*2);
-    ctx.fillStyle='#000000'; ctx.fill();
-
-    drawHalf(true);
-
-    // ── SPACECRAFT — orbiting the TDE to study it ────────────
-    // Research vessel stationed at the disruption point.
-    // Small tight orbit around tdeBX/tdeBY — clearly purposeful.
-    ship.ang += 0.010; // ~10s per full orbit — clearly visible as circular motion
-    const shipOrbitR = Math.min(W,H)*0.055;
-    const orbitX = tdeBX + Math.cos(ship.ang)*shipOrbitR;
-    const orbitY = tdeBY + Math.sin(ship.ang)*shipOrbitR*0.45;
-    const shipDist = Math.hypot(orbitX-SX, orbitY-SY);
-
-    if(shipDist>BH_R*1.2){
-      const S=Math.min(W,H)*0.003; // 40% smaller than before (was 0.005)
-      const nextX=tdeBX+Math.cos(ship.ang+0.10)*shipOrbitR;
-      const nextY=tdeBY+Math.sin(ship.ang+0.10)*shipOrbitR*0.45;
-      const heading=Math.atan2(nextY-orbitY,nextX-orbitX) + Math.PI/2;
-
-      // Faint orbit circle around the TDE point
-      ctx.beginPath();
-      ctx.ellipse(tdeBX,tdeBY,shipOrbitR,shipOrbitR*0.45,0,0,Math.PI*2);
+    // ── SPACECRAFT orbiting TDE ──────────────────────────────
+    ship.ang += 0.010;
+    var shipR = Math.min(W,H)*0.055;
+    var shipX = tdeX + Math.cos(ship.ang)*shipR;
+    var shipY = tdeY + Math.sin(ship.ang)*shipR*0.45;
+    if(Math.hypot(shipX-SX,shipY-SY) > BH_R*1.2){
+      var S=Math.min(W,H)*0.003;
+      var nxs=tdeX+Math.cos(ship.ang+0.10)*shipR;
+      var nys=tdeY+Math.sin(ship.ang+0.10)*shipR*0.45;
+      var hdg=Math.atan2(nys-shipY,nxs-shipX)+Math.PI/2;
+      // Orbit ring
+      ctx.beginPath(); ctx.ellipse(tdeX,tdeY,shipR,shipR*0.45,0,0,Math.PI*2);
       ctx.strokeStyle='rgba(200,180,100,0.10)'; ctx.lineWidth=0.7;
       ctx.setLineDash([2,6]); ctx.stroke(); ctx.setLineDash([]);
-
-      ctx.save(); ctx.translate(orbitX,orbitY); ctx.rotate(heading);
-      const pulse=0.5+0.5*Math.sin(t*0.14);
-      const eg=ctx.createRadialGradient(0,S*1.2,0,0,S*1.2,S*8);
-      eg.addColorStop(0,`rgba(80,200,255,${0.9+pulse*0.1})`);
-      eg.addColorStop(0.25,`rgba(40,120,255,${0.35+pulse*0.15})`);
+      ctx.save(); ctx.translate(shipX,shipY); ctx.rotate(hdg);
+      // Engine glow
+      var pulse=0.5+0.5*Math.sin(frameT*0.14);
+      var eg=ctx.createRadialGradient(0,S*1.2,0,0,S*1.2,S*8);
+      eg.addColorStop(0,'rgba(80,200,255,'+(0.9+pulse*0.1)+')');
+      eg.addColorStop(0.25,'rgba(40,120,255,'+(0.35+pulse*0.15)+')');
       eg.addColorStop(1,'rgba(0,0,0,0)');
       ctx.beginPath(); ctx.arc(0,S*1.2,S*8,0,Math.PI*2); ctx.fillStyle=eg; ctx.fill();
       // Exhaust
-      const jet=ctx.createLinearGradient(0,S*1.2,0,S*9);
-      jet.addColorStop(0,`rgba(180,230,255,${0.6+pulse*0.3})`);
+      var jet=ctx.createLinearGradient(0,S*1.2,0,S*9);
+      jet.addColorStop(0,'rgba(180,230,255,'+(0.6+pulse*0.3)+')');
       jet.addColorStop(1,'rgba(0,0,0,0)');
       ctx.beginPath(); ctx.moveTo(-S*0.14,S*1.4);
       ctx.bezierCurveTo(-S*0.35,S*4,S*0.35,S*5,0,S*9);
@@ -8815,31 +8817,31 @@ function initNebula(){
       ctx.fillStyle='rgba(15,55,120,0.88)'; ctx.fill();
       ctx.strokeStyle='rgba(100,180,255,0.55)'; ctx.lineWidth=0.3; ctx.stroke();
       // Wings
-      [[1],[-1]].forEach(([side])=>{
+      [[1],[-1]].forEach(function(arr){
+        var side=arr[0];
         ctx.beginPath();
         ctx.moveTo(side*S*0.33,-S*0.18); ctx.lineTo(side*S*3.1,S*1.55);
         ctx.lineTo(side*S*2.55,S*1.95); ctx.lineTo(side*S*0.28,S*1.18); ctx.closePath();
         ctx.fillStyle='rgba(128,152,208,0.83)'; ctx.fill();
-        const tipCol=side>0?'rgba(60,255,100,':'rgba(255,60,60,';
+        var tipCol=side>0?'rgba(60,255,100,':'rgba(255,60,60,';
         ctx.beginPath(); ctx.arc(side*S*2.9,S*1.65,S*0.22,0,Math.PI*2);
         ctx.fillStyle=tipCol+(0.45+pulse*0.55)+')'; ctx.fill();
       });
       // Nose beacon
-      if(Math.sin(t*0.07)>0.25){
-        const nb=ctx.createRadialGradient(0,-S*3.2,0,0,-S*3.2,S*0.9);
+      if(Math.sin(frameT*0.07)>0.25){
+        var nb=ctx.createRadialGradient(0,-S*3.2,0,0,-S*3.2,S*0.9);
         nb.addColorStop(0,'rgba(255,255,255,0.92)'); nb.addColorStop(1,'rgba(0,0,0,0)');
         ctx.beginPath(); ctx.arc(0,-S*3.2,S*0.9,0,Math.PI*2); ctx.fillStyle=nb; ctx.fill();
       }
       ctx.restore();
     }
-
-    requestAnimationFrame(drawNebula);
   }
+
   requestAnimationFrame(drawNebula);
 
-  const ns=document.getElementById('name-screen');
+  var ns=document.getElementById('name-screen');
   if(ns){
-    const obs=new MutationObserver(()=>{
+    var obs=new MutationObserver(function(){
       if(ns.style.display==='none'){running=false;obs.disconnect();}
     });
     obs.observe(ns,{attributes:true,attributeFilter:['style']});
@@ -11276,218 +11278,263 @@ let titleAnimId = null;
 let titleMusicNode = null;
 
 function initTitleAnimation(){
-  const h1 = document.getElementById('title-h1');
+  const h1  = document.getElementById('title-h1');
   const cvs = document.getElementById('title-anim-canvas');
   if(!h1 || !cvs) return;
 
-  // Size canvas to match h1
   function sizeCanvas(){
     const r = h1.getBoundingClientRect();
     const z = currentZoom || 1;
-    cvs.width  = r.width  / z + 80;
-    cvs.height = r.height / z + 80;
+    cvs.width  = (r.width  / z) + 120;
+    cvs.height = (r.height / z) + 80;
   }
   sizeCanvas();
 
   const ctx = cvs.getContext('2d');
-  const TEXT = 'SPECTRA EXPLORER';
-  const MOON_LETTER_IDX = TEXT.indexOf('O', TEXT.indexOf('EXPLORER')); // O in EXPLORER
+  const TEXT = 'SPECTRA EXPLORERS';
+  const MOON_IDX = TEXT.lastIndexOf('O');
 
-  let t2 = 0;
+  // Measure each letter position once
+  var fontSize = 48;
+  ctx.font = '400 ' + fontSize + 'px \'Share Tech Mono\',\'Courier New\',monospace';
+  var totalW  = ctx.measureText(TEXT).width;
+  var letterX = [];  // left edge of each letter
+  var letterW = [];  // width of each letter
+  var cx2 = 0;
+  for(var i=0;i<TEXT.length;i++){
+    letterX.push(cx2);
+    letterW.push(ctx.measureText(TEXT[i]).width);
+    cx2 += letterW[i];
+  }
+
+  // Drifting star particles — float slowly around/through the title area
+  var STARS = Array.from({length:55}, function(){
+    return {
+      x: Math.random(), y: Math.random() * 0.9 + 0.05,
+      r: 0.4 + Math.random()*1.1,
+      a: 0.08 + Math.random()*0.35,
+      vx: (Math.random()-0.5)*0.00018,
+      vy: (Math.random()-0.5)*0.00008,
+      twinkle: Math.random()*Math.PI*2,
+      tspd: 0.008 + Math.random()*0.018,
+      col: Math.random()<0.3?'#c8e8ff':Math.random()<0.5?'#ffd8a0':'#ffffff',
+    };
+  });
+
+  // Letter glow phases — each letter has a slow independent pulse
+  var PULSE = TEXT.split('').map(function(_,i){ return {
+    phase: (i/TEXT.length)*Math.PI*2,
+    spd:   0.012 + Math.random()*0.008,
+  };});
+
+  var t2 = 0;
+
   function frameTitleAnim(){
     titleAnimId = requestAnimationFrame(frameTitleAnim);
-    t2 += 0.4;
-    const W = cvs.width, H = cvs.height;
+    t2 += 0.3;
+
+    var W = cvs.width, H = cvs.height;
     ctx.clearRect(0,0,W,H);
 
-    // Sequential letter glow — a shimmer wave travelling left→right
-    // We don't redraw the text (h1 CSS handles that) — we draw glows
-    // positioned over each letter using estimated character width
-    const fontSize = 48;
-    ctx.font = `400 ${fontSize}px 'Share Tech Mono','Courier New',monospace`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    var startX = W/2 - totalW/2;
+    var cy = H/2;
 
-    const totalW = ctx.measureText(TEXT).width;
-    const startX = W/2 - totalW/2;
-    const cy = H/2;
+    // ── NEBULA COLOUR WASH behind letters ──────────────────────
+    // Slow-moving gradient that shifts from blue-purple to teal
+    var nebShift = 0.5 + 0.5*Math.sin(t2*0.005);
+    var nebGrad = ctx.createLinearGradient(0, cy-30, W, cy+30);
+    nebGrad.addColorStop(0,   'rgba(40,10,80,'+(0.06+nebShift*0.04)+')');
+    nebGrad.addColorStop(0.4, 'rgba(0,60,120,'+(0.08+nebShift*0.03)+')');
+    nebGrad.addColorStop(0.7, 'rgba(0,100,100,'+(0.06+nebShift*0.04)+')');
+    nebGrad.addColorStop(1,   'rgba(60,20,100,'+(0.05)+')');
+    ctx.fillStyle = nebGrad;
+    ctx.fillRect(startX-10, cy-fontSize*0.6, totalW+20, fontSize*1.2);
 
-    // Wave position: 0→TEXT.length, repeating every 3 seconds
-    const waveProg = (t2 * 0.018) % (TEXT.length + 4);
-
-    let cx2 = startX;
-    for(let i = 0; i < TEXT.length; i++){
-      const ch = TEXT[i];
-      const chW = ctx.measureText(ch).width;
-      const chCx = cx2 + chW/2;
-
-      // Distance of this letter from the wave crest
-      const dist = Math.abs(i - waveProg);
-      if(dist < 2.5){
-        const intensity = Math.max(0, 1 - dist/2.5);
-        // Outer glow
-        ctx.shadowBlur = 18 * intensity;
-        ctx.shadowColor = `rgba(140,200,255,${intensity})`;
-        ctx.fillStyle = `rgba(200,230,255,${intensity * 0.55})`;
-        ctx.fillText(ch, chCx, cy);
-        ctx.shadowBlur = 0;
-        ctx.shadowColor = 'transparent';
+    // ── DRIFTING STARS ────────────────────────────────────────
+    STARS.forEach(function(s){
+      s.x += s.vx; s.y += s.vy;
+      if(s.x<-0.05) s.x=1.05; if(s.x>1.05) s.x=-0.05;
+      if(s.y<-0.05) s.y=1.05; if(s.y>1.05) s.y=-0.05;
+      var sx = startX-10 + s.x*(totalW+20);
+      var sy = cy-fontSize*0.55 + s.y*fontSize*1.1;
+      var alpha = s.a*(0.6+0.4*Math.sin(t2*s.tspd+s.twinkle));
+      var rv=parseInt(s.col.slice(1,3),16),gv=parseInt(s.col.slice(3,5),16),bv=parseInt(s.col.slice(5,7),16);
+      // Tiny glow for brighter stars
+      if(s.r>0.8){
+        var sg=ctx.createRadialGradient(sx,sy,0,sx,sy,s.r*3.5);
+        sg.addColorStop(0,'rgba('+rv+','+gv+','+bv+','+(alpha*0.3).toFixed(2)+')');
+        sg.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.beginPath(); ctx.arc(sx,sy,s.r*3.5,0,Math.PI*2); ctx.fillStyle=sg; ctx.fill();
       }
+      ctx.fillStyle='rgba('+rv+','+gv+','+bv+','+alpha.toFixed(2)+')';
+      ctx.beginPath(); ctx.arc(sx,sy,s.r,0,Math.PI*2); ctx.fill();
+    });
 
-      // Moon orbit — draws on the O in EXPLORER
-      if(i === MOON_LETTER_IDX){
-        const moonAng = t2 * 0.035;
-        const moonR   = chW * 0.72;
-        const moonX   = chCx + Math.cos(moonAng) * moonR;
-        const moonY   = cy   + Math.sin(moonAng) * moonR * 0.45;
-        // Orbit ring (faint)
-        ctx.beginPath();
-        ctx.ellipse(chCx, cy, moonR, moonR*0.45, 0, 0, Math.PI*2);
-        ctx.strokeStyle = 'rgba(100,160,255,0.12)';
-        ctx.lineWidth = 0.6; ctx.stroke();
-        // Moon dot
-        const mg = ctx.createRadialGradient(moonX,moonY,0,moonX,moonY,3.5);
-        mg.addColorStop(0,'rgba(220,230,255,0.95)');
-        mg.addColorStop(0.5,'rgba(160,190,240,0.6)');
-        mg.addColorStop(1,'rgba(0,0,0,0)');
-        ctx.beginPath(); ctx.arc(moonX,moonY,3.5,0,Math.PI*2);
-        ctx.fillStyle=mg; ctx.fill();
-      }
+    // ── PER-LETTER STELLAR GLOW ───────────────────────────────
+    // Each letter glows like a star — slow independent pulse,
+    // colour shifts between warm gold and cool blue-white
+    for(var i=0;i<TEXT.length;i++){
+      var lx = startX + letterX[i];
+      var lw = letterW[i];
+      var lcx = lx + lw/2;
 
-      cx2 += chW;
+      var pulse = 0.5+0.5*Math.sin(t2*PULSE[i].spd+PULSE[i].phase);
+      // Warm stars glow gold, cool stars glow blue — alternating
+      var warm = (i % 3 === 0);
+      var cr = warm ? 255 : 140+Math.floor(pulse*60);
+      var cg = warm ? 200+Math.floor(pulse*55) : 200+Math.floor(pulse*40);
+      var cb = warm ? 80+Math.floor(pulse*40)  : 255;
+      var glowA = 0.08 + pulse*0.14;
+      var glowR = fontSize*0.55 + pulse*fontSize*0.25;
+
+      var lg = ctx.createRadialGradient(lcx, cy, 0, lcx, cy, glowR);
+      lg.addColorStop(0,   'rgba('+cr+','+cg+','+cb+','+glowA.toFixed(2)+')');
+      lg.addColorStop(0.5, 'rgba('+cr+','+cg+','+cb+','+(glowA*0.4).toFixed(2)+')');
+      lg.addColorStop(1,   'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(lcx, cy, glowR, 0, Math.PI*2);
+      ctx.fillStyle=lg; ctx.fill();
     }
+
+    // ── SLOW SCAN LINE (very subtle) ──────────────────────────
+    // A barely-visible brightening that slowly sweeps the title
+    var scanPos = ((t2*0.007) % (TEXT.length+10)) - 2;
+    for(var i=0;i<TEXT.length;i++){
+      var dist = Math.abs(i - scanPos);
+      if(dist < 4){
+        var lx = startX + letterX[i];
+        var lw = letterW[i];
+        var intensity = Math.max(0, 1-dist/4) * 0.12;
+        ctx.save();
+        ctx.shadowBlur  = 10;
+        ctx.shadowColor = 'rgba(200,230,255,'+intensity+')';
+        ctx.fillStyle   = 'rgba(200,230,255,'+(intensity*0.5).toFixed(2)+')';
+        ctx.fillRect(lx, cy - fontSize*0.52, lw, fontSize*1.04);
+        ctx.restore();
+      }
+    }
+
+    // ── MOON orbiting the O in EXPLORERS ─────────────────────
+    var lcxO = startX + letterX[MOON_IDX] + letterW[MOON_IDX]/2;
+    var moonAng = t2 * 0.026;
+    var moonR   = letterW[MOON_IDX] * 0.70;
+    var moonX   = lcxO + Math.cos(moonAng)*moonR;
+    var moonY   = cy   + Math.sin(moonAng)*moonR*0.44;
+    ctx.beginPath();
+    ctx.ellipse(lcxO, cy, moonR, moonR*0.44, 0, 0, Math.PI*2);
+    ctx.strokeStyle='rgba(130,180,255,0.16)'; ctx.lineWidth=0.7; ctx.stroke();
+    var mg=ctx.createRadialGradient(moonX,moonY,0,moonX,moonY,4.5);
+    mg.addColorStop(0,'rgba(230,242,255,0.95)');
+    mg.addColorStop(0.5,'rgba(170,205,248,0.6)');
+    mg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(moonX,moonY,4.5,0,Math.PI*2); ctx.fillStyle=mg; ctx.fill();
+    var mg2=ctx.createRadialGradient(moonX,moonY,0,moonX,moonY,12);
+    mg2.addColorStop(0,'rgba(150,195,255,0.15)'); mg2.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(moonX,moonY,12,0,Math.PI*2); ctx.fillStyle=mg2; ctx.fill();
   }
   frameTitleAnim();
 }
-
 function stopTitleAnimation(){
   if(titleAnimId){ cancelAnimationFrame(titleAnimId); titleAnimId=null; }
 }
 
 function initTitleMusic(){
   if(!window.AudioContext && !window.webkitAudioContext) return;
-  const ac = new (window.AudioContext||window.webkitAudioContext)();
-  if(ac.state==='suspended') ac.resume();
 
-  const master = ac.createGain();
-  master.gain.value = 0;
-  master.connect(ac.destination);
-  master.gain.linearRampToValueAtTime(0.28, ac.currentTime+3);
+  let started = false;
 
-  // ── MUSIC BOX / VIBRAPHONE STYLE ──────────────────────────
-  // Triangle waves with quick decay — ring and fade, never drone.
-  // Each note blooms then completely silences before the next.
-  // Silence between notes is as important as the notes themselves.
+  function startMusic(){
+    if(started) return;
+    started = true;
 
-  function note(freq, startT, decay){
-    const o = ac.createOscillator();
-    const g = ac.createGain();
-    o.type = 'triangle';
-    o.frequency.value = freq;
-    // Quick attack, natural exponential decay — sounds like struck metal/glass
-    g.gain.setValueAtTime(0, ac.currentTime + startT);
-    g.gain.linearRampToValueAtTime(0.28, ac.currentTime + startT + 0.012);
-    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + startT + decay);
-    o.connect(g); g.connect(master);
-    o.start(ac.currentTime + startT);
-    o.stop(ac.currentTime + startT + decay + 0.05);
+    const ac = new (window.AudioContext||window.webkitAudioContext)();
+
+    const master = ac.createGain();
+    master.gain.value = 0;
+    master.connect(ac.destination);
+    master.gain.linearRampToValueAtTime(0.28, ac.currentTime+3);
+
+    function note(freq, startT, decay){
+      const o = ac.createOscillator();
+      const g = ac.createGain();
+      o.type = 'triangle';
+      o.frequency.value = freq;
+      g.gain.setValueAtTime(0, ac.currentTime + startT);
+      g.gain.linearRampToValueAtTime(0.28, ac.currentTime + startT + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + startT + decay);
+      o.connect(g); g.connect(master);
+      o.start(ac.currentTime + startT);
+      o.stop(ac.currentTime + startT + decay + 0.05);
+    }
+
+    function bass(freq, startT){
+      const o = ac.createOscillator();
+      const g = ac.createGain();
+      o.type = 'triangle';
+      o.frequency.value = freq;
+      g.gain.setValueAtTime(0, ac.currentTime + startT);
+      g.gain.linearRampToValueAtTime(0.12, ac.currentTime + startT + 0.04);
+      g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + startT + 3.5);
+      o.connect(g); g.connect(master);
+      o.start(ac.currentTime + startT);
+      o.stop(ac.currentTime + startT + 4.0);
+    }
+
+    const P1 = [
+      [523.25, 4.0,  1.8],[659.25, 5.5,  1.8],[783.99, 6.8,  2.2],[1046.5, 8.2,  3.0],
+      [659.25, 13.5, 1.4],[783.99, 14.6, 1.4],[880.00, 15.6, 1.6],[783.99, 16.8, 2.4],
+    ];
+    P1.forEach(([f,t,d]) => note(f, t, d));
+    bass(130.81, 4.0); bass(196.00, 13.5);
+
+    const off2 = 21.0;
+    [[523.25,0.0,1.6],[587.33,1.3,1.4],[659.25,2.4,1.6],[783.99,3.6,1.8],[880.00,5.0,2.8],
+     [659.25,9.5,1.4],[523.25,10.7,1.4],[392.00,11.7,2.6]
+    ].forEach(([f,t,d]) => note(f, t+off2, d));
+    bass(130.81, off2); bass(98.00, off2+9.5);
+
+    const off3 = 46.0;
+    P1.forEach(([f,t,d]) => note(f, t+off3, d));
+    bass(130.81, off3); bass(196.00, off3+13.5);
+
+    const off4 = 72.0;
+    [[783.99,0.0,1.8],[659.25,1.6,1.6],[523.25,3.0,2.2],[392.00,5.0,3.5]
+    ].forEach(([f,t,d]) => note(f, t+off4, d));
+    bass(130.81, off4);
+
+    titleMusicNode = {ac, volNode:master};
+
+    const volSlider = document.getElementById('title-music-vol');
+    if(volSlider){
+      volSlider.addEventListener('input',()=>{
+        if(titleMusicNode)
+          titleMusicNode.volNode.gain.setTargetAtTime(
+            parseInt(volSlider.value)/100*0.38,
+            titleMusicNode.ac.currentTime, 0.1);
+      });
+    }
+
+    let musicPlaying = true;
+    const btn = document.getElementById('title-music-btn');
+    if(btn){
+      btn.textContent = '♪ Music on'; btn.style.color = '#5080c0';
+      btn.addEventListener('click', ()=>{
+        musicPlaying = !musicPlaying;
+        if(titleMusicNode)
+          titleMusicNode.volNode.gain.linearRampToValueAtTime(
+            musicPlaying ? (parseInt(volSlider?.value||50)/100*0.38) : 0,
+            titleMusicNode.ac.currentTime + 0.6);
+        btn.textContent = musicPlaying ? '♪ Music on' : '♪ Music off';
+        btn.style.color  = musicPlaying ? '#5080c0' : '#402020';
+      });
+    }
   }
 
-  // Soft bass triangle — very gentle, single note, fades slowly
-  function bass(freq, startT){
-    const o = ac.createOscillator();
-    const g = ac.createGain();
-    o.type = 'triangle';
-    o.frequency.value = freq;
-    g.gain.setValueAtTime(0, ac.currentTime + startT);
-    g.gain.linearRampToValueAtTime(0.12, ac.currentTime + startT + 0.04);
-    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + startT + 3.5);
-    o.connect(g); g.connect(master);
-    o.start(ac.currentTime + startT);
-    o.stop(ac.currentTime + startT + 4.0);
-  }
-
-  // ── PHRASE 1 — simple ascending wonder phrase (bars 1-8)
-  // Lots of silence. Each note fully decays before next.
-  //        C5    E5    G5    C6   (hold/silence)     E5    G5    A5    G5
-  const P1 = [
-    [523.25, 4.0,  1.8],
-    [659.25, 5.5,  1.8],
-    [783.99, 6.8,  2.2],
-    [1046.5, 8.2,  3.0],  // C6 — held longer, fades out
-    // Silence 11.2 → 13.5
-    [659.25, 13.5, 1.4],
-    [783.99, 14.6, 1.4],
-    [880.00, 15.6, 1.6],
-    [783.99, 16.8, 2.4],  // resolve back to G5
-    // Bass under phrase 1
-  ];
-  P1.forEach(([f,t,d]) => note(f, t, d));
-  bass(130.81, 4.0);   // C2 bass under first phrase
-  bass(196.00, 13.5);  // G2 bass under second half
-
-  // ── PHRASE 2 — repeated 21s later, slightly varied (bars 9-16)
-  const offset = 21.0;
-  const P2 = [
-    [523.25, 0.0, 1.6],
-    [587.33, 1.3, 1.4],   // D5 — new note for variety
-    [659.25, 2.4, 1.6],
-    [783.99, 3.6, 1.8],
-    [880.00, 5.0, 2.8],   // A5 — climbs a little higher
-    // Silence
-    [659.25, 9.5,  1.4],
-    [523.25, 10.7, 1.4],
-    [392.00, 11.7, 2.6],  // G4 — descend and rest
-  ];
-  P2.forEach(([f,t,d]) => note(f, t+offset, d));
-  bass(130.81, offset);
-  bass(98.00,  offset+9.5);  // G1 bass under descent
-
-  // ── PHRASE 3 — again at 46s, back to opening feeling
-  const offset3 = 46.0;
-  P1.forEach(([f,t,d]) => note(f, t+offset3, d));
-  bass(130.81, offset3);
-  bass(196.00, offset3+13.5);
-
-  // ── PHRASE 4 — final phrase at 72s, gentle close
-  const offset4 = 72.0;
-  const P4 = [
-    [783.99, 0.0, 1.8],
-    [659.25, 1.6, 1.6],
-    [523.25, 3.0, 2.2],
-    [392.00, 5.0, 3.5],  // resolve to G4 — peaceful close
-  ];
-  P4.forEach(([f,t,d]) => note(f, t+offset4, d));
-  bass(130.81, offset4);
-
-  titleMusicNode = {ac, volNode:master};
-
-  const volSlider = document.getElementById('title-music-vol');
-  if(volSlider){
-    volSlider.addEventListener('input',()=>{
-      if(titleMusicNode)
-        titleMusicNode.volNode.gain.setTargetAtTime(
-          parseInt(volSlider.value)/100*0.38,
-          titleMusicNode.ac.currentTime, 0.1);
-    });
-  }
-
-  let musicPlaying=true;
-  const btn=document.getElementById('title-music-btn');
-  if(btn){
-    btn.textContent='♪ Music on'; btn.style.color='#5080c0';
-    btn.addEventListener('click',()=>{
-      musicPlaying=!musicPlaying;
-      if(titleMusicNode)
-        titleMusicNode.volNode.gain.linearRampToValueAtTime(
-          musicPlaying ? (parseInt(volSlider?.value||50)/100*0.38) : 0,
-          titleMusicNode.ac.currentTime+0.6);
-      btn.textContent=musicPlaying?'♪ Music on':'♪ Music off';
-      btn.style.color=musicPlaying?'#5080c0':'#402020';
-    });
-  }
+  // Start on first interaction — satisfies browser autoplay policy
+  // Works on click, keydown, or touch anywhere on the page
+  ['click','keydown','touchstart'].forEach(evt =>
+    document.addEventListener(evt, startMusic, {once:true, passive:true})
+  );
 }
-
 function stopTitleMusic(){
   if(!titleMusicNode) return;
   try{
