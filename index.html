@@ -956,6 +956,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
       <div style="display:flex;gap:0;margin-bottom:0">
         <button class="gloss-tab active" id="gloss-tab-terms" onclick="switchGlossTab('terms')">📖 Terms</button>
         <button class="gloss-tab" id="gloss-tab-spectra" onclick="switchGlossTab('spectra')">🌈 Element Spectra</button>
+      <button class="gloss-tab" id="gloss-tab-config" onclick="switchGlossTab('config')">⚛️ Configurations</button>
       </div>
     </div>
 
@@ -976,7 +977,15 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
     </div>
     <div id="gloss-spectra-body" style="display:none;padding:0 22px 16px;max-height:62vh;overflow-y:auto"></div>
 
-    <div style="padding:10px 22px 14px;border-top:1px solid rgba(40,70,130,0.2);display:flex;justify-content:flex-end">
+    <!-- Configuration reference tab -->
+    <div id="gloss-pane-config" style="display:none;padding:12px 22px 4px">
+      <div style="font-size:10px;color:#304060;line-height:1.7;margin-bottom:8px">
+        Ground-state electron configurations for all elements in the game pool. Valence electrons — shown in <span style="color:#c090ff">purple</span> — are the ones that produce the emission lines you identify in puzzles. Grouped by block (s, p, d, f).
+      </div>
+      <input id="config-search" type="text" placeholder="Search element or configuration..." autocomplete="off"
+        style="background:rgba(8,18,50,0.9);border:1px solid rgba(60,100,200,0.3);border-radius:5px;color:#90b0e0;font-family:inherit;font-size:12px;padding:8px 12px;width:100%;outline:none;margin-bottom:10px">
+    </div>
+    <div id="gloss-config-body" style="display:none;padding:0 22px 16px;max-height:62vh;overflow-y:auto"></div>
       <button class="pbtn pbtn-close" id="glossary-close">Close</button>
     </div>
   </div>
@@ -1271,6 +1280,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
       <button class="guide-tab" data-tab="guide-survey">Planet Survey</button>
       <button class="guide-tab" data-tab="guide-bonuses">Bonus Puzzles</button>
       <button class="guide-tab" data-tab="guide-howto">How to Play</button>
+      <button class="guide-tab" data-tab="guide-research" id="guide-tab-research" style="display:none;color:#c090ff">🔬 Research</button>
     </div>
     <div id="guide-body">
 
@@ -1409,6 +1419,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p>The formula is <span class="highlight">a = ∛(T² × M)</span> where T is the planet's orbital period in years, M is the stellar mass, and a is the distance from the star in AU. The in-game calculator walks you through all three steps — just enter your answer in the input field.</p>
             <div class="tip-box green" style="margin-top:8px">Worked example: T=1yr, M=1 → 1² × 1 = 1 → ∛1 = <span class="good">1.0 AU</span> — Earth's orbit. Inside the Sun's habitable zone (0.95–1.37 AU). ✓</div>
+            <p style="margin-top:8px;font-size:10px;color:#3a5060">The in-game calculator automatically fills in Steps 1 and 2 for your first 10 correct answers, then progressively removes scaffolding — after 10 correct it leaves only Step 1 pre-filled, and after 20 correct all steps are blank. This is intentional: the goal is for you to eventually work through the formula independently.</p>
           </div>
         </details>
 
@@ -1421,7 +1432,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
         </details>
 
         <!-- Stellar Evolution detail -->
-        <details>
+        <details style="margin-bottom:8px">
           <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ How stellar evolution works</summary>
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p>A star's mass determines its entire life and death. The puzzle gives you the star's mass in solar masses (M☉) and asks what it will eventually become:</p>
@@ -1431,6 +1442,53 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
               <li>8–20 M☉ → <span class="highlight">Neutron Star</span> (supernova remnant)</li>
               <li>Above 20 M☉ → <span class="highlight">Black Hole</span> (complete collapse)</li>
             </ul>
+          </div>
+        </details>
+
+        <!-- Electron Configuration detail -->
+        <details style="margin-bottom:8px">
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Electron configuration (appears after correct Element ID)</summary>
+          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
+            <p>After correctly identifying an element, a follow-up question asks you to identify its ground-state electron configuration. This closes the loop between the spectrum you matched visually and the atomic physics that produced it.</p>
+            <p>The valence electrons — the outermost shell — are what produce the emission lines you see. When a photon from the star excites one of those electrons to a higher energy level, the specific wavelength emitted as it falls back is exactly the line you matched.</p>
+            <p>Three difficulty tiers: choose the correct config from four options (0–4 correct) → only valence shell shown (5–9 correct) → all steps blank (10+ correct). The <span class="highlight">⚛️ Configurations</span> tab in the 📖 Glossary is a full reference for all 86 elements.</p>
+          </div>
+        </details>
+
+        <!-- Survey Sprint detail -->
+        <details style="margin-bottom:8px">
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Survey Sprint — timed challenge mode</summary>
+          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
+            <p>Survey Sprint is an optional timed mode accessible from the <span class="highlight">⬡ Sector Jump</span> screen. Classify 10 stars correctly within 10 minutes. An orange timer bar appears in the HUD showing time remaining.</p>
+            <p>A speed bonus of up to +1,000 points is awarded on completion — the faster you finish, the more points. The sprint counts correct emission matches only; other puzzle types continue normally. Hit <span class="highlight">Quit</span> on the timer bar to end early without penalty.</p>
+          </div>
+        </details>
+
+        <!-- Mystery Objects detail -->
+        <details style="margin-bottom:8px">
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Mystery objects — anomalous classifications</summary>
+          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
+            <p>Every 8–14 stars, you may encounter an object that doesn't fit any OBAFGKM class. These appear with a coloured badge and distinctive prefix:</p>
+            <ul style="margin:6px 0 0 16px;line-height:2">
+              <li><span class="highlight">BD prefix</span> — Brown Dwarf. Too cool for hydrogen fusion. Classify as Anomalous.</li>
+              <li><span class="highlight">TT prefix</span> — T Tauri star. Pre-main-sequence protostar still forming. Classify as Anomalous.</li>
+              <li><span class="highlight">WD prefix</span> — Polluted White Dwarf. Heavy metal lines that shouldn't exist at this temperature. Classify as Anomalous.</li>
+            </ul>
+            <p>In Act III, an <span class="highlight">? Anomalous Object</span> button appears alongside the normal OBAFGKM choices. Selecting it correctly awards +175 pts. The explanation shown is real astrophysics — these objects genuinely don't fit the classification system, and noticing that is what real scientists do.</p>
+          </div>
+        </details>
+
+        <!-- Special Events detail -->
+        <details>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Special events — variable stars, flares, binaries</summary>
+          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
+            <p>Every 6–9 correct scans, a special event star appears. You'll hear a three-note chime and see a coloured badge below the star name with a science explanation. Three event types:</p>
+            <ul style="margin:6px 0 0 16px;line-height:2">
+              <li><span class="highlight">🔮 Variable Star</span> — a pulsating star whose brightness varies cyclically. The puzzle mechanic is identical — classify from the line pattern. The event note explains the science of Cepheid and RR Lyrae variables.</li>
+              <li><span class="highlight">☀️ Stellar Flare</span> — an energetic magnetic reconnection event on an M-dwarf, causing anomalous blue brightening. The science note explains why flares matter for planetary habitability.</li>
+              <li><span class="highlight">⚡ Spectroscopic Binary</span> — two stars in a close orbit producing a composite spectrum. The science note explains how binary stars are detected from Doppler line splitting.</li>
+            </ul>
+            <p>Special events don't change how you play Act I — they add context and science. The mission lore below the star name is grounded in real observational astronomy.</p>
           </div>
         </details>
       </div>
@@ -1451,8 +1509,9 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
         <ul style="font-size:11px;color:#5070a0;line-height:2.2;margin:0 0 14px 20px">
           <li><span class="highlight">Click</span> a star to target it → <span class="highlight">SCAN</span> to begin analysis</li>
           <li><span class="highlight">Drag</span> the map to pan · <span class="highlight">Minimap</span> bottom-right shows your position</li>
-          <li><span class="highlight">?</span> reopens this guide · <span class="highlight">📖</span> opens the science glossary</li>
-          <li><span class="highlight">⬡ Sector Jump</span> unlocks after your first colony</li>
+          <li><span class="highlight">?</span> reopens this guide · <span class="highlight">📖</span> opens the science glossary · <span class="highlight">A</span> cycles font size (small / medium / large)</li>
+          <li><span class="highlight">♪ Music</span> toggles audio · the volume slider adjusts level · track label shows Cosmos or Battle depending on sector tier</li>
+          <li><span class="highlight">⬡ Sector Jump</span> unlocks after your first colony · includes the ⚡ Survey Sprint timed challenge</li>
         </ul>
 
         <!-- Collapsible reference sections -->
@@ -1504,7 +1563,62 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
           </ul>
         </details>
 
-      </div>
+      </div><!-- end guide-howto -->
+
+      <!-- ============================================================
+           RESEARCH MODE GUIDE — shown only after Research Mode unlocks
+      ============================================================ -->
+      <div class="guide-section" id="guide-research" style="display:none">
+        <h2 style="color:#c090ff">Research Mode</h2>
+        <p>Research Mode unlocks after discovering your first star in The Heliopause. It adds two new puzzle variants to the main game loop — the same four acts, but Act III and the bonus puzzles become significantly more demanding.</p>
+
+        <div class="tip-box" style="border-color:rgba(160,80,220,0.4);background:rgba(20,5,50,0.6)">
+          <span style="color:#c090ff">Research Mode is a prestige layer</span> — it doesn't replace the main game. All ten sectors remain playable with their standard puzzles. Research Mode variants appear when replaying sectors after the unlock.
+        </div>
+
+        <!-- HR DIAGRAM -->
+        <details open style="margin-top:14px">
+          <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">▸ HR Diagram Placement (replaces classification buttons)</summary>
+          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
+            <p>Instead of clicking O B A F G K M, you place the star on an interactive Hertzsprung-Russell diagram with five clickable regions: Supergiant, Giant, Main Sequence, Subgiant, and White Dwarf.</p>
+            <p>The key insight this puzzle teaches: <span class="highlight">temperature alone doesn't classify a star</span>. A G-type temperature (5,750K) could belong to a main sequence dwarf, a subgiant, a giant, or even a white dwarf. Luminosity and radius together with temperature determine where on the diagram a star belongs — and therefore its luminosity class (Ia, II, III, IV, V).</p>
+            <div class="tip-box amber">The diagram shows your target star as a yellow dot. Clicking a wrong region reveals why that region is ruled out by the data — part of the learning is understanding what each region of the HR diagram actually represents.</div>
+          </div>
+        </details>
+
+        <!-- SPECTROSCOPIC BINARY MASS -->
+        <details style="margin-top:8px">
+          <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">▸ Spectroscopic Binary Mass (new mandatory puzzle for composite spectra)</summary>
+          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
+            <p>When a composite binary spectrum is detected, both stars' absorption lines are visible shifting back and forth in opposite directions as they orbit. The velocity amplitude of each star is inversely proportional to its mass:</p>
+            <div class="tip-box" style="text-align:center;font-size:13px"><span class="highlight">M₁ / M₂ = V₂ / V₁</span></div>
+            <p>The more massive star moves slower — it has a smaller orbit around the centre of mass. The puzzle shows a radial velocity graph with two sinusoidal curves (one per star) and gives you both amplitudes. You must identify which star is more massive and estimate the mass ratio.</p>
+            <div class="tip-box green">This is exactly how stellar masses are measured in practice. Spica (α Virginis), one of the brightest stars in the sky, was first determined to be a binary system in 1890 using this technique.</div>
+          </div>
+        </details>
+
+        <!-- RESEARCH LOG -->
+        <details style="margin-top:8px">
+          <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">▸ Research Log (replaces Mission Report)</summary>
+          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
+            <p>In Research Mode, the session summary becomes a formatted Research Log showing all derived quantities alongside measured parameters. For each star analysed it records:</p>
+            <ul style="margin:6px 0 0 16px;line-height:2.2">
+              <li>Spectral type and luminosity class (from HR diagram placement)</li>
+              <li>Binary mass ratio if a composite spectrum was detected</li>
+              <li>Lithium age estimate and Li/Fe line ratio (if Heliopause sector)</li>
+              <li>Orbital period and planet classification from radial velocity curve</li>
+              <li>ISM tracer lines identified (Ca II K, Na I D)</li>
+              <li>Electron configuration for each identified element</li>
+            </ul>
+            <p style="margin-top:8px">The Research Log can be printed or copied — it's formatted like a brief observational report suitable for submission as a lab exercise at introductory university level.</p>
+          </div>
+        </details>
+
+        <!-- PROGRESSION NOTE -->
+        <div class="tip-box green" style="margin-top:14px">
+          <span class="good">Curriculum alignment:</span> The HR diagram placement puzzle maps to stellar evolution units in AP Physics, IB Physics HL, and introductory astrophysics courses. The spectroscopic binary mass puzzle corresponds to exercises in Carroll &amp; Ostlie's <em>Introduction to Modern Astrophysics</em> (Chapter 7). The Research Log format mirrors standard observational astronomy lab reports.
+        </div>
+      </div><!-- end guide-research -->
 
     </div><!-- end guide-body -->
 
@@ -1853,6 +1967,7 @@ const state={
   score:0, credits:0, streak:0, found:0, colonies:0,
   tier4Unlocked: false,
   tier5Unlocked: false,
+  researchUnlocked: false,
   currentSectorId:'home',
   camX:0, camY:0, mapW:0, mapH:0,
   dragging:false, dragStartX:0, dragStartY:0, camStartX:0, camStartY:0,
@@ -2305,6 +2420,15 @@ function checkUnlocks(prevColonies){
     state.tier5Unlocked = true;
     showUnlockToast('★ THE HELIOPAUSE UNLOCKED — Advanced spectroscopy sector now accessible');
   }
+  // Research Mode unlocks after discovering at least 1 star in The Heliopause
+  const helioPauseVisited = state.sectorStars['heliopause'] &&
+    state.sectorStars['heliopause'].some(s => s.discovered);
+  if(helioPauseVisited && !state.researchUnlocked){
+    state.researchUnlocked = true;
+    showUnlockToast('🔬 RESEARCH MODE UNLOCKED — Advanced puzzle variants now active');
+    // Add the Research Puzzles tab to the guide dynamically
+    addResearchGuideTab();
+  }
 }
 
 function showUnlockToast(msg){
@@ -2484,16 +2608,11 @@ function confirmAct1(){
   const basePoints = specMode==='composite' ? 200 : specMode==='emission' ? 150 : 100;
   let pts = correct ? (basePoints + state.streak*20) : -15;
   if(correct&&!star.discovered){pts+=50;state.found++;star.discovered=true;
-    // Check if this discovery triggers Tier 4 unlock
     checkUnlocks(state.colonies);
-    // At exactly 20 discoveries, element analysis becomes mandatory
-    if(state.found === 20){
-      showUnlockToast('🔬 Element Analysis now required for all scans');
-    }
-    // At exactly 40 discoveries, stellar evolution puzzle unlocks
-    if(state.found === 40){
-      showUnlockToast('🌟 Stellar Evolution puzzles now available after classification');
-    }
+    if(state.found === 20) showUnlockToast('🔬 Element Analysis now required for all scans');
+    if(state.found === 40) showUnlockToast('🌟 Stellar Evolution puzzles now available after classification');
+    // Check if the entire current sector is now complete
+    checkSectorComplete();
   }
   state.act1pts=pts;
   if(correct){
@@ -2745,10 +2864,16 @@ function confirmAct3(){
     if(b.dataset.type===state.classifyChoice&&!correct)b.classList.add('wrong-reveal');
   });
   const pts=correct?125+state.streak*20:-15; state.act3pts=pts;
-  if(correct){recordCorrect('classify');state.score+=pts;state.streak++;state.credits+=25;showFlash(t('act3_flash_correct')(pts),'#f0b040');}
-  else{recordError('classify');state.score=Math.max(0,state.score+pts);state.streak=0;showFlash(t('act3_flash_wrong'),'#e03030');}
+  if(correct){ recordCorrect('classify'); state.score+=pts; state.streak++; state.credits+=25; showFlash(t('act3_flash_correct')(pts),'#f0b040'); }
+  else{ recordError('classify'); state.score=Math.max(0,state.score+pts); state.streak=0; showFlash(t('act3_flash_wrong'),'#e03030'); }
   if(!correct) showFeedback('classify-feedback','classify');
   else { const fb=document.getElementById('classify-feedback'); if(fb) fb.style.display='none'; }
+
+  // Research Mode: after correct classification, open HR diagram
+  if(correct && state.researchUnlocked && !state.currentStar._mystery){
+    setTimeout(()=> openHRDiagram(state.currentStar, ()=> openAct4(state.currentStar)), 400);
+    return; // openAct4 called from HR diagram callback
+  }
   const hab=star.cls.habIdx;
   const f3=document.getElementById('hab-fill-3');
   f3.style.width=hab+'%';
@@ -4047,6 +4172,213 @@ function openElementID(star, onDone, mandatory){
   document.getElementById('element-confirm').onclick      = confirmElementID;
 }
 
+/* ================================================================
+   ELECTRON CONFIGURATION DATA
+   Ground-state electron configurations for all 86 elements in pool.
+   Format: { config, valence, group, period, noble_core }
+   config = full notation shown to student
+   shortConfig = condensed [noble gas] + valence shell notation
+   distractors = 3 plausible wrong configs (same period or group)
+================================================================ */
+const ELECTRON_CONFIGS = {
+  'Hydrogen (H)':      { config:'1s¹',                shortConfig:'1s¹',                    period:1, group:1,  valence:'1s¹',        distractors:['1s²','2s¹','1s² 2s¹'] },
+  'Helium (He)':       { config:'1s²',                shortConfig:'1s²',                    period:1, group:18, valence:'1s²',        distractors:['1s¹','2s²','1s² 2s²'] },
+  'Lithium (Li)':      { config:'1s² 2s¹',            shortConfig:'[He] 2s¹',               period:2, group:1,  valence:'2s¹',        distractors:['[He] 2s²','[He] 2p¹','[He] 2s² 2p¹'] },
+  'Beryllium (Be)':    { config:'1s² 2s²',            shortConfig:'[He] 2s²',               period:2, group:2,  valence:'2s²',        distractors:['[He] 2s¹','[He] 2s² 2p¹','[He] 2p²'] },
+  'Boron (B)':         { config:'1s² 2s² 2p¹',        shortConfig:'[He] 2s² 2p¹',          period:2, group:13, valence:'2s² 2p¹',    distractors:['[He] 2s² 2p²','[He] 2s¹ 2p²','[He] 2s² 2p³'] },
+  'Carbon (C)':        { config:'1s² 2s² 2p²',        shortConfig:'[He] 2s² 2p²',          period:2, group:14, valence:'2s² 2p²',    distractors:['[He] 2s² 2p¹','[He] 2s² 2p³','[He] 2s¹ 2p³'] },
+  'Nitrogen (N)':      { config:'1s² 2s² 2p³',        shortConfig:'[He] 2s² 2p³',          period:2, group:15, valence:'2s² 2p³',    distractors:['[He] 2s² 2p²','[He] 2s² 2p⁴','[He] 2s¹ 2p⁴'] },
+  'Oxygen (O)':        { config:'1s² 2s² 2p⁴',        shortConfig:'[He] 2s² 2p⁴',          period:2, group:16, valence:'2s² 2p⁴',    distractors:['[He] 2s² 2p³','[He] 2s² 2p⁵','[He] 2s¹ 2p⁵'] },
+  'Fluorine (F)':      { config:'1s² 2s² 2p⁵',        shortConfig:'[He] 2s² 2p⁵',          period:2, group:17, valence:'2s² 2p⁵',    distractors:['[He] 2s² 2p⁴','[He] 2s² 2p⁶','[He] 2s¹ 2p⁶'] },
+  'Neon (Ne)':         { config:'1s² 2s² 2p⁶',        shortConfig:'[He] 2s² 2p⁶',          period:2, group:18, valence:'2s² 2p⁶',    distractors:['[He] 2s² 2p⁵','[Ne] itself','[He] 2s¹ 2p⁶'] },
+  'Sodium (Na)':       { config:'1s² 2s² 2p⁶ 3s¹',    shortConfig:'[Ne] 3s¹',              period:3, group:1,  valence:'3s¹',        distractors:['[Ne] 3s²','[Ne] 3s² 3p¹','[Ar] 4s¹'] },
+  'Magnesium (Mg)':    { config:'1s² 2s² 2p⁶ 3s²',    shortConfig:'[Ne] 3s²',              period:3, group:2,  valence:'3s²',        distractors:['[Ne] 3s¹','[Ne] 3s² 3p¹','[Ar] 4s²'] },
+  'Aluminium (Al)':    { config:'1s² 2s² 2p⁶ 3s² 3p¹',shortConfig:'[Ne] 3s² 3p¹',        period:3, group:13, valence:'3s² 3p¹',    distractors:['[Ne] 3s² 3p²','[Ne] 3s¹ 3p²','[Ar] 4s² 3d¹'] },
+  'Silicon (Si)':      { config:'1s² 2s² 2p⁶ 3s² 3p²',shortConfig:'[Ne] 3s² 3p²',        period:3, group:14, valence:'3s² 3p²',    distractors:['[Ne] 3s² 3p¹','[Ne] 3s² 3p³','[Ar] 4s² 3d²'] },
+  'Phosphorus (P)':    { config:'1s² 2s² 2p⁶ 3s² 3p³',shortConfig:'[Ne] 3s² 3p³',        period:3, group:15, valence:'3s² 3p³',    distractors:['[Ne] 3s² 3p²','[Ne] 3s² 3p⁴','[Ar] 4s² 3d³'] },
+  'Sulphur (S)':       { config:'1s² 2s² 2p⁶ 3s² 3p⁴',shortConfig:'[Ne] 3s² 3p⁴',        period:3, group:16, valence:'3s² 3p⁴',    distractors:['[Ne] 3s² 3p³','[Ne] 3s² 3p⁵','[Ar] 4s² 3d⁴'] },
+  'Chlorine (Cl)':     { config:'1s² 2s² 2p⁶ 3s² 3p⁵',shortConfig:'[Ne] 3s² 3p⁵',        period:3, group:17, valence:'3s² 3p⁵',    distractors:['[Ne] 3s² 3p⁴','[Ne] 3s² 3p⁶','[Ar] 4s² 3d⁵'] },
+  'Argon (Ar)':        { config:'1s² 2s² 2p⁶ 3s² 3p⁶',shortConfig:'[Ne] 3s² 3p⁶',        period:3, group:18, valence:'3s² 3p⁶',    distractors:['[Ne] 3s² 3p⁵','[Ar] itself','[Ne] 3s¹ 3p⁶'] },
+  'Potassium (K)':     { config:'[Ar] 4s¹',            shortConfig:'[Ar] 4s¹',              period:4, group:1,  valence:'4s¹',        distractors:['[Ar] 4s²','[Ar] 3d¹','[Kr] 5s¹'] },
+  'Calcium (Ca)':      { config:'[Ar] 4s²',            shortConfig:'[Ar] 4s²',              period:4, group:2,  valence:'4s²',        distractors:['[Ar] 4s¹','[Ar] 4s² 3d¹','[Kr] 5s²'] },
+  'Scandium (Sc)':     { config:'[Ar] 3d¹ 4s²',        shortConfig:'[Ar] 3d¹ 4s²',          period:4, group:3,  valence:'3d¹ 4s²',    distractors:['[Ar] 3d² 4s²','[Ar] 3d¹ 4s¹','[Ar] 3d² 4s¹'] },
+  'Titanium (Ti)':     { config:'[Ar] 3d² 4s²',        shortConfig:'[Ar] 3d² 4s²',          period:4, group:4,  valence:'3d² 4s²',    distractors:['[Ar] 3d³ 4s²','[Ar] 3d² 4s¹','[Ar] 3d¹ 4s²'] },
+  'Vanadium (V)':      { config:'[Ar] 3d³ 4s²',        shortConfig:'[Ar] 3d³ 4s²',          period:4, group:5,  valence:'3d³ 4s²',    distractors:['[Ar] 3d⁴ 4s²','[Ar] 3d³ 4s¹','[Ar] 3d² 4s²'] },
+  'Chromium (Cr)':     { config:'[Ar] 3d⁵ 4s¹',        shortConfig:'[Ar] 3d⁵ 4s¹',          period:4, group:6,  valence:'3d⁵ 4s¹',    distractors:['[Ar] 3d⁴ 4s²','[Ar] 3d⁵ 4s²','[Ar] 3d⁶ 4s¹'] },
+  'Manganese (Mn)':    { config:'[Ar] 3d⁵ 4s²',        shortConfig:'[Ar] 3d⁵ 4s²',          period:4, group:7,  valence:'3d⁵ 4s²',    distractors:['[Ar] 3d⁶ 4s²','[Ar] 3d⁵ 4s¹','[Ar] 3d⁴ 4s²'] },
+  'Iron (Fe)':         { config:'[Ar] 3d⁶ 4s²',        shortConfig:'[Ar] 3d⁶ 4s²',          period:4, group:8,  valence:'3d⁶ 4s²',    distractors:['[Ar] 3d⁵ 4s²','[Ar] 3d⁷ 4s²','[Ar] 3d⁶ 4s¹'] },
+  'Cobalt (Co)':       { config:'[Ar] 3d⁷ 4s²',        shortConfig:'[Ar] 3d⁷ 4s²',          period:4, group:9,  valence:'3d⁷ 4s²',    distractors:['[Ar] 3d⁶ 4s²','[Ar] 3d⁸ 4s²','[Ar] 3d⁷ 4s¹'] },
+  'Nickel (Ni)':       { config:'[Ar] 3d⁸ 4s²',        shortConfig:'[Ar] 3d⁸ 4s²',          period:4, group:10, valence:'3d⁸ 4s²',    distractors:['[Ar] 3d⁷ 4s²','[Ar] 3d¹⁰ 4s⁰','[Ar] 3d⁹ 4s¹'] },
+  'Copper (Cu)':       { config:'[Ar] 3d¹⁰ 4s¹',       shortConfig:'[Ar] 3d¹⁰ 4s¹',         period:4, group:11, valence:'3d¹⁰ 4s¹',   distractors:['[Ar] 3d⁹ 4s²','[Ar] 3d¹⁰ 4s²','[Kr] 4d¹⁰ 5s¹'] },
+  'Zinc (Zn)':         { config:'[Ar] 3d¹⁰ 4s²',       shortConfig:'[Ar] 3d¹⁰ 4s²',         period:4, group:12, valence:'3d¹⁰ 4s²',   distractors:['[Ar] 3d¹⁰ 4s¹','[Ar] 3d⁹ 4s²','[Kr] 4d¹⁰ 5s²'] },
+  'Gallium (Ga)':      { config:'[Ar] 3d¹⁰ 4s² 4p¹',   shortConfig:'[Ar] 3d¹⁰ 4s² 4p¹',   period:4, group:13, valence:'4s² 4p¹',    distractors:['[Ar] 3d¹⁰ 4s² 4p²','[Ar] 3d¹⁰ 4s¹ 4p²','[Kr] 4d¹⁰ 5s² 5p¹'] },
+  'Germanium (Ge)':    { config:'[Ar] 3d¹⁰ 4s² 4p²',   shortConfig:'[Ar] 3d¹⁰ 4s² 4p²',   period:4, group:14, valence:'4s² 4p²',    distractors:['[Ar] 3d¹⁰ 4s² 4p¹','[Ar] 3d¹⁰ 4s² 4p³','[Kr] 4d¹⁰ 5s² 5p²'] },
+  'Arsenic (As)':      { config:'[Ar] 3d¹⁰ 4s² 4p³',   shortConfig:'[Ar] 3d¹⁰ 4s² 4p³',   period:4, group:15, valence:'4s² 4p³',    distractors:['[Ar] 3d¹⁰ 4s² 4p²','[Ar] 3d¹⁰ 4s² 4p⁴','[Kr] 4d¹⁰ 5s² 5p³'] },
+  'Selenium (Se)':     { config:'[Ar] 3d¹⁰ 4s² 4p⁴',   shortConfig:'[Ar] 3d¹⁰ 4s² 4p⁴',   period:4, group:16, valence:'4s² 4p⁴',    distractors:['[Ar] 3d¹⁰ 4s² 4p³','[Ar] 3d¹⁰ 4s² 4p⁵','[Kr] 4d¹⁰ 5s² 5p⁴'] },
+  'Bromine (Br)':      { config:'[Ar] 3d¹⁰ 4s² 4p⁵',   shortConfig:'[Ar] 3d¹⁰ 4s² 4p⁵',   period:4, group:17, valence:'4s² 4p⁵',    distractors:['[Ar] 3d¹⁰ 4s² 4p⁴','[Ar] 3d¹⁰ 4s² 4p⁶','[Kr] 4d¹⁰ 5s² 5p⁵'] },
+  'Krypton (Kr)':      { config:'[Ar] 3d¹⁰ 4s² 4p⁶',   shortConfig:'[Ar] 3d¹⁰ 4s² 4p⁶',   period:4, group:18, valence:'4s² 4p⁶',    distractors:['[Ar] 3d¹⁰ 4s² 4p⁵','[Kr] itself','[Ar] 3d¹⁰ 4s¹ 4p⁶'] },
+  'Rubidium (Rb)':     { config:'[Kr] 5s¹',             shortConfig:'[Kr] 5s¹',              period:5, group:1,  valence:'5s¹',        distractors:['[Kr] 5s²','[Kr] 4d¹','[Xe] 6s¹'] },
+  'Strontium (Sr)':    { config:'[Kr] 5s²',             shortConfig:'[Kr] 5s²',              period:5, group:2,  valence:'5s²',        distractors:['[Kr] 5s¹','[Kr] 5s² 4d¹','[Xe] 6s²'] },
+  'Yttrium (Y)':       { config:'[Kr] 4d¹ 5s²',         shortConfig:'[Kr] 4d¹ 5s²',          period:5, group:3,  valence:'4d¹ 5s²',    distractors:['[Kr] 4d² 5s²','[Kr] 4d¹ 5s¹','[Kr] 5s² 5p¹'] },
+  'Zirconium (Zr)':   { config:'[Kr] 4d² 5s²',         shortConfig:'[Kr] 4d² 5s²',          period:5, group:4,  valence:'4d² 5s²',    distractors:['[Kr] 4d³ 5s²','[Kr] 4d² 5s¹','[Kr] 4d¹ 5s²'] },
+  'Niobium (Nb)':      { config:'[Kr] 4d⁴ 5s¹',         shortConfig:'[Kr] 4d⁴ 5s¹',          period:5, group:5,  valence:'4d⁴ 5s¹',    distractors:['[Kr] 4d³ 5s²','[Kr] 4d⁵ 5s¹','[Kr] 4d⁴ 5s²'] },
+  'Molybdenum (Mo)':  { config:'[Kr] 4d⁵ 5s¹',         shortConfig:'[Kr] 4d⁵ 5s¹',          period:5, group:6,  valence:'4d⁵ 5s¹',    distractors:['[Kr] 4d⁴ 5s²','[Kr] 4d⁵ 5s²','[Kr] 4d⁶ 5s¹'] },
+  'Ruthenium (Ru)':   { config:'[Kr] 4d⁷ 5s¹',         shortConfig:'[Kr] 4d⁷ 5s¹',          period:5, group:8,  valence:'4d⁷ 5s¹',    distractors:['[Kr] 4d⁶ 5s²','[Kr] 4d⁷ 5s²','[Kr] 4d⁸ 5s¹'] },
+  'Rhodium (Rh)':     { config:'[Kr] 4d⁸ 5s¹',         shortConfig:'[Kr] 4d⁸ 5s¹',          period:5, group:9,  valence:'4d⁸ 5s¹',    distractors:['[Kr] 4d⁷ 5s²','[Kr] 4d⁸ 5s²','[Kr] 4d⁹ 5s¹'] },
+  'Palladium (Pd)':   { config:'[Kr] 4d¹⁰',            shortConfig:'[Kr] 4d¹⁰',             period:5, group:10, valence:'4d¹⁰',       distractors:['[Kr] 4d⁹ 5s¹','[Kr] 4d⁸ 5s²','[Kr] 4d¹⁰ 5s¹'] },
+  'Silver (Ag)':       { config:'[Kr] 4d¹⁰ 5s¹',       shortConfig:'[Kr] 4d¹⁰ 5s¹',         period:5, group:11, valence:'4d¹⁰ 5s¹',   distractors:['[Kr] 4d¹⁰ 5s²','[Kr] 4d⁹ 5s²','[Xe] 4f¹⁴ 5d¹⁰ 6s¹'] },
+  'Cadmium (Cd)':     { config:'[Kr] 4d¹⁰ 5s²',        shortConfig:'[Kr] 4d¹⁰ 5s²',         period:5, group:12, valence:'4d¹⁰ 5s²',   distractors:['[Kr] 4d¹⁰ 5s¹','[Kr] 4d⁹ 5s²','[Xe] 4f¹⁴ 5d¹⁰ 6s²'] },
+  'Indium (In)':       { config:'[Kr] 4d¹⁰ 5s² 5p¹',   shortConfig:'[Kr] 4d¹⁰ 5s² 5p¹',   period:5, group:13, valence:'5s² 5p¹',    distractors:['[Kr] 4d¹⁰ 5s² 5p²','[Kr] 4d¹⁰ 5s¹ 5p²','[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p¹'] },
+  'Tin (Sn)':          { config:'[Kr] 4d¹⁰ 5s² 5p²',   shortConfig:'[Kr] 4d¹⁰ 5s² 5p²',   period:5, group:14, valence:'5s² 5p²',    distractors:['[Kr] 4d¹⁰ 5s² 5p¹','[Kr] 4d¹⁰ 5s² 5p³','[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²'] },
+  'Antimony (Sb)':     { config:'[Kr] 4d¹⁰ 5s² 5p³',   shortConfig:'[Kr] 4d¹⁰ 5s² 5p³',   period:5, group:15, valence:'5s² 5p³',    distractors:['[Kr] 4d¹⁰ 5s² 5p²','[Kr] 4d¹⁰ 5s² 5p⁴','[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p³'] },
+  'Tellurium (Te)':    { config:'[Kr] 4d¹⁰ 5s² 5p⁴',   shortConfig:'[Kr] 4d¹⁰ 5s² 5p⁴',   period:5, group:16, valence:'5s² 5p⁴',    distractors:['[Kr] 4d¹⁰ 5s² 5p³','[Kr] 4d¹⁰ 5s² 5p⁵','[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁴'] },
+  'Iodine (I)':        { config:'[Kr] 4d¹⁰ 5s² 5p⁵',   shortConfig:'[Kr] 4d¹⁰ 5s² 5p⁵',   period:5, group:17, valence:'5s² 5p⁵',    distractors:['[Kr] 4d¹⁰ 5s² 5p⁴','[Kr] 4d¹⁰ 5s² 5p⁶','[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁵'] },
+  'Xenon (Xe)':        { config:'[Kr] 4d¹⁰ 5s² 5p⁶',   shortConfig:'[Kr] 4d¹⁰ 5s² 5p⁶',   period:5, group:18, valence:'5s² 5p⁶',    distractors:['[Kr] 4d¹⁰ 5s² 5p⁵','[Xe] itself','[Kr] 4d¹⁰ 5s¹ 5p⁶'] },
+  'Caesium (Cs)':      { config:'[Xe] 6s¹',             shortConfig:'[Xe] 6s¹',              period:6, group:1,  valence:'6s¹',        distractors:['[Xe] 6s²','[Xe] 5d¹','[Rn] 7s¹'] },
+  'Barium (Ba)':       { config:'[Xe] 6s²',             shortConfig:'[Xe] 6s²',              period:6, group:2,  valence:'6s²',        distractors:['[Xe] 6s¹','[Xe] 6s² 5d¹','[Rn] 7s²'] },
+  'Lanthanum (La)':    { config:'[Xe] 5d¹ 6s²',         shortConfig:'[Xe] 5d¹ 6s²',          period:6, group:3,  valence:'5d¹ 6s²',    distractors:['[Xe] 4f¹ 6s²','[Xe] 5d² 6s²','[Xe] 5d¹ 6s¹'] },
+  'Cerium (Ce)':       { config:'[Xe] 4f¹ 5d¹ 6s²',    shortConfig:'[Xe] 4f¹ 5d¹ 6s²',    period:6, group:0,  valence:'4f¹ 5d¹ 6s²', distractors:['[Xe] 4f² 6s²','[Xe] 4f¹ 6s²','[Xe] 4f² 5d¹ 6s¹'] },
+  'Praseodymium (Pr)': { config:'[Xe] 4f³ 6s²',         shortConfig:'[Xe] 4f³ 6s²',          period:6, group:0,  valence:'4f³ 6s²',    distractors:['[Xe] 4f² 5d¹ 6s²','[Xe] 4f⁴ 6s²','[Xe] 4f³ 5d¹ 6s¹'] },
+  'Neodymium (Nd)':    { config:'[Xe] 4f⁴ 6s²',         shortConfig:'[Xe] 4f⁴ 6s²',          period:6, group:0,  valence:'4f⁴ 6s²',    distractors:['[Xe] 4f³ 5d¹ 6s²','[Xe] 4f⁵ 6s²','[Xe] 4f⁴ 5d¹ 6s¹'] },
+  'Samarium (Sm)':     { config:'[Xe] 4f⁶ 6s²',         shortConfig:'[Xe] 4f⁶ 6s²',          period:6, group:0,  valence:'4f⁶ 6s²',    distractors:['[Xe] 4f⁵ 5d¹ 6s²','[Xe] 4f⁷ 6s²','[Xe] 4f⁶ 5d¹ 6s¹'] },
+  'Europium (Eu)':     { config:'[Xe] 4f⁷ 6s²',         shortConfig:'[Xe] 4f⁷ 6s²',          period:6, group:0,  valence:'4f⁷ 6s²',    distractors:['[Xe] 4f⁶ 5d¹ 6s²','[Xe] 4f⁷ 5d¹ 6s²','[Xe] 4f⁸ 6s²'] },
+  'Gadolinium (Gd)':   { config:'[Xe] 4f⁷ 5d¹ 6s²',    shortConfig:'[Xe] 4f⁷ 5d¹ 6s²',    period:6, group:0,  valence:'4f⁷ 5d¹ 6s²', distractors:['[Xe] 4f⁸ 6s²','[Xe] 4f⁷ 6s²','[Xe] 4f⁸ 5d¹ 6s¹'] },
+  'Terbium (Tb)':      { config:'[Xe] 4f⁹ 6s²',         shortConfig:'[Xe] 4f⁹ 6s²',          period:6, group:0,  valence:'4f⁹ 6s²',    distractors:['[Xe] 4f⁸ 5d¹ 6s²','[Xe] 4f¹⁰ 6s²','[Xe] 4f⁹ 5d¹ 6s¹'] },
+  'Dysprosium (Dy)':   { config:'[Xe] 4f¹⁰ 6s²',        shortConfig:'[Xe] 4f¹⁰ 6s²',         period:6, group:0,  valence:'4f¹⁰ 6s²',   distractors:['[Xe] 4f⁹ 5d¹ 6s²','[Xe] 4f¹¹ 6s²','[Xe] 4f¹⁰ 5d¹ 6s¹'] },
+  'Holmium (Ho)':      { config:'[Xe] 4f¹¹ 6s²',        shortConfig:'[Xe] 4f¹¹ 6s²',         period:6, group:0,  valence:'4f¹¹ 6s²',   distractors:['[Xe] 4f¹⁰ 5d¹ 6s²','[Xe] 4f¹² 6s²','[Xe] 4f¹¹ 5d¹ 6s¹'] },
+  'Erbium (Er)':       { config:'[Xe] 4f¹² 6s²',        shortConfig:'[Xe] 4f¹² 6s²',         period:6, group:0,  valence:'4f¹² 6s²',   distractors:['[Xe] 4f¹¹ 5d¹ 6s²','[Xe] 4f¹³ 6s²','[Xe] 4f¹² 5d¹ 6s¹'] },
+  'Thulium (Tm)':      { config:'[Xe] 4f¹³ 6s²',        shortConfig:'[Xe] 4f¹³ 6s²',         period:6, group:0,  valence:'4f¹³ 6s²',   distractors:['[Xe] 4f¹² 5d¹ 6s²','[Xe] 4f¹⁴ 6s²','[Xe] 4f¹³ 5d¹ 6s¹'] },
+  'Ytterbium (Yb)':    { config:'[Xe] 4f¹⁴ 6s²',        shortConfig:'[Xe] 4f¹⁴ 6s²',         period:6, group:0,  valence:'4f¹⁴ 6s²',   distractors:['[Xe] 4f¹³ 5d¹ 6s²','[Xe] 4f¹⁴ 5d¹ 6s²','[Xe] 4f¹⁴ 6s¹'] },
+  'Lutetium (Lu)':     { config:'[Xe] 4f¹⁴ 5d¹ 6s²',   shortConfig:'[Xe] 4f¹⁴ 5d¹ 6s²',   period:6, group:3,  valence:'4f¹⁴ 5d¹ 6s²', distractors:['[Xe] 4f¹⁴ 6s²','[Xe] 4f¹⁴ 5d² 6s²','[Xe] 4f¹³ 5d² 6s²'] },
+  'Hafnium (Hf)':      { config:'[Xe] 4f¹⁴ 5d² 6s²',   shortConfig:'[Xe] 4f¹⁴ 5d² 6s²',   period:6, group:4,  valence:'5d² 6s²',    distractors:['[Xe] 4f¹⁴ 5d¹ 6s²','[Xe] 4f¹⁴ 5d³ 6s²','[Xe] 4f¹⁴ 5d² 6s¹'] },
+  'Tantalum (Ta)':     { config:'[Xe] 4f¹⁴ 5d³ 6s²',   shortConfig:'[Xe] 4f¹⁴ 5d³ 6s²',   period:6, group:5,  valence:'5d³ 6s²',    distractors:['[Xe] 4f¹⁴ 5d² 6s²','[Xe] 4f¹⁴ 5d⁴ 6s²','[Xe] 4f¹⁴ 5d³ 6s¹'] },
+  'Tungsten (W)':      { config:'[Xe] 4f¹⁴ 5d⁴ 6s²',   shortConfig:'[Xe] 4f¹⁴ 5d⁴ 6s²',   period:6, group:6,  valence:'5d⁴ 6s²',    distractors:['[Xe] 4f¹⁴ 5d⁵ 6s¹','[Xe] 4f¹⁴ 5d⁴ 6s¹','[Xe] 4f¹⁴ 5d³ 6s²'] },
+  'Rhenium (Re)':      { config:'[Xe] 4f¹⁴ 5d⁵ 6s²',   shortConfig:'[Xe] 4f¹⁴ 5d⁵ 6s²',   period:6, group:7,  valence:'5d⁵ 6s²',    distractors:['[Xe] 4f¹⁴ 5d⁴ 6s²','[Xe] 4f¹⁴ 5d⁶ 6s²','[Xe] 4f¹⁴ 5d⁵ 6s¹'] },
+  'Osmium (Os)':       { config:'[Xe] 4f¹⁴ 5d⁶ 6s²',   shortConfig:'[Xe] 4f¹⁴ 5d⁶ 6s²',   period:6, group:8,  valence:'5d⁶ 6s²',    distractors:['[Xe] 4f¹⁴ 5d⁵ 6s²','[Xe] 4f¹⁴ 5d⁷ 6s²','[Xe] 4f¹⁴ 5d⁶ 6s¹'] },
+  'Iridium (Ir)':      { config:'[Xe] 4f¹⁴ 5d⁷ 6s²',   shortConfig:'[Xe] 4f¹⁴ 5d⁷ 6s²',   period:6, group:9,  valence:'5d⁷ 6s²',    distractors:['[Xe] 4f¹⁴ 5d⁶ 6s²','[Xe] 4f¹⁴ 5d⁸ 6s²','[Xe] 4f¹⁴ 5d⁷ 6s¹'] },
+  'Platinum (Pt)':     { config:'[Xe] 4f¹⁴ 5d⁹ 6s¹',   shortConfig:'[Xe] 4f¹⁴ 5d⁹ 6s¹',   period:6, group:10, valence:'5d⁹ 6s¹',    distractors:['[Xe] 4f¹⁴ 5d⁸ 6s²','[Xe] 4f¹⁴ 5d¹⁰ 6s⁰','[Xe] 4f¹⁴ 5d⁹ 6s²'] },
+  'Gold (Au)':         { config:'[Xe] 4f¹⁴ 5d¹⁰ 6s¹',  shortConfig:'[Xe] 4f¹⁴ 5d¹⁰ 6s¹',  period:6, group:11, valence:'5d¹⁰ 6s¹',   distractors:['[Xe] 4f¹⁴ 5d¹⁰ 6s²','[Xe] 4f¹⁴ 5d⁹ 6s²','[Kr] 4d¹⁰ 5s¹'] },
+  'Mercury (Hg)':      { config:'[Xe] 4f¹⁴ 5d¹⁰ 6s²',  shortConfig:'[Xe] 4f¹⁴ 5d¹⁰ 6s²',  period:6, group:12, valence:'5d¹⁰ 6s²',   distractors:['[Xe] 4f¹⁴ 5d¹⁰ 6s¹','[Xe] 4f¹⁴ 5d⁹ 6s²','[Kr] 4d¹⁰ 5s²'] },
+  'Thallium (Tl)':     { config:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p¹', shortConfig:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p¹', period:6, group:13, valence:'6s² 6p¹', distractors:['[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²','[Xe] 4f¹⁴ 5d¹⁰ 6s¹ 6p²','[Rn] 7s² 7p¹'] },
+  'Lead (Pb)':         { config:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²', shortConfig:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²', period:6, group:14, valence:'6s² 6p²', distractors:['[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p¹','[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p³','[Rn] 7s² 7p²'] },
+  'Bismuth (Bi)':      { config:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p³', shortConfig:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p³', period:6, group:15, valence:'6s² 6p³', distractors:['[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²','[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁴','[Rn] 7s² 7p³'] },
+  'Polonium (Po)':     { config:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁴', shortConfig:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁴', period:6, group:16, valence:'6s² 6p⁴', distractors:['[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p³','[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁵','[Rn] 7s² 7p⁴'] },
+  'Radon (Rn)':        { config:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁶', shortConfig:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁶', period:6, group:18, valence:'6s² 6p⁶', distractors:['[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁵','[Rn] itself','[Xe] 4f¹⁴ 5d¹⁰ 6s¹ 6p⁶'] },
+  'Thorium (Th)':      { config:'[Rn] 6d² 7s²',            shortConfig:'[Rn] 6d² 7s²',            period:7, group:0,  valence:'6d² 7s²',    distractors:['[Rn] 5f¹ 6d¹ 7s²','[Rn] 6d¹ 7s²','[Rn] 5f² 7s²'] },
+  'Uranium (U)':       { config:'[Rn] 5f³ 6d¹ 7s²',        shortConfig:'[Rn] 5f³ 6d¹ 7s²',        period:7, group:0,  valence:'5f³ 6d¹ 7s²', distractors:['[Rn] 5f⁴ 7s²','[Rn] 5f³ 7s²','[Rn] 5f² 6d² 7s²'] },
+};
+
+/* ================================================================
+   ELECTRON CONFIGURATION PUZZLE
+   Appears inline after a correct element ID answer.
+   Three difficulty tiers:
+   Tier 0 (0-4 correct): Full config shown — which element is this?
+   Tier 1 (5-9 correct): Valence shell only — identify element
+   Tier 2 (10+ correct): Pick the CORRECT config for the element
+================================================================ */
+function openElectronConfig(elementName, onDone){
+  const cfg = ELECTRON_CONFIGS[elementName];
+  if(!cfg){ if(onDone) onDone(); return; } // no data for this element
+
+  const eCorrect = state.session.correct.elementID || 0;
+  const eTier    = eCorrect >= 10 ? 2 : eCorrect >= 5 ? 1 : 0;
+
+  // Build config sub-panel inside element panel
+  const resultEl = document.getElementById('element-result');
+  const existing = document.getElementById('econfig-panel');
+  if(existing) existing.remove();
+
+  const panel = document.createElement('div');
+  panel.id = 'econfig-panel';
+  panel.style.cssText = 'background:rgba(10,5,40,0.8);border:1px solid rgba(100,60,200,0.35);border-radius:6px;padding:12px 14px;margin-top:10px';
+
+  // Header
+  const hdr = document.createElement('div');
+  hdr.style.cssText = 'font-size:9px;color:#604090;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px';
+  hdr.textContent = 'Bonus — Electron Configuration · +75 pts';
+  panel.appendChild(hdr);
+
+  // Tier descriptions
+  const tierDesc = {
+    0: `The emission lines of ${elementName} are produced by electron transitions. Which configuration belongs to this element?`,
+    1: `The valence shell of ${elementName} is <strong style="color:#c090ff">${cfg.valence}</strong> — which full configuration does this match?`,
+    2: `You identified ${elementName} from its spectrum. Which of these is its correct electron configuration?`
+  };
+
+  const desc = document.createElement('div');
+  desc.style.cssText = 'font-size:10px;color:#5040a0;line-height:1.7;margin-bottom:10px';
+  desc.innerHTML = tierDesc[eTier];
+  panel.appendChild(desc);
+
+  // For Tier 0: show the config and ask which element → reverse question
+  // For Tier 1/2: show the element name and ask for correct config
+  const correctConfig = cfg.shortConfig;
+  const allOptions = [correctConfig, ...cfg.distractors].sort(() => Math.random() - 0.5);
+
+  const choiceGrid = document.createElement('div');
+  choiceGrid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px';
+
+  let ecDone = false;
+  const ecResult = document.createElement('div');
+  ecResult.style.cssText = 'font-size:10px;line-height:1.7;padding:8px 10px;border-radius:5px;display:none;margin-top:6px';
+
+  allOptions.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.style.cssText = 'background:rgba(20,10,50,0.8);border:1px solid rgba(80,50,160,0.35);color:#8060c0;font-family:inherit;font-size:10px;padding:8px 6px;border-radius:5px;cursor:pointer;text-align:center;letter-spacing:0.5px';
+    btn.textContent = opt;
+
+    btn.addEventListener('click', () => {
+      if(ecDone) return;
+      ecDone = true;
+      const isCorrect = opt === correctConfig;
+
+      // Reveal
+      choiceGrid.querySelectorAll('button').forEach(b => {
+        if(b.textContent === correctConfig){
+          b.style.borderColor = '#60e080'; b.style.color = '#60e080';
+        } else if(b === btn && !isCorrect){
+          b.style.borderColor = '#e06060'; b.style.color = '#e06060';
+        }
+        b.disabled = true;
+      });
+
+      if(isCorrect){
+        state.score   += 75;
+        state.credits += 10;
+        updateHUD();
+        showFlash('+75  CONFIGURATION!', '#c090ff');
+        ecResult.style.cssText += ';display:block;background:rgba(10,5,40,0.8);border:1px solid rgba(100,60,200,0.4);color:#c090ff';
+        ecResult.innerHTML = `✓ Correct — <strong>${elementName}</strong> has configuration <strong>${cfg.config}</strong>. `
+          + `The valence electrons (${cfg.valence}) are the ones responsible for the emission lines you matched. `
+          + `When a stellar photon excites one of these outer electrons to a higher energy level, the specific wavelength of light emitted as it falls back is exactly what you saw in the spectrum. +75 pts`;
+      } else {
+        ecResult.style.cssText += ';display:block;background:rgba(30,5,5,0.7);border:1px solid rgba(160,40,40,0.3);color:#e07070';
+        ecResult.innerHTML = `The correct configuration is <strong>${cfg.config}</strong>. `
+          + `Note the valence shell: ${cfg.valence} — these outermost electrons are what produce the visible emission lines. `
+          + (cfg.group === 1 ? 'Alkali metals always have a single s-electron in the outermost shell, producing simple, sparse spectra.'
+           : cfg.group === 18 ? 'Noble gases have completely filled outer shells — no tendency to gain or lose electrons, but many possible electron transitions produce their rich spectra.'
+           : cfg.group <= 12 && cfg.config.includes('d') ? 'Transition metals have partially filled d-orbitals — this gives them multiple possible electron transitions and richer spectra than main-group elements.'
+           : 'The configuration explains why this element\'s spectrum looks the way it does.');
+      }
+
+      const continueBtn = document.createElement('button');
+      continueBtn.className = 'pbtn pbtn-action';
+      continueBtn.style.marginTop = '8px';
+      continueBtn.textContent = 'Continue →';
+      continueBtn.addEventListener('click', () => {
+        panel.remove();
+        if(onDone) onDone();
+      });
+      ecResult.appendChild(continueBtn);
+    });
+    choiceGrid.appendChild(btn);
+  });
+
+  panel.appendChild(choiceGrid);
+  panel.appendChild(ecResult);
+  resultEl.insertAdjacentElement('afterend', panel);
+}
+
 function confirmElementID(){
   if(!state.elementChoice || state.elementDone) return;
   state.elementDone = true;
@@ -4107,9 +4439,11 @@ function confirmElementID(){
   }
 
   const btn = document.getElementById('element-confirm');
-  btn.textContent = 'Continue →';
+  btn.textContent = correct ? 'What\'s the configuration? →' : 'Continue →';
   btn.disabled    = false;
-  btn.onclick     = closeElementID;
+  btn.onclick     = correct
+    ? () => { btn.style.display='none'; openElectronConfig(activeEl, closeElementID); }
+    : closeElementID;
 }
 
 function closeElementID(){
@@ -4750,21 +5084,51 @@ const GLOSSARY_TERMS = [
   {word:'Transit method',     def:'A technique for detecting exoplanets by measuring the tiny dimming of starlight as a planet passes in front of the star. Used by the Kepler and TESS missions to find thousands of planets.'},
   {word:'Wavelength',         def:'The distance between successive peaks of a wave. Visible light spans wavelengths from ~380nm (violet) to ~700nm (red). Shorter wavelengths carry more energy and correspond to hotter radiation.'},
   {word:'White dwarf',        def:'The hot, dense remnant of a low-to-medium mass star after it has exhausted its nuclear fuel and shed its outer layers. About the size of Earth but with roughly the mass of the Sun. Cools over billions of years.'},
+
+  // -- New terms added with advanced puzzles and game features --
+  {word:'Anomalous object',   def:'In Spectra Explorer, any stellar object that does not fit the standard OBAFGKM classification system — brown dwarfs, T Tauri stars, and polluted white dwarfs. Selecting "Anomalous Object" in Act III is the correct response when the data contradicts every standard class.'},
+  {word:'Brown dwarf',        def:'A sub-stellar object with mass between roughly 13 and 80 Jupiter masses — too cool to sustain hydrogen fusion, but too massive to be a planet. They are classified as types L, T, and Y in the extended spectral system and appear in Spectra Explorer as mystery objects.'},
+  {word:'Class Mode',         def:'A URL parameter feature in Spectra Explorer for teachers. Adding ?mode=classify (or spectra, survey, element, kepler) to the game URL focuses the session on that puzzle type. Students see no difference — the parameter works silently. See the Educator panel for full instructions.'},
+  {word:'Electron configuration', def:'A description of how electrons are distributed among the atomic orbitals of an element in its ground state. Written as a series of subshell notations (e.g. 1s² 2s² 2p⁶ 3s¹ for sodium). The outermost electrons — the valence shell — are what produce visible emission lines when excited by starlight.'},
+  {word:'f-block',            def:'The section of the periodic table containing the lanthanides and actinides, where the 4f and 5f orbitals are being filled. These elements have complex spectra because the f-subshell has 7 orbitals and many possible electron transitions.'},
+  {word:'Hertzsprung-Russell diagram', def:'A scatter plot of stars showing luminosity versus surface temperature. Most stars fall on the diagonal "main sequence." Giants occupy the upper right; white dwarfs the lower left; supergiants the very top. The HR diagram is the single most important tool in stellar astrophysics for understanding stellar evolution.'},
+  {word:'Interstellar medium (ISM)', def:'The gas and dust that fills the space between stars. Primarily hydrogen and helium, with trace amounts of heavier atoms. Cold ISM gas produces very narrow absorption lines (especially Ca II K at 393nm and Na I D at 589nm) superimposed on stellar spectra — identifiable because they don\'t Doppler shift with the star.'},
+  {word:'Lithium depletion',  def:'The gradual destruction of lithium inside stars through proton capture reactions. Lithium is depleted faster in hotter stars and over time. A strong lithium absorption line at 670.8nm indicates a young star; a weak or absent line indicates an old one. Used as a stellar age indicator in The Heliopause sector puzzles.'},
+  {word:'Luminosity class',   def:'A Roman numeral suffix added to the spectral type letter indicating the star\'s evolutionary stage: I = supergiant, II = bright giant, III = giant, IV = subgiant, V = main sequence dwarf. For example, the Sun is G2V and Betelgeuse is M2I. Luminosity class cannot be determined from temperature alone — luminosity and radius are also required.'},
+  {word:'Main sequence',      def:'The diagonal band on the Hertzsprung-Russell diagram where stars spend most of their lives fusing hydrogen into helium. Designated luminosity class V. The Sun has been on the main sequence for 4.6 billion years and will remain there for another ~5 billion.'},
+  {word:'MK system',          def:'The Morgan-Keenan spectral classification system — an extension of the Harvard OBAFGKM system that adds luminosity class (I through V). Named after William Morgan and Philip Keenan who developed it in the 1940s at Yerkes Observatory. The full MK designation for our Sun is G2V.'},
+  {word:'Orbital (subshell)', def:'A region of space where electrons are likely to be found around an atomic nucleus. Subshells are labelled s (2 electrons max), p (6 max), d (10 max), and f (14 max). The subshell an electron occupies determines the energy of photons emitted when it drops to a lower level — and therefore which spectral lines appear.'},
+  {word:'Polluted white dwarf', def:'A white dwarf with heavy elements (calcium, magnesium, iron) visible in its spectrum. At white dwarf temperatures, these elements should sink below the photosphere in days — their presence means the star is actively accreting rocky debris from a disrupted planetary body. This is one of our best methods for studying the composition of exoplanetary material.'},
+  {word:'Research Mode',      def:'An advanced gameplay layer in Spectra Explorer that unlocks after discovering a star in The Heliopause sector. In Research Mode, the standard OBAFGKM classification buttons are replaced with an interactive HR diagram, and a Research Log replaces the Mission Report. Designed for university-level players and educators.'},
+  {word:'s-block',            def:'The first two columns of the periodic table — groups 1 and 2 (plus hydrogen and helium) — where the s-orbital is being filled. Alkali metals (Li, Na, K...) have one s-electron in the outer shell, producing simple, sparse emission spectra.'},
+  {word:'p-block',            def:'Groups 13–18 of the periodic table, where the p-orbital is being filled. Includes boron, carbon, nitrogen, oxygen, the halogens, and noble gases. p-block elements produce moderately complex emission patterns.'},
+  {word:'d-block',            def:'The transition metals (groups 3–12) where d-orbitals are filling. These elements have many possible electron transitions between closely spaced d-orbital energy levels, producing rich, complex emission spectra. Chromium, iron, copper, and zinc are all d-block elements.'},
+  {word:'Spectroscopic binary', def:'A binary star system whose dual nature is revealed not by seeing two separate points of light (they are too close for that) but by observing two sets of spectral lines shifting back and forth in opposite directions as each star moves toward and away from us. The velocity amplitudes reveal the mass ratio of the two stars.'},
+  {word:'Subgiant',           def:'A star that has exhausted hydrogen in its core and begun to expand, but has not yet reached the full giant stage. Luminosity class IV. Subgiants are slightly more luminous than main sequence stars of the same temperature. The oldest stars visible to the naked eye are often subgiants.'},
+  {word:'Survey Sprint',      def:'An optional timed game mode in Spectra Explorer, accessible from the Sector Jump screen. Classify 10 stars as quickly as possible within a 10-minute window. A speed bonus of up to +1,000 points is awarded for fast completion. The orange timer bar appears in the HUD during a sprint.'},
+  {word:'T Tauri star',       def:'A pre-main-sequence star still contracting under gravity and accreting material from a surrounding disk. Named after T Tauri, the first star of this type to be studied. T Tauri stars show strong hydrogen emission lines (especially H-alpha) and irregular brightness variations. They appear in Spectra Explorer as mystery objects — classifying them as Anomalous is correct.'},
+  {word:'Valence electron',   def:'An electron in the outermost shell of an atom. Valence electrons are the ones that participate in chemical bonding and, in stellar atmospheres, are excited by photon absorption and then re-emit photons at specific wavelengths when they fall back to their ground state. The number of valence electrons determines an element\'s position in the periodic table.'},
+  {word:'Valence shell',      def:'The outermost electron shell of an atom — the shell containing the valence electrons. Written as the highest-numbered subshell in an element\'s electron configuration. For sodium ([Ne] 3s¹), the valence shell is 3s¹. This single outer electron produces sodium\'s characteristic yellow doublet at 589nm.'},
 ];
 
 function switchGlossTab(tab){
-  // Toggle panes
   document.getElementById('gloss-pane-terms').style.display    = tab==='terms'   ? 'block' : 'none';
   document.getElementById('gloss-pane-spectra').style.display  = tab==='spectra' ? 'block' : 'none';
+  document.getElementById('gloss-pane-config').style.display   = tab==='config'  ? 'block' : 'none';
   document.getElementById('glossary-body').style.display       = tab==='terms'   ? 'block' : 'none';
   document.getElementById('gloss-spectra-body').style.display  = tab==='spectra' ? 'block' : 'none';
-  // Tab buttons
+  document.getElementById('gloss-config-body').style.display   = tab==='config'  ? 'block' : 'none';
   document.getElementById('gloss-tab-terms').classList.toggle('active',   tab==='terms');
   document.getElementById('gloss-tab-spectra').classList.toggle('active', tab==='spectra');
-  // Build spectra reference on first open
+  const configBtn = document.getElementById('gloss-tab-config');
+  if(configBtn) configBtn.classList.toggle('active', tab==='config');
   if(tab==='spectra'){
-    const body = document.getElementById('gloss-spectra-body');
+    const body=document.getElementById('gloss-spectra-body');
     if(!body.dataset.built){ buildSpectraReference(body); body.dataset.built='1'; }
+  }
+  if(tab==='config'){
+    const body=document.getElementById('gloss-config-body');
+    if(!body.dataset.built){ buildConfigReference(body); body.dataset.built='1'; }
   }
 }
 
@@ -5383,6 +5747,21 @@ const LEVEL_TABS = {
   intermediate: ['guide-intro', 'guide-obafgkm', 'guide-survey',  'guide-bonuses', 'guide-howto'],
   advanced:     ['guide-intro', 'guide-bonuses', 'guide-howto']
 };
+
+function addResearchGuideTab(){
+  // Show the Research tab button
+  const btn = document.getElementById('guide-tab-research');
+  if(btn) btn.style.display = 'block';
+  // Add to all level tab sets
+  Object.keys(LEVEL_TABS).forEach(level => {
+    if(!LEVEL_TABS[level].includes('guide-research')){
+      LEVEL_TABS[level].push('guide-research');
+    }
+  });
+  // Show the research section
+  const section = document.getElementById('guide-research');
+  if(section) section.style.display = 'block';
+}
 
 function showGuide(level){
   const lang = currentLang || 'en';
@@ -8216,12 +8595,355 @@ function openHeliopauseBonuses(star, onDone){
 }
 
 /* ================================================================
+   CONFIGURATION REFERENCE BUILDER
+   Renders all 86 elements grouped by block (s/p/d/f)
+   with colour-coded valence electrons and searchable filter.
+================================================================ */
+function buildConfigReference(container){
+  container.innerHTML = '';
+
+  const blocks = [
+    { label:'s-block — Alkali metals, alkaline earths, hydrogen, helium',
+      color:'rgba(40,100,180,0.15)', border:'rgba(60,120,220,0.3)',
+      elements: Object.entries(ELECTRON_CONFIGS).filter(([_,v])=>
+        v.valence.match(/^[0-9]+s/) && !v.valence.includes('d') && !v.valence.includes('f')
+      )
+    },
+    { label:'p-block — Main group elements (groups 13-18)',
+      color:'rgba(40,160,80,0.12)', border:'rgba(50,180,80,0.3)',
+      elements: Object.entries(ELECTRON_CONFIGS).filter(([_,v])=>
+        v.valence.includes('p')
+      )
+    },
+    { label:'d-block — Transition metals',
+      color:'rgba(160,80,20,0.12)', border:'rgba(180,100,20,0.3)',
+      elements: Object.entries(ELECTRON_CONFIGS).filter(([_,v])=>
+        v.valence.includes('d') && !v.valence.includes('f')
+      )
+    },
+    { label:'f-block — Lanthanides and actinides',
+      color:'rgba(120,40,180,0.12)', border:'rgba(140,60,200,0.3)',
+      elements: Object.entries(ELECTRON_CONFIGS).filter(([_,v])=>
+        v.valence.includes('f')
+      )
+    },
+  ];
+
+  function renderBlock(items){
+    const grid = document.createElement('div');
+    grid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px';
+    items.forEach(([name, cfg]) => {
+      const card = document.createElement('div');
+      card.style.cssText = `background:rgba(5,10,30,0.6);border:1px solid rgba(40,60,120,0.2);
+        border-radius:5px;padding:7px 9px;font-size:10px`;
+      card.dataset.search = (name+' '+cfg.config+' '+cfg.shortConfig).toLowerCase();
+      card.innerHTML = `
+        <div style="color:#8090c0;font-weight:bold;margin-bottom:2px">${name}</div>
+        <div style="color:#4060a0;font-size:9px;letter-spacing:0.3px">
+          ${cfg.shortConfig.replace(cfg.valence,
+            `<span style="color:#c090ff;font-weight:bold">${cfg.valence}</span>`)}
+        </div>
+        <div style="color:#2a4060;font-size:8px;margin-top:2px">
+          Period ${cfg.period}${cfg.group>0?' · Group '+cfg.group:' · f-block'} · valence: 
+          <span style="color:#806090">${cfg.valence}</span>
+        </div>`;
+      grid.appendChild(card);
+    });
+    return grid;
+  }
+
+  blocks.forEach(block => {
+    if(block.elements.length === 0) return;
+    const hdr = document.createElement('div');
+    hdr.style.cssText = `font-size:9px;color:#304060;letter-spacing:2px;text-transform:uppercase;
+      padding:7px 8px;border-radius:4px;margin-bottom:6px;
+      background:${block.color};border:1px solid ${block.border}`;
+    hdr.textContent = block.label;
+    container.appendChild(hdr);
+    container.appendChild(renderBlock(block.elements));
+  });
+
+  // Wire search
+  const search = document.getElementById('config-search');
+  if(search){
+    search.oninput = ()=>{
+      const q = search.value.trim().toLowerCase();
+      container.querySelectorAll('[data-search]').forEach(card=>{
+        card.style.display = (!q || card.dataset.search.includes(q)) ? 'block' : 'none';
+      });
+    };
+  }
+}
+
+/* ================================================================
+   RESEARCH MODE PUZZLES
+================================================================ */
+
+/* -- HR DIAGRAM PLACEMENT ----------------------------------------
+   Shown in Act III when researchUnlocked. Player clicks a region
+   on an interactive HR diagram instead of choosing OBAFGKM.
+   Five regions: Supergiant, Giant, Subgiant, Main Sequence, White Dwarf.
+*/
+const HR_REGIONS_DEF = [
+  { id:'supergiant', label:'Supergiant',
+    // top row across full width
+    xFrac:0.05, yFrac:0.02, wFrac:0.9, hFrac:0.13,
+    lumRange:'> 10,000 L☉', tempNote:'O,B,A,F,G type',
+    wrongMsg:'Supergiants are luminosities of 10,000–1,000,000 L☉. Check the luminosity value given.' },
+  { id:'giant', label:'Giant branch',
+    xFrac:0.05, yFrac:0.16, wFrac:0.60, hFrac:0.18,
+    lumRange:'10–10,000 L☉', tempNote:'K,M dominant',
+    wrongMsg:'Giants sit at 10–10,000 L☉. Compare this star\'s luminosity to that range.' },
+  { id:'subgiant', label:'Subgiant',
+    xFrac:0.05, yFrac:0.33, wFrac:0.55, hFrac:0.13,
+    lumRange:'0.5–10 L☉', tempNote:'F,G,K',
+    wrongMsg:'Subgiants are 0.5–10 L☉ — evolved off the main sequence but not yet full giants.' },
+  { id:'main', label:'Main sequence',
+    xFrac:0.20, yFrac:0.18, wFrac:0.70, hFrac:0.56,
+    lumRange:'0.0001–10⁶ L☉ (diagonal)', tempNote:'All types',
+    wrongMsg:'Main sequence stars fall on the diagonal band. Check both temperature and luminosity together.' },
+  { id:'wd', label:'White dwarf',
+    xFrac:0.62, yFrac:0.72, wFrac:0.30, hFrac:0.22,
+    lumRange:'< 0.01 L☉', tempNote:'Very hot (> 10,000K) but tiny',
+    wrongMsg:'White dwarfs are very hot but very dim — tiny remnant cores with luminosities below 0.01 L☉.' },
+];
+
+function getCorrectHRRegion(cls){
+  // Determine correct HR region from stellar class data
+  if(cls.lum > 1000)  return 'supergiant';
+  if(cls.lum > 10)    return 'giant';
+  if(cls.lum > 0.5 && cls.lum <= 10 && cls.rad > 1.5) return 'subgiant';
+  if(cls.lum < 0.005) return 'wd';
+  return 'main'; // default: main sequence
+}
+
+function openHRDiagram(star, onDone){
+  const panel = document.getElementById('classify-panel');
+  const existing = document.getElementById('hr-research-panel');
+  if(existing) existing.remove();
+
+  const hrDiv = document.createElement('div');
+  hrDiv.id = 'hr-research-panel';
+  hrDiv.style.cssText = 'padding:14px 22px';
+  hrDiv.innerHTML = `
+    <div style="font-size:9px;letter-spacing:2px;color:#805090;text-transform:uppercase;margin-bottom:4px">Research Mode — HR Diagram Placement</div>
+    <div style="font-size:12px;color:#c090ff;margin-bottom:8px">Click the region where <strong>${star.name}</strong> belongs.</div>
+    <div style="font-size:10px;color:#4a5080;margin-bottom:10px;line-height:1.6">
+      Luminosity: <span style="color:#f0c060">${cls_display(star.cls.lum)} L☉</span> &nbsp;·&nbsp;
+      Temperature: <span style="color:#f0a060">${star.cls.tempK.toLocaleString()} K</span> &nbsp;·&nbsp;
+      Radius: <span style="color:#a0d0f0">${star.cls.rad.toFixed(2)} R☉</span>
+    </div>
+    <canvas id="hr-research-canvas" width="560" height="260"
+      style="display:block;width:100%;border-radius:5px;background:#030408;border:1px solid rgba(80,40,140,0.3);margin-bottom:10px;cursor:crosshair"></canvas>
+    <div id="hr-research-result" style="display:none;font-size:11px;line-height:1.7;padding:10px 12px;border-radius:5px;margin-bottom:10px"></div>
+    <div style="display:flex;gap:8px">
+      <button class="pbtn pbtn-close" id="hr-skip-btn">Skip</button>
+    </div>`;
+
+  panel.appendChild(hrDiv);
+
+  function cls_display(lum){ return lum >= 1 ? lum.toFixed(1) : lum.toFixed(4); }
+
+  const cvs = document.getElementById('hr-research-canvas');
+  const ctx = cvs.getContext('2d');
+  const W=560, H=260;
+  ctx.globalCompositeOperation='source-over';
+
+  function drawHR(highlightId, correct){
+    ctx.fillStyle='#030408'; ctx.fillRect(0,0,W,H);
+    const bg=ctx.createLinearGradient(0,0,W,H);
+    bg.addColorStop(0,'rgba(40,50,180,0.1)');
+    bg.addColorStop(0.5,'rgba(255,220,100,0.05)');
+    bg.addColorStop(1,'rgba(200,50,20,0.08)');
+    ctx.fillStyle=bg; ctx.fillRect(30,8,W-38,H-28);
+    // Grid
+    ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=0.5;
+    [0.2,0.4,0.6,0.8].forEach(t=>{
+      ctx.beginPath(); ctx.moveTo(30,8+t*(H-36)); ctx.lineTo(W-8,8+t*(H-36)); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(30+t*(W-38),8); ctx.lineTo(30+t*(W-38),H-20); ctx.stroke();
+    });
+    // Axis labels
+    ctx.fillStyle='rgba(120,140,180,0.6)'; ctx.font='9px monospace';
+    ctx.textAlign='center'; ctx.fillText('← Hotter  Temperature  Cooler →',W/2,H-4);
+    ctx.save(); ctx.translate(12,H/2); ctx.rotate(-Math.PI/2);
+    ctx.textAlign='center'; ctx.fillText('Luminosity (L☉) →',0,0); ctx.restore();
+    // Regions
+    HR_REGIONS_DEF.forEach(r=>{
+      const rx=30+r.xFrac*(W-38), ry=8+r.yFrac*(H-28);
+      const rw=r.wFrac*(W-38), rh=r.hFrac*(H-28);
+      let fill='rgba(60,80,140,0.12)', stroke='rgba(100,120,180,0.2)';
+      if(highlightId===r.id){
+        fill = correct ? 'rgba(40,160,80,0.25)' : 'rgba(200,50,40,0.25)';
+        stroke = correct ? 'rgba(40,200,80,0.7)' : 'rgba(220,60,40,0.7)';
+      }
+      ctx.fillStyle=fill; ctx.fillRect(rx,ry,rw,rh);
+      ctx.strokeStyle=stroke; ctx.lineWidth=correct||highlightId===r.id?1.5:0.5;
+      ctx.strokeRect(rx,ry,rw,rh);
+      ctx.fillStyle='rgba(180,200,240,0.65)'; ctx.font='10px monospace';
+      ctx.textAlign='center';
+      ctx.fillText(r.label, rx+rw/2, ry+rh/2+3);
+      ctx.fillStyle='rgba(100,120,180,0.45)'; ctx.font='8px monospace';
+      ctx.fillText(r.lumRange, rx+rw/2, ry+rh/2+14);
+    });
+    // Star marker
+    const correctRegion = HR_REGIONS_DEF.find(r=>r.id===getCorrectHRRegion(star.cls));
+    if(correctRegion && highlightId){
+      const mx = 30+correctRegion.xFrac*(W-38)+correctRegion.wFrac*(W-38)*0.5;
+      const my = 8+correctRegion.yFrac*(H-28)+correctRegion.hFrac*(H-28)*0.5;
+      ctx.beginPath(); ctx.arc(mx,my-12,5,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,240,100,0.9)'; ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,0.5)'; ctx.lineWidth=1; ctx.stroke();
+    }
+  }
+
+  drawHR(null,false);
+
+  let hrDone=false;
+  const correctId = getCorrectHRRegion(star.cls);
+
+  cvs.addEventListener('click', e=>{
+    if(hrDone)return;
+    const rect=cvs.getBoundingClientRect();
+    const sx=560/rect.width, sy=260/rect.height;
+    const cx=(e.clientX-rect.left)*sx, cy=(e.clientY-rect.top)*sy;
+    HR_REGIONS_DEF.forEach(r=>{
+      const rx=30+r.xFrac*522, ry=8+r.yFrac*232, rw=r.wFrac*522, rh=r.hFrac*232;
+      if(cx>=rx&&cx<=rx+rw&&cy>=ry&&cy<=ry+rh){
+        hrDone=true;
+        const correct=r.id===correctId;
+        drawHR(r.id, correct);
+        const res=document.getElementById('hr-research-result');
+        res.style.display='block';
+        res.style.cssText=`display:block;font-size:11px;line-height:1.7;padding:10px 12px;
+          border-radius:5px;margin-bottom:10px;
+          background:${correct?'rgba(5,25,10,0.8)':'rgba(30,5,5,0.8)'};
+          border:1px solid ${correct?'rgba(40,160,70,0.4)':'rgba(160,40,40,0.4)'};
+          color:${correct?'#50d878':'#e07070'}`;
+        if(correct){
+          state.score += 150; state.credits += 20; updateHUD();
+          showFlash('+150  HR PLACEMENT!','#c090ff');
+          res.innerHTML=`✓ Correct — ${star.name} is on the <strong>${r.label}</strong>. `
+            +`At ${star.cls.lum.toFixed(3)} L☉ and ${star.cls.tempK.toLocaleString()}K this places it `
+            +`in luminosity class ${correctId==='main'?'V (main sequence)':correctId==='subgiant'?'IV (subgiant)':correctId==='giant'?'III (giant)':correctId==='supergiant'?'I (supergiant)':'degenerate (WD)'}. `
+            +`The full spectral designation would be ${star.cls.type}${correctId==='main'?'V':correctId==='subgiant'?'IV':correctId==='giant'?'III':'I'}. +150 pts`;
+        } else {
+          res.innerHTML=`${r.wrongMsg} The correct placement is the <strong>${HR_REGIONS_DEF.find(x=>x.id===correctId).label}</strong> — `
+            +`at ${star.cls.lum.toFixed(3)} L☉ this star's luminosity falls in that region.`;
+        }
+        const cont=document.createElement('button');
+        cont.className='pbtn pbtn-action'; cont.style.marginTop='8px'; cont.textContent='Continue →';
+        cont.onclick=()=>{ hrDiv.remove(); if(onDone) onDone(); };
+        res.appendChild(cont);
+      }
+    });
+  });
+
+  document.getElementById('hr-skip-btn').onclick=()=>{ hrDiv.remove(); if(onDone) onDone(); };
+}
+
+/* ================================================================
+   SECTOR COMPLETION DETECTION & AUDIO CUE
+   Plays a celebratory chime when all stars in the current sector
+   have been discovered. Melody changes with sector tier:
+   Tier 1: warm major arpeggio (C-E-G-C)
+   Tier 2: bright ascending run (C-D-E-G-A)
+   Tier 3: triumphant fanfare (C-G-C-E-G)
+   Tier 4: dramatic resolution (C-Eb-G-Bb-C)
+   Tier 5 (Heliopause): ethereal shimmer (C-D-F#-A-C)
+================================================================ */
+function checkSectorComplete(){
+  const stars = state.sectorStars[state.currentSectorId] || [];
+  if(stars.length === 0) return;
+  const allFound = stars.every(s => s.discovered);
+  if(!allFound) return;
+  // Don't fire more than once per sector load
+  if(state._sectorCompleted && state._sectorCompleted[state.currentSectorId]) return;
+  if(!state._sectorCompleted) state._sectorCompleted = {};
+  state._sectorCompleted[state.currentSectorId] = true;
+
+  const sector = SECTORS.find(s => s.id === state.currentSectorId) || SECTORS[0];
+  const tier   = sector.tier || 1;
+
+  // Delay slightly so it plays after the scan flash settles
+  setTimeout(() => playSectorCompleteChime(tier, sector.name), 1200);
+}
+
+function playSectorCompleteChime(tier, sectorName){
+  if(!audioCtx || !masterGain) return;
+
+  // Note sequences per tier (frequency ratios above C4 = 261.63 Hz)
+  const C4 = 261.63;
+  const SEQUENCES = {
+    1: [ // Warm major arpeggio C-E-G-C — familiar, satisfying
+      {freq:C4,     dur:0.3, t:0.0},
+      {freq:C4*1.25,dur:0.3, t:0.18},
+      {freq:C4*1.5, dur:0.3, t:0.36},
+      {freq:C4*2,   dur:0.6, t:0.54},
+    ],
+    2: [ // Bright ascending run C-D-E-G-A — energetic
+      {freq:C4,     dur:0.2, t:0.0},
+      {freq:C4*1.122,dur:0.2,t:0.15},
+      {freq:C4*1.25,dur:0.2, t:0.30},
+      {freq:C4*1.5, dur:0.2, t:0.45},
+      {freq:C4*1.667,dur:0.5,t:0.60},
+    ],
+    3: [ // Triumphant fanfare C-G-C-E-G — bold
+      {freq:C4,     dur:0.25,t:0.0},
+      {freq:C4*1.5, dur:0.25,t:0.20},
+      {freq:C4*2,   dur:0.25,t:0.40},
+      {freq:C4*2.5, dur:0.25,t:0.55},
+      {freq:C4*3,   dur:0.7, t:0.70},
+    ],
+    4: [ // Dark-to-light resolution C-Eb-G-Bb-C — dramatic
+      {freq:C4,         dur:0.3, t:0.0},
+      {freq:C4*1.189,   dur:0.3, t:0.22},
+      {freq:C4*1.5,     dur:0.3, t:0.44},
+      {freq:C4*1.782,   dur:0.3, t:0.66},
+      {freq:C4*2,       dur:0.8, t:0.88},
+    ],
+    5: [ // Ethereal shimmer C-D-F#-A-C — otherworldly, Heliopause feel
+      {freq:C4,         dur:0.35,t:0.0},
+      {freq:C4*1.122,   dur:0.35,t:0.25},
+      {freq:C4*1.414,   dur:0.35,t:0.50},
+      {freq:C4*1.667,   dur:0.35,t:0.75},
+      {freq:C4*2,       dur:0.8, t:1.0},
+    ],
+  };
+
+  const seq = SEQUENCES[Math.min(tier, 5)] || SEQUENCES[1];
+  const now = audioCtx.currentTime;
+  const gainLevel = (state.musicVolume || 0.7) * 0.18;
+
+  seq.forEach(note => {
+    const osc  = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = note.freq;
+    const t = now + note.t;
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(gainLevel, t + 0.05);
+    gain.gain.setValueAtTime(gainLevel, t + note.dur * 0.6);
+    gain.gain.linearRampToValueAtTime(0, t + note.dur);
+    osc.connect(gain);
+    gain.connect(masterGain);
+    osc.start(t);
+    osc.stop(t + note.dur + 0.05);
+  });
+
+  // Show sector complete toast
+  const totalStars = (state.sectorStars[state.currentSectorId]||[]).length;
+  showUnlockToast(`✦ ${sectorName} fully surveyed — ${totalStars} stars discovered!`);
+}
+
+/* ================================================================
    STARTUP
 ================================================================ */
 applyLanguage('en');
 snapshotEnglishGuideContent();
 detectClassMode();
 initFontSize();
+// Restore research tab if already unlocked from a previous save
+if(state.researchUnlocked) addResearchGuideTab();
 // Safety reset
 document.getElementById('overlay').style.display = 'none';
 ['spectra-panel','survey-panel','classify-panel','civ-panel','debrief-panel',
