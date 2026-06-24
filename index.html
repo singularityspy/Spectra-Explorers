@@ -24,7 +24,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New',monospace;overflow:hidden;height:100vh;width:100vw}
+body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New',monospace;overflow:hidden;height:100vh;width:100vw;zoom:1}
 #bg,#main{position:absolute;top:0;left:0}
 #ui{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
 .panel{background:rgba(5,15,40,0.96);border:1px solid rgba(100,160,255,0.3);border-radius:8px;pointer-events:all}
@@ -331,6 +331,31 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 #ui.font-large  .tip-box { font-size:13px !important }
 #ui.font-large  .score-table td { font-size:13px !important; padding:6px 10px !important }
 #ui.font-large  .gloss-word { font-size:14px !important }
+/* ── HYDROGEN PULSE (periodic table hover hint) ──────────────── */
+@keyframes hPulse{
+  0%  {transform:scale(1);   box-shadow:0 0 0 0 rgba(220,180,30,0)}
+  30% {transform:scale(1.35);box-shadow:0 0 8px 3px rgba(220,180,30,0.7)}
+  60% {transform:scale(1);   box-shadow:0 0 0 0 rgba(220,180,30,0)}
+  80% {transform:scale(1.25);box-shadow:0 0 6px 2px rgba(220,180,30,0.5)}
+  100%{transform:scale(1);   box-shadow:0 0 0 0 rgba(220,180,30,0)}
+}
+.h-pulse{animation:hPulse 0.9s ease-in-out}
+
+/* ── FIRST-SCAN TUTORIAL OVERLAY ─────────────────────────────── */
+#tutorial-overlay{position:absolute;inset:0;pointer-events:none;z-index:45}
+.tut-step{position:absolute;pointer-events:all;animation:tutFade 0.3s ease-out}
+@keyframes tutFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.tut-bubble{background:rgba(2,8,30,0.97);border:1.5px solid rgba(100,180,255,0.6);border-radius:8px;padding:12px 16px;font-size:13px;color:#a0c8f0;line-height:1.7;max-width:260px;font-family:system-ui,-apple-system,sans-serif;box-shadow:0 4px 24px rgba(0,0,255,0.15)}
+.tut-bubble strong{color:#c0e0ff;font-weight:600}
+.tut-arrow{position:absolute;width:0;height:0}
+.tut-arrow.down{border-left:8px solid transparent;border-right:8px solid transparent;border-top:10px solid rgba(100,180,255,0.6)}
+.tut-arrow.up{border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:10px solid rgba(100,180,255,0.6)}
+.tut-arrow.right{border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:10px solid rgba(100,180,255,0.6)}
+.tut-next{margin-top:10px;width:100%;background:rgba(20,60,160,0.8);border:1px solid rgba(80,140,255,0.5);color:#90c0ff;font-family:inherit;font-size:12px;padding:7px 0;border-radius:5px;cursor:pointer;letter-spacing:1px}
+.tut-next:hover{background:rgba(30,80,200,0.9);color:#c0e0ff}
+.tut-highlight{outline:2px solid rgba(100,180,255,0.8)!important;outline-offset:3px!important;animation:tutPulseEl 1s ease-in-out infinite}
+@keyframes tutPulseEl{0%,100%{outline-color:rgba(100,180,255,0.8)}50%{outline-color:rgba(160,220,255,1)}}
+
 /* ── HYPERSPACE / AURORA / SCORE BURST ───────────────────────── */
 #hyperspace-canvas{position:absolute;inset:0;pointer-events:none;z-index:50;display:none}
 #aurora-canvas{position:absolute;inset:0;pointer-events:none;z-index:8;display:none;opacity:0;transition:opacity 0.5s}
@@ -346,8 +371,8 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 #glossary-search::placeholder{color:#2a4060}
 .gloss-term{padding:10px 0;border-bottom:1px solid rgba(30,50,100,0.2)}
 .gloss-term:last-child{border-bottom:none}
-.gloss-word{font-size:12px;color:#90b8f0;font-weight:bold;margin-bottom:3px}
-.gloss-def{font-size:11px;color:#4a6080;line-height:1.6}
+.gloss-word{font-size:14px;color:#90b8f0;font-weight:600;margin-bottom:4px;font-family:'Share Tech Mono','Courier New',monospace}
+.gloss-def{font-size:15px;color:#4a6080;line-height:1.8;font-family:system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
 .gloss-letter{font-size:9px;color:#203050;letter-spacing:3px;text-transform:uppercase;padding:8px 0 4px;margin-top:4px}
 .elem-card{background:rgba(5,10,30,0.7);border:1px solid rgba(40,70,140,0.25);border-radius:6px;padding:8px 10px;margin-bottom:8px}
 .elem-card-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
@@ -472,14 +497,17 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 .guide-tab.active{color:#90b8ff;border-bottom-color:#5090ff}
 
 /* Guide content areas */
-#guide-body{padding:22px 24px}
+#guide-body{padding:22px 28px;font-family:system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
 .guide-section{display:none}
 .guide-section.active{display:block}
 
-/* Guide typography */
-.guide-section h2{font-size:11px;letter-spacing:3px;color:#4070b0;text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(40,70,130,0.3)}
-.guide-section h3{font-size:12px;color:#80a8e0;margin:16px 0 8px;letter-spacing:1px}
-.guide-section p{font-size:11px;color:#5070a0;line-height:1.8;margin-bottom:10px}
+/* Guide typography — 15px body, proper line height, sans-serif for reading comfort */
+.guide-section h2{font-size:11px;letter-spacing:3px;color:#4070b0;text-transform:uppercase;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid rgba(40,70,130,0.3);font-family:'Share Tech Mono','Courier New',monospace}
+.guide-section h3{font-size:15px;color:#80a8e0;margin:18px 0 10px;font-weight:600;letter-spacing:0}
+.guide-section p{font-size:15px;color:#5070a0;line-height:1.9;margin-bottom:12px}
+.guide-section ul li,.guide-section ol li{font-size:15px;color:#5070a0;line-height:1.9;margin-bottom:4px}
+.guide-section details summary{font-size:13px}
+.guide-section details > div{font-size:14px;line-height:1.85}
 .guide-section .highlight{color:#90c0ff}
 .guide-section .good{color:#50d080}
 .guide-section .warn{color:#d09030}
@@ -492,7 +520,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 .spec-mini-canvas{width:100%;height:22px;border-radius:2px}
 
 /* Tip boxes */
-.tip-box{background:rgba(10,30,60,0.5);border-left:3px solid rgba(60,120,200,0.6);border-radius:0 6px 6px 0;padding:10px 14px;margin:12px 0;font-size:10px;color:#5070a0;line-height:1.7}
+.tip-box{background:rgba(10,30,60,0.5);border-left:3px solid rgba(60,120,200,0.6);border-radius:0 6px 6px 0;padding:12px 16px;margin:12px 0;font-size:14px;color:#5070a0;line-height:1.8;font-family:system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
 .tip-box.green{border-left-color:rgba(50,180,90,0.6);background:rgba(5,30,15,0.5)}
 .tip-box.amber{border-left-color:rgba(200,150,30,0.6);background:rgba(30,20,5,0.5);color:#8a7040}
 
@@ -517,22 +545,21 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
 /* -- LANGUAGE SELECTOR ------------------------------------------ */
 #lang-selector{display:flex;gap:10px;margin-bottom:24px}
-.lang-btn{background:rgba(10,25,60,0.8);border:1px solid rgba(60,100,180,0.3);border-radius:5px;color:#4060a0;font-family:inherit;font-size:12px;letter-spacing:1px;padding:8px 18px;cursor:pointer;transition:all 0.2s}
+.lang-btn{background:rgba(10,25,60,0.8);border:1px solid rgba(60,100,180,0.3);border-radius:5px;color:#6080a0;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13px;letter-spacing:0.5px;padding:8px 18px;cursor:pointer;transition:all 0.2s}
 .lang-btn:hover{border-color:#6080c0;color:#8090d0;background:rgba(20,45,100,0.9)}
 .lang-btn.active{border-color:#5090ff;color:#90b8ff;background:rgba(15,35,100,0.85)}
 
-/* -- NAME ENTRY SCREEN ------------------------------------------ */
-#name-screen{position:absolute;inset:0;background:rgba(2,5,16,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:all;z-index:25;padding:20px;isolation:isolate}
-#name-screen h1{font-size:26px;letter-spacing:8px;color:#a0c8ff;margin-bottom:8px;text-align:center}
-#name-screen .ns-sub{font-size:11px;color:#304060;letter-spacing:3px;text-transform:uppercase;margin-bottom:32px}
-#name-screen .ns-label{font-size:10px;color:#4060a0;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
-#name-input{background:rgba(10,25,60,0.9);border:1px solid rgba(80,130,255,0.4);border-radius:5px;color:#c0d8ff;font-family:inherit;font-size:18px;letter-spacing:2px;padding:12px 18px;width:320px;text-align:center;outline:none;transition:border-color 0.2s;margin-bottom:20px}
-#name-input:focus{border-color:rgba(100,170,255,0.8)}
-#name-input::placeholder{color:#2a4060;font-size:13px}
-#name-submit{background:rgba(20,60,120,0.9);border:1px solid rgba(80,150,255,0.5);color:#90c0ff;font-family:inherit;font-size:12px;letter-spacing:2px;padding:12px 32px;cursor:pointer;border-radius:5px;text-transform:uppercase;transition:all 0.2s}
-#name-submit:hover{background:rgba(40,90,180,0.9);border-color:#70b8ff}
+#name-screen{position:absolute;inset:0;background:rgba(2,5,16,0.82);display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:all;z-index:25;padding:20px;isolation:isolate}
+#name-screen h1{font-size:48px;letter-spacing:10px;color:#c0d8ff;margin-bottom:6px;text-align:center;font-family:'Share Tech Mono','Courier New',monospace;font-weight:400;text-shadow:0 0 40px rgba(100,160,255,0.4)}
+#name-screen .ns-sub{font-size:14px;color:#3a5878;letter-spacing:4px;text-transform:uppercase;margin-bottom:36px;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-weight:300}
+#name-screen .ns-label{font-size:13px;color:#5070a0;letter-spacing:1px;margin-bottom:10px;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+#name-input{background:rgba(5,15,50,0.85);border:1px solid rgba(60,100,200,0.4);border-radius:6px;color:#c0d8ff;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:16px;padding:12px 20px;width:320px;outline:none;margin-bottom:16px;letter-spacing:0.5px;transition:border-color 0.2s}
+#name-input:focus{border-color:rgba(100,160,255,0.7)}
+#name-input::placeholder{color:#2a3f60}
+#name-submit{background:rgba(20,60,120,0.9);border:1px solid rgba(80,150,255,0.5);color:#90c0ff;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;letter-spacing:1px;padding:13px 40px;cursor:pointer;border-radius:6px;transition:all 0.2s}
+#name-submit:hover{background:rgba(40,90,180,0.9);border-color:#70b8ff;color:#c0e0ff}
 #name-submit:disabled{opacity:0.3;cursor:default}
-#name-screen .ns-note{font-size:9px;color:#202840;letter-spacing:1px;text-transform:uppercase;margin-top:14px}
+#name-screen .ns-note{font-size:12px;color:#2a3850;letter-spacing:0.3px;margin-top:16px;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;text-align:center}
 
 /* -- SAVE STATUS BAR -------------------------------------------- */
 #save-status{position:absolute;bottom:58px;left:50%;transform:translateX(-50%);font-size:9px;color:#2a4060;letter-spacing:1px;pointer-events:none;white-space:nowrap;text-align:center;display:none}
@@ -575,6 +602,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 <canvas id="main"></canvas>
 <canvas id="hyperspace-canvas"></canvas>
 <canvas id="aurora-canvas"></canvas>
+<div id="tutorial-overlay"></div>
 <div id="ui">
 
   <!-- HUD — stats on left, title in centre, action buttons on right, all one bar -->
@@ -595,6 +623,11 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
         <span id="track-label">Cosmos</span>
       </div>
       <button id="font-toggle-btn" title="Change text size">A</button>
+      <div style="display:flex;align-items:center;gap:3px;margin-left:4px">
+        <button id="zoom-out-btn" title="Zoom out" style="font-size:14px;padding:4px 7px;background:rgba(10,25,60,0.8);border:1px solid rgba(60,100,180,0.3);color:#4060a0;font-family:inherit;border-radius:3px;cursor:pointer;line-height:1">−</button>
+        <span id="zoom-val" style="font-size:9px;color:#304060;min-width:30px;text-align:center">100%</span>
+        <button id="zoom-in-btn"  title="Zoom in"  style="font-size:14px;padding:4px 7px;background:rgba(10,25,60,0.8);border:1px solid rgba(60,100,180,0.3);color:#4060a0;font-family:inherit;border-radius:3px;cursor:pointer;line-height:1">+</button>
+      </div>
       <button id="glossary-btn" title="Glossary">📖</button>
       <button id="help-btn" title="How to play">?</button>
     </div>
@@ -999,7 +1032,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
     <!-- Periodic table tab -->
     <div id="gloss-pane-periodic" style="display:none;padding:12px 22px 8px">
       <div style="font-size:10px;color:#304060;line-height:1.7;margin-bottom:6px">
-        All 118 elements. Elements <span style="color:#f0c040">highlighted in gold</span> are in the game's emission pool. Click any element to see its electron configuration and spectral lines.
+        All 118 elements. <span style="color:#f0c040">Gold-bordered</span> elements are in the game's emission pool — each one has a worked configuration example inside. New to configurations? Start with <span id="pt-h-hint" style="color:#f0c040;cursor:default;text-decoration:underline dotted rgba(200,160,30,0.5)" title="Hover to highlight Hydrogen on the table">H</span> (Hydrogen, #1) — it has just one electron and the simplest possible example.
       </div>
     </div>
     <div id="gloss-periodic-body" style="display:none;padding:0 14px 16px;max-height:68vh;overflow-y:auto"></div>
@@ -1126,24 +1159,37 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
   ========================================================== -->
   <div id="name-screen">
     <canvas id="nebula-canvas" style="position:absolute;inset:0;pointer-events:none;z-index:0"></canvas>
-    <h1 style="position:relative;z-index:2">SPECTRA EXPLORER</h1>
-    <div class="ns-sub" id="ns-sub-text" style="position:relative;z-index:2">Galactic Survey Corps — Enlistment</div>
-    <div id="lang-selector" style="position:relative;z-index:2">
-      <button class="lang-btn active" data-lang="en">🇺🇸 English</button>
-      <button class="lang-btn" data-lang="es">🇪🇸 Español</button>
+
+    <!-- Language selector — top right corner, unobtrusive -->
+    <div id="lang-selector" style="position:absolute;top:18px;right:20px;z-index:10;display:flex;gap:6px">
+      <button class="lang-btn active" data-lang="en" style="font-size:11px;padding:5px 12px">🇺🇸 EN</button>
+      <button class="lang-btn" data-lang="es" style="font-size:11px;padding:5px 12px">🇪🇸 ES</button>
     </div>
+
+    <!-- Music toggle — top left corner, clearly visible -->
+    <div style="position:absolute;top:18px;left:20px;z-index:10;display:flex;align-items:center;gap:8px">
+      <button id="title-music-btn" style="background:rgba(10,30,80,0.85);border:1px solid rgba(80,130,220,0.5);border-radius:5px;color:#5080c0;font-family:system-ui,sans-serif;font-size:12px;padding:6px 14px;cursor:pointer;letter-spacing:0.5px;min-width:100px">♪ Music on</button>
+      <input type="range" id="title-music-vol" min="0" max="100" value="50" style="width:70px;accent-color:#3060a0" title="Music volume">
+    </div>
+
+    <!-- Title + animated canvas overlay -->
+    <div style="position:relative;z-index:2;text-align:center;margin-bottom:8px">
+      <canvas id="title-anim-canvas" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:3"></canvas>
+      <h1 id="title-h1" style="position:relative;z-index:2">SPECTRA EXPLORER</h1>
+    </div>
+
+    <div class="ns-sub" id="ns-sub-text" style="position:relative;z-index:2">Map the cosmos. Decode the light.</div>
+
     <div class="ns-label" id="ns-label-text" style="position:relative;z-index:2">Enter your explorer name:</div>
     <input id="name-input" type="text" maxlength="20" placeholder="Your name or callsign" autocomplete="off" spellcheck="false" style="position:relative;z-index:2">
     <button id="name-submit" disabled style="position:relative;z-index:2">Begin Mission →</button>
-    <div class="ns-note" id="ns-note-text" style="position:relative;z-index:2">This name appears on the global leaderboard · Use any name or callsign — no personal data is stored</div>
+    <div class="ns-note" id="ns-note-text" style="position:relative;z-index:2">Use any name or callsign · no personal data is stored</div>
 
-    <!-- Photosensitivity notice — inline, subtle, below name entry -->
-    <div style="position:relative;z-index:2;margin-top:18px;padding:10px 16px;border:1px solid rgba(80,60,20,0.35);border-radius:5px;background:rgba(10,8,2,0.5);max-width:400px;text-align:left">
-      <div style="font-size:9px;color:#706030;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px">⚠ Photosensitivity</div>
-      <div style="font-size:10px;color:#504020;line-height:1.7">Contains flashing lights and motion effects. If you are photosensitive, enable Reduce Motion below.</div>
-      <label style="display:flex;align-items:center;gap:8px;margin-top:7px;cursor:pointer;font-size:10px;color:#706030">
+    <!-- Photosensitivity notice — bottom of screen, minimal -->
+    <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:10;text-align:center;max-width:420px">
+      <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:11px;color:#3a3020;font-family:system-ui,sans-serif">
         <input type="checkbox" id="reduce-motion-check" style="accent-color:#80c060;cursor:pointer">
-        Reduce Motion — disables flashing effects
+        <span>⚠ Reduce Motion — disable flashing effects</span>
       </label>
     </div>
   </div>
@@ -1217,74 +1263,123 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
     <div style="padding:18px 24px 14px;border-bottom:1px solid rgba(60,100,180,0.2)">
       <div style="font-size:9px;letter-spacing:3px;color:#4060a0;text-transform:uppercase;margin-bottom:4px">For Educators</div>
       <div style="font-size:20px;color:#a0c8ff;margin-bottom:2px">Spectra Explorer — Educator Guide</div>
-      <div style="font-size:10px;color:#2a4060">Free educational game · No accounts · No data collection · Works in any modern browser · <span style="color:#3a5878">Version 1.0.0</span></div>
+      <div style="font-size:10px;color:#2a4060">Free · No accounts · No data collection · Single HTML file · Works in any modern browser · <span style="color:#3a5878">v1.0.0</span></div>
     </div>
-    <div style="padding:16px 24px">
+    <div style="padding:16px 24px;font-family:system-ui,-apple-system,'Segoe UI',sans-serif">
 
       <div class="edu-section">
         <h3>What students learn</h3>
-        <p>Spectra Explorer is designed so students learn by doing, not by reading. The game's puzzles are built directly on real astronomy and chemistry concepts:</p>
-        <div class="edu-obj"><div class="edu-obj-num">1</div><div>Identify stellar spectral classes (OBAFGKM Harvard system) by reading absorption and emission line patterns</div></div>
-        <div class="edu-obj"><div class="edu-obj-num">2</div><div>Distinguish between absorption spectra (dark lines on rainbow) and emission spectra (bright lines on black)</div></div>
-        <div class="edu-obj"><div class="edu-obj-num">3</div><div>Interpret Doppler shift — determine radial velocity direction from spectral line displacement</div></div>
-        <div class="edu-obj"><div class="edu-obj-num">4</div><div>Apply Kepler's Third Law (T²=a³/M) to determine whether a planet's orbit falls within the habitable zone</div></div>
-        <div class="edu-obj"><div class="edu-obj-num">5</div><div>Identify elements from pure emission spectra drawn from the periodic table</div></div>
-        <div class="edu-obj"><div class="edu-obj-num">6</div><div>Assess planetary habitability using atmospheric pressure, surface temperature, magnetic field, and orbital stability</div></div>
-        <div class="edu-obj"><div class="edu-obj-num">7</div><div>Predict stellar evolution endpoints (white dwarf, neutron star, black hole) from stellar mass</div></div>
-        <p style="margin-top:8px">Difficulty scales automatically. New players see full explanations and absorption-only spectra. Advanced players encounter emission, binary composite, and partial-window spectra with formula-based classification.</p>
+        <p>Spectra Explorer teaches by doing. Every concept is embedded in a puzzle students must solve — not a fact sheet they must memorise. The game adapts in difficulty automatically across 10 sectors.</p>
+        <div class="edu-obj"><div class="edu-obj-num">1</div><div><strong style="color:#7090c0">Stellar spectral classification</strong> — identify star types O B A F G K M by reading absorption and emission line patterns in realistic spectra</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">2</div><div><strong style="color:#7090c0">Spectral line identification</strong> — distinguish absorption spectra (dark lines on rainbow) from emission spectra (bright lines on black); match patterns to candidates</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">3</div><div><strong style="color:#7090c0">Doppler effect</strong> — determine radial velocity direction (approaching/receding) from spectral line displacement relative to a reference</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">4</div><div><strong style="color:#7090c0">Kepler's Third Law</strong> — apply T²=a³/M to calculate semi-major axis, then determine if a planet's orbit falls in the habitable zone</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">5</div><div><strong style="color:#7090c0">Element identification</strong> — identify 86 periodic table elements from pure emission spectra; three difficulty tiers with progressive scaffolding removal</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">6</div><div><strong style="color:#7090c0">Electron configuration</strong> — after correct element ID, determine ground-state electron configuration using the Aufbau principle; three scaffold tiers (full config → valence only → blank)</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">7</div><div><strong style="color:#7090c0">Planetary habitability</strong> — evaluate four instrument readings (atmospheric pressure 0.3–3.0 atm, surface temperature −20 to +70°C, magnetic field ≥8 μT, orbital stability ≥55) to classify a world</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">8</div><div><strong style="color:#7090c0">Stellar evolution</strong> — predict end states (white dwarf, neutron star, black hole) from stellar mass using the mass boundary rules</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">9</div><div><strong style="color:#7090c0">Advanced spectroscopy</strong> (Research Mode) — HR diagram placement, spectroscopic binary mass ratios, lithium depletion age estimation, interstellar absorption line identification, radial velocity planet detection</div></div>
       </div>
 
       <div class="edu-section">
-        <h3>Curriculum alignment</h3>
-        <p>Suitable for <strong style="color:#7090c0">high school astronomy, physics, and chemistry</strong> (approx. grades 9–12) and <strong style="color:#7090c0">introductory collegiate astronomy</strong>. Aligns with:</p>
-        <div class="edu-obj"><div class="edu-obj-num">→</div><div>Next Generation Science Standards (NGSS): ESS1-A, ESS1-B, PS4-B (electromagnetic radiation)</div></div>
-        <div class="edu-obj"><div class="edu-obj-num">→</div><div>AP Physics / AP Environmental Science: stellar classification, atomic emission, orbital mechanics</div></div>
-        <div class="edu-obj"><div class="edu-obj-num">→</div><div>IB Physics and Chemistry: spectroscopy, atomic structure, Kepler's Laws</div></div>
-        <div class="edu-obj"><div class="edu-obj-num">→</div><div>College intro astronomy: OBAFGKM sequence, habitable zones, stellar evolution</div></div>
+        <h3>Game structure</h3>
+        <p>The game is organised into <strong style="color:#7090c0">10 sectors across 5 tiers</strong>. Each sector introduces new puzzle complexity.</p>
+        <div class="edu-obj"><div class="edu-obj-num">T1</div><div><strong style="color:#7090c0">Home Nebula, Habitable Belt</strong> — absorption spectra only; full scaffolding; Doppler bonus unlocked</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">T2</div><div><strong style="color:#7090c0">White Ring, Red Dwarf Field</strong> — adds emission spectra; Doppler required; special events begin</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">T3</div><div><strong style="color:#7090c0">Inner Rim, Deep Field</strong> — binary composite spectra dominate; all bonus puzzles active</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">T4</div><div><strong style="color:#7090c0">Stellar Graveyard, Void Margin, Forbidden Zone</strong> — unlocks after all 6 base sectors visited; increased mystery object frequency</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">T5</div><div><strong style="color:#7090c0">The Heliopause</strong> — named halo stars; three advanced bonus puzzles (lithium age, radial velocity, ISM absorption); unlocks Research Mode</div></div>
+        <p>Each star scan follows a 4-act loop: <em>emission match → planetary survey → stellar classification → civilisation outcome</em>. Acts II–IV only appear when relevant (e.g. Act II only if the star has a habitable candidate).</p>
+      </div>
+
+      <div class="edu-section">
+        <h3>Progression &amp; unlocks</h3>
+        <p>Difficulty increases automatically as students play — no teacher configuration required.</p>
+        <div class="edu-obj"><div class="edu-obj-num">→</div><div>0–19 stars: Element ID Tier A (full emission strip shown, choose from 4)</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">→</div><div>20+ stars: Element ID becomes mandatory; Tier B active (strips visible for first 5 correct, then name-only)</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">→</div><div>40+ stars: Stellar evolution puzzle unlocked; Element ID Tier C (partial absorption window only; −10 pts per wrong answer)</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">→</div><div>Electron configuration follows every correct element ID — 3 scaffold tiers, progressive difficulty</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">→</div><div>Colony 3: Deep Field Telescope unlocked (50 credits/scan; 19 curated real deep-field targets)</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">→</div><div>Research Mode: unlocks after first Heliopause discovery; HR diagram replaces OBAFGKM buttons</div></div>
+      </div>
+
+      <div class="edu-section">
+        <h3>First-scan tutorial</h3>
+        <p>Players who select "New to This" and close the guide in under 20 seconds without reading it will automatically receive a 3-step interactive tutorial on their first scan. The tutorial points at the target spectrum and candidate strips with highlighted outlines and plain-language prompts — it does not give the answer. It fires only once and only for new players. Intermediate and Advanced players never see it.</p>
+      </div>
+
+      <div class="edu-section">
+        <h3>Glossary &amp; reference tools</h3>
+        <p>The in-game glossary (📖 button) contains four tabs:</p>
+        <div class="edu-obj"><div class="edu-obj-num">📖</div><div><strong style="color:#7090c0">Terms</strong> — 76 alphabetised astronomy and chemistry definitions; fully translated into Spanish</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">🌈</div><div><strong style="color:#7090c0">Element Spectra</strong> — rendered emission strips for all 86 game-pool elements; lazy-loaded</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">⚛️</div><div><strong style="color:#7090c0">Configurations</strong> — ground-state electron configurations for all 86 elements, grouped by s/p/d/f block; searchable</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">🔬</div><div><strong style="color:#7090c0">Periodic Table</strong> — all 118 elements; gold-bordered elements are in the game pool; click any gold element for a step-by-step Aufbau walkthrough with plain-language bus-seat analogy; guided tour suggests H → B → Ne → Sc → La to demonstrate all four blocks</div></div>
+      </div>
+
+      <div class="edu-section">
+        <h3>Bilingual support</h3>
+        <p>The game is fully playable in <strong style="color:#7090c0">English and Spanish</strong>. Language is selected on the title screen and can be changed at any time. The following are translated: all UI strings and act headings, the full How to Play guide, all 5 guide sections (Reading Spectra, Star Classes, Planet Survey, Bonus Puzzles, Research Mode), and all 65+ Spanish glossary terms. The Periodic Table, Element Spectra, and Configuration tabs function identically in both languages.</p>
       </div>
 
       <div class="edu-section">
         <h3>Class Mode — focused activity URLs</h3>
-        <p>Add a URL parameter to create a focused version of the game for in-class activities. Share the modified URL with students and the game will highlight and prioritise that puzzle type.</p>
+        <p>Add a URL parameter to focus the game on a specific puzzle type for in-class activities. Students see no difference in the interface — the parameter works silently.</p>
         <div class="edu-mode">
-          <div style="margin-bottom:6px;color:#6090c0">Add to the game URL:</div>
-          <code>?mode=classify</code> — Focus on OBAFGKM stellar classification (Act III)<br>
-          <code>?mode=spectra</code> — Focus on emission matching (Act I)<br>
-          <code>?mode=survey</code> — Focus on planetary habitability survey (Act II)<br>
-          <code>?mode=element</code> — Focus on element identification puzzles<br>
-          <code>?mode=kepler</code> — Focus on Kepler's Law orbital puzzles<br>
-          <code>?mode=free</code> — Default full game (no restriction)
+          <code>?mode=classify</code> — OBAFGKM stellar classification (Act III)<br>
+          <code>?mode=spectra</code> — emission spectrum matching (Act I)<br>
+          <code>?mode=survey</code> — planetary habitability survey (Act II)<br>
+          <code>?mode=element</code> — element identification puzzles<br>
+          <code>?mode=kepler</code> — Kepler's Law orbital distance puzzles<br>
+          <code>?mode=free</code> — full game, no restriction (default)
         </div>
-        <p>Example: if the game is at <code style="color:#80b0e0;background:rgba(20,40,100,0.4);padding:1px 6px;border-radius:3px">spectraexplorer.html</code>, share <code style="color:#80b0e0;background:rgba(20,40,100,0.4);padding:1px 6px;border-radius:3px">spectraexplorer.html?mode=classify</code> for a classification-focused lesson. Students see no difference in the game's appearance — the URL parameter works silently in the background.</p>
       </div>
 
       <div class="edu-section">
         <h3>Session reports &amp; assessment</h3>
-        <p>After completing a mission (transmitting a discovery to the archive), students see a <strong style="color:#7090c0">Mission Report</strong> showing their accuracy per puzzle type. This report can be:</p>
-        <div class="edu-obj"><div class="edu-obj-num">→</div><div>Copied as plain text and submitted via email, LMS, or Google Form</div></div>
-        <div class="edu-obj"><div class="edu-obj-num">→</div><div>Printed directly using the Print Session Card button in the report</div></div>
-        <p>Reports show: puzzle attempts and accuracy per category, total score, stars discovered, time played, and the player's chosen name. No real names are required.</p>
+        <p>After transmitting a discovery, students see a <strong style="color:#7090c0">Mission Report</strong> with accuracy per puzzle category, total score, stars found, time played, and Kepler working shown (T, T², T²×M, calculated vs student a, % error). The report can be:</p>
+        <div class="edu-obj"><div class="edu-obj-num">→</div><div>Copied as plain text (includes version number) for submission via email, LMS, or Google Form</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">→</div><div>Printed directly using the Print Session Card button — formatted as a single-page lab report</div></div>
+        <p>Research Mode upgrades the report to a full <em>Research Log</em> — formatted as an observational astronomy report suitable for introductory lab submission.</p>
+      </div>
+
+      <div class="edu-section">
+        <h3>Accessibility &amp; motion</h3>
+        <div class="edu-privacy">
+          ✓ Photosensitivity notice on title screen with Reduce Motion toggle<br>
+          ✓ Reduce Motion disables hyperspace bars, mystery object flicker, and score burst — all gameplay intact<br>
+          ✓ Font size toggle (A button in HUD) — three sizes<br>
+          ✓ Zoom control (+ / − in HUD) — 80% to 140%; auto-scales to screen resolution (1080p=100%, 1440p=120%, 4K=140%)<br>
+          ✓ Full bilingual UI and guide content (English / Spanish)<br>
+          ✓ All puzzles completable without audio — music and chimes are supplementary
+        </div>
       </div>
 
       <div class="edu-section">
         <h3>Privacy &amp; data</h3>
         <div class="edu-privacy">
           ✓ No accounts required — students choose any display name or callsign<br>
-          ✓ No personal data collected or transmitted to any server<br>
-          ✓ Leaderboard stores only the chosen display name and game score<br>
-          ✓ All session data stays in the browser — nothing is logged externally<br>
-          ✓ The game runs entirely in the browser as a single HTML file — no installation
+          ✓ No personal data collected or transmitted<br>
+          ✓ Leaderboard stores only chosen display name and score<br>
+          ✓ All session data stays in the browser — nothing logged externally<br>
+          ✓ Runs entirely as a single HTML file — no installation, no server required<br>
+          ✓ Works offline after first load
         </div>
       </div>
 
       <div class="edu-section">
         <h3>Content guidance</h3>
-        <p><strong style="color:#7090c0">Suitable for ages 14+.</strong> The game contains:</p>
-        <div class="edu-obj"><div class="edu-obj-num">·</div><div>Real historical facts about scientists, including Hypatia of Alexandria (mentions her death in 415 CE), and historical use of lead in Roman civilization</div></div>
-        <div class="edu-obj"><div class="edu-obj-num">·</div><div>References to extreme astrophysical phenomena (supernovae, black holes, neutron stars) in purely scientific context</div></div>
-        <div class="edu-obj"><div class="edu-obj-num">·</div><div>A global leaderboard where players can see scores from other users — students use chosen callsigns, not real names</div></div>
-        <p>No violent, sexual, or otherwise inappropriate content. The colonization narrative involves founding peaceful science settlements, not conflict.</p>
-        <p>Element assignments in the identification puzzles are drawn from the periodic table for educational variety and <em>do not claim to represent the actual spectral composition of named stars</em>. This is noted in the in-game guide.</p>
+        <p><strong style="color:#7090c0">Suitable for ages 14+.</strong> Contains: real historical science facts (including Hypatia of Alexandria); references to extreme astrophysical phenomena in scientific context only; a global leaderboard using chosen callsigns not real names. No violent, sexual, or inappropriate content. Colonisation narrative involves peaceful science settlements. Element assignments in identification puzzles are educational and do not claim to represent actual spectral compositions of named stars.</p>
+      </div>
+
+      <div class="edu-section">
+        <h3>Curriculum alignment</h3>
+        <p>Suitable for high school astronomy, physics, and chemistry (grades 9–12) and introductory collegiate astronomy.</p>
+        <div class="edu-obj"><div class="edu-obj-num">→</div><div>NGSS: ESS1-A, ESS1-B, PS4-B (electromagnetic radiation and stellar properties)</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">→</div><div>AP Physics / AP Environmental Science: stellar classification, atomic emission, Kepler's Laws, orbital mechanics</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">→</div><div>IB Physics and Chemistry: spectroscopy SL/HL, atomic structure, electron configuration, Kepler's Laws</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">→</div><div>College intro astronomy: OBAFGKM sequence, HR diagram, habitable zones, stellar evolution, spectroscopic binaries</div></div>
+        <div class="edu-obj"><div class="edu-obj-num">→</div><div>Research Mode (Heliopause): aligns with Carroll &amp; Ostlie Ch. 7 (binary mass), observational astronomy lab formats</div></div>
       </div>
 
     </div>
@@ -2480,8 +2575,18 @@ function checkUnlocks(prevColonies){
   if(helioPauseVisited && !state.researchUnlocked){
     state.researchUnlocked = true;
     showUnlockToast('🔬 RESEARCH MODE UNLOCKED — Advanced puzzle variants now active');
-    // Add the Research Puzzles tab to the guide dynamically
     addResearchGuideTab();
+  }
+
+  // ── ENDGAME — all 10 sectors discovered + Heliopause visited ──
+  const allSectorIds = ['home','inner','habitable','redfield','whitering','deepfield',
+                        'graveyard','voidmargin','forbiddenzone','heliopause'];
+  const gameComplete = allSectorIds.every(id =>
+    state.sectorStars[id] && state.sectorStars[id].some(s => s.discovered)
+  );
+  if(gameComplete && !state._endgameFired){
+    state._endgameFired = true;
+    setTimeout(playEndgameCelebration, 1500);
   }
 }
 
@@ -2555,6 +2660,11 @@ function openAct1(star){
   showOverlay();
   document.getElementById('spectra-panel').style.display='block';
   document.getElementById('sp-star-name').textContent=star.name;
+
+  // Fire first-scan tutorial for New players who didn't read the guide
+  if(shouldShowTutorial()){
+    setTimeout(()=> runFirstScanTutorial(null), 400);
+  }
 
   // -- LORE & SPECIAL EVENTS --
   const loreEl  = document.getElementById('sp-lore');
@@ -3548,9 +3658,12 @@ function anyPanelOpen(){
 }
 
 function handleMapClick(e){
-  const rect=mainCanvas.getBoundingClientRect();
-  const mx=e.clientX-rect.left+state.camX;
-  const my=e.clientY-rect.top+state.camY;
+  const rect = mainCanvas.getBoundingClientRect();
+  // CSS zoom makes getBoundingClientRect() return zoomed dimensions.
+  // Divide by zoom ratio to convert from CSS pixels → canvas pixels.
+  const zoom = currentZoom || 1;
+  const mx = (e.clientX - rect.left) / zoom + state.camX;
+  const my = (e.clientY - rect.top)  / zoom + state.camY;
   const stars=state.sectorStars[state.currentSectorId]||[];
   let closest=-1, minD=35;
   stars.forEach((s,i)=>{
@@ -4582,6 +4695,16 @@ const ELECTRON_CONFIGS = {
 function buildPeriodicTable(container){
   container.innerHTML = '';
 
+  // Aufbau filling order — each entry: [subshell, max electrons, block, colour]
+  const FILL_ORDER = [
+    ['1s',2,'s','#6090e0'],['2s',2,'s','#6090e0'],['2p',6,'p','#50c070'],
+    ['3s',2,'s','#6090e0'],['3p',6,'p','#50c070'],['4s',2,'s','#6090e0'],
+    ['3d',10,'d','#d09030'],['4p',6,'p','#50c070'],['5s',2,'s','#6090e0'],
+    ['4d',10,'d','#d09030'],['5p',6,'p','#50c070'],['6s',2,'s','#6090e0'],
+    ['4f',14,'f','#b060e0'],['5d',10,'d','#d09030'],['6p',6,'p','#50c070'],
+    ['7s',2,'s','#6090e0'],['5f',14,'f','#b060e0'],['6d',10,'d','#d09030'],['7p',6,'p','#50c070'],
+  ];
+
   // Complete 118-element dataset [symbol, name, atomicNum, block, group, period]
   const ALL_ELEMENTS = [
     ['H','Hydrogen',1,'s',1,1],['He','Helium',2,'noble',18,1],
@@ -4649,33 +4772,30 @@ function buildPeriodicTable(container){
     poolByElement[e.element] = e;
   });
 
-  // ── ALWAYS-VISIBLE LEGEND + HOW TO USE ───────────────────────
+  // ── LEGEND ───────────────────────────────────────────────────
   const guide = document.createElement('div');
-  guide.style.cssText = 'margin-bottom:12px;padding:10px 14px;background:rgba(5,12,35,0.7);border:1px solid rgba(40,70,130,0.3);border-radius:6px';
+  guide.style.cssText = 'margin-bottom:12px;padding:8px 14px;background:rgba(5,12,35,0.7);border:1px solid rgba(40,70,130,0.3);border-radius:6px';
   guide.innerHTML = `
-    <div style="font-size:9px;color:#3050a0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">How to use this table to find an electron configuration</div>
-    <div style="font-size:10px;color:#4a6080;line-height:1.9">
-      <span style="color:#a0b8e0">Step 1</span> — Find the element by its symbol or atomic number. Gold-outlined elements appear in game puzzles.<br>
-      <span style="color:#a0b8e0">Step 2</span> — Note its <strong>period</strong> (row 1–7) and <strong>group</strong> (column 1–18). Period = outermost electron shell. Group = valence electrons.<br>
-      <span style="color:#a0b8e0">Step 3</span> — The <strong>block colour</strong> tells you which subshell is being filled: <span style="color:#6090e0">s</span> (groups 1–2), <span style="color:#50c070">p</span> (groups 13–18), <span style="color:#d09030">d</span> (groups 3–12), <span style="color:#b060e0">f</span> (lanthanides/actinides).<br>
-      <span style="color:#a0b8e0">Step 4</span> — Click any element to see its full configuration, valence shell, and spectral lines.
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
+    <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:7px">
       ${[['s-block','rgba(15,40,110,0.8)','rgba(70,130,230,0.6)','Groups 1–2 · fills s orbital (max 2e)'],
          ['p-block','rgba(8,65,25,0.8)','rgba(50,170,80,0.6)','Groups 13–18 · fills p orbital (max 6e)'],
          ['d-block','rgba(55,30,4,0.8)','rgba(170,110,25,0.6)','Groups 3–12 · fills d orbital (max 10e)'],
          ['f-block','rgba(45,8,75,0.8)','rgba(130,50,190,0.6)','Lanthanides/actinides · fills f orbital (max 14e)'],
          ['Noble gas','rgba(0,55,55,0.8)','rgba(25,170,170,0.6)','Group 18 · full outer shell'],
-         ['★ In game','rgba(60,45,0,0.8)','rgba(200,160,30,0.7)','Element appears in ID puzzles'],
+         ['★ In game','rgba(60,45,0,0.8)','rgba(200,160,30,0.7)','Gold border = in Element ID puzzles'],
       ].map(([label,bg,border,tip])=>`
-        <div title="${tip}" style="display:flex;align-items:center;gap:5px;cursor:help">
-          <div style="width:14px;height:14px;border-radius:2px;background:${bg};border:1px solid ${border}"></div>
+        <div title="${tip}" style="display:flex;align-items:center;gap:4px;cursor:help">
+          <div style="width:12px;height:12px;border-radius:2px;background:${bg};border:1px solid ${border};flex-shrink:0"></div>
           <span style="font-size:9px;color:#506080">${label}</span>
         </div>`).join('')}
+    </div>
+    <div style="font-size:10px;color:#3a5878;font-style:italic">
+      💡 Click any <span style="color:#f0c040">gold-bordered</span> element for a step-by-step example of how its configuration is built.
     </div>`;
   container.appendChild(guide);
 
-  // ── DETAIL CARD — shown on click, pinned above table ──────────
+  // Keep a reference to the H cell so the hover hint can animate it
+  let hCell = null;
   const detail = document.createElement('div');
   detail.id = 'pt-detail';
   detail.style.cssText = 'display:none;margin-bottom:10px;padding:12px 16px;background:rgba(5,12,35,0.85);border:1px solid rgba(80,120,220,0.4);border-radius:6px;font-size:11px;color:#8090c0;line-height:1.9';
@@ -4695,6 +4815,96 @@ function buildPeriodicTable(container){
 
   let pinnedEl = null;
 
+  function buildFillWalkthrough(atomicNum, cfgData){
+    // Superscript helper
+    const sup = n => String(n).split('').map(c=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[parseInt(c)]||c).join('');
+
+    // Noble gas cores
+    const NOBLE_COUNTS = {2:'He',10:'Ne',18:'Ar',36:'Kr',54:'Xe',86:'Rn'};
+
+    // Walk through filling order
+    let remaining = atomicNum;
+    const steps = [];
+    let running = 0;
+
+    for(const [sub,cap,block,col] of FILL_ORDER){
+      if(remaining <= 0) break;
+      const placed = Math.min(remaining, cap);
+      remaining -= placed;
+      running   += placed;
+      const isNobleCap = NOBLE_COUNTS[running] && remaining > 0;
+      steps.push({sub, placed, running, block, col, isNobleCap, isFinal: remaining===0});
+    }
+
+    // ── FRIENDLY INTRO ────────────────────────────────────────
+    let html = `
+    <div style="background:rgba(5,20,50,0.6);border-left:3px solid rgba(80,120,220,0.5);border-radius:0 5px 5px 0;padding:10px 12px;margin-bottom:12px;font-size:11px;color:#5070a0;line-height:1.8">
+      <span style="color:#a0b8e0;font-weight:bold">Think of it like filling seats on a bus 🚌</span><br>
+      Every element has a number of electrons equal to its atomic number.
+      Electrons fill the lowest-energy "seats" first — these seats are the subshells (s, p, d, f).
+      Once a seat is full, electrons move to the next one. The configuration is just a record of which seats got filled and how many electrons are in each.
+    </div>`;
+
+    // ── VISUAL STRIP ─────────────────────────────────────────
+    html += `<div style="margin-bottom:12px">`;
+    html += `<div style="font-size:9px;color:#304060;margin-bottom:5px;letter-spacing:1px;text-transform:uppercase">Seats filled in order (${atomicNum} electrons total):</div>`;
+    html += `<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center">`;
+
+    let placed2 = 0;
+    for(const [sub,cap,block,col] of FILL_ORDER){
+      if(placed2 >= atomicNum) break;
+      const n = Math.min(atomicNum - placed2, cap);
+      placed2 += n;
+      const isCurrent = placed2 === atomicNum;
+      const isCore    = NOBLE_COUNTS[placed2] && placed2 < atomicNum;
+      const bg     = isCurrent ? 'rgba(120,80,0,0.7)' : isCore ? 'rgba(0,50,40,0.5)' : `${col}22`;
+      const border = isCurrent ? 'rgba(220,170,30,0.9)' : isCore ? 'rgba(40,160,120,0.5)' : `${col}66`;
+      const txtCol = isCurrent ? '#f0c040' : isCore ? '#40d0a0' : col;
+      const label  = isCore ? `${sub}${sup(n)} [=${NOBLE_COUNTS[placed2]}]` : `${sub}${sup(n)}`;
+      html += `<div title="${n} electron${n!==1?'s':''} in ${sub}" style="background:${bg};border:1px solid ${border};border-radius:3px;padding:2px 6px;font-size:9px;color:${txtCol};white-space:nowrap;font-weight:${isCurrent?'bold':'normal'}">${label}</div>`;
+      if(isCore) html += `<span style="color:#304060;font-size:11px;margin:0 1px">→</span>`;
+    }
+    html += `</div></div>`;
+
+    // ── PLAIN-ENGLISH STEPS ───────────────────────────────────
+    html += `<div style="font-size:9px;color:#304060;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px">What's happening at each step:</div>`;
+    html += `<div style="display:flex;flex-direction:column;gap:3px;margin-bottom:12px">`;
+
+    const BLOCK_PLAIN = {s:'s-seat (holds 2)',p:'p-seat (holds 6)',d:'d-seat (holds 10)',f:'f-seat (holds 14)'};
+    const BLOCK_COL   = {s:'#6090e0',p:'#50c070',d:'#d09030',f:'#b060e0'};
+
+    for(const {sub,placed,running,block,col,isNobleCap,isFinal} of steps){
+      let rowBg  = isFinal ? 'rgba(60,40,0,0.5)' : isNobleCap ? 'rgba(0,40,30,0.45)' : 'rgba(5,10,30,0.35)';
+      let rowBdr = isFinal ? 'rgba(200,150,20,0.6)' : isNobleCap ? 'rgba(40,160,100,0.4)' : `${col}44`;
+      let txt    = isFinal ? '#e0c060' : isNobleCap ? '#40d0a0' : '#5070a0';
+
+      let msg = '';
+      if(isNobleCap){
+        msg = `Fill ${sub} with ${placed} electron${placed!==1?'s':''} → ${running} total. This matches ${NOBLE_COUNTS[running]}, a noble gas — so we can write everything up to here as <strong style="color:#40d0a0">[${NOBLE_COUNTS[running]}]</strong> as a shortcut.`;
+      } else if(isFinal){
+        msg = `Fill ${sub} with ${placed} electron${placed!==1?'s':''} → ${running} total. <strong style="color:#f0c040">All electrons placed! ✓</strong> This last subshell is the <em>valence shell</em> — it produces the emission lines you see in puzzles.`;
+      } else {
+        msg = `Fill ${sub} with ${placed} electron${placed!==1?'s':''} → ${running} total.`;
+      }
+
+      html += `<div style="background:${rowBg};border-left:2px solid ${rowBdr};border-radius:0 4px 4px 0;padding:4px 10px;font-size:10px;color:${txt};line-height:1.6">${msg}</div>`;
+    }
+    html += `</div>`;
+
+    // ── RESULT ───────────────────────────────────────────────
+    if(cfgData){
+      html += `<div style="background:rgba(40,10,70,0.6);border:1px solid rgba(120,50,200,0.4);border-radius:5px;padding:10px 14px">`;
+      html += `<div style="font-size:9px;color:#6050a0;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">The finished configuration</div>`;
+      html += `<div style="font-size:15px;color:#c090ff;letter-spacing:1px;font-weight:bold;margin-bottom:4px">${cfgData.config}</div>`;
+      if(cfgData.shortConfig !== cfgData.config){
+        html += `<div style="font-size:11px;color:#806080;margin-bottom:4px">Written with shortcut: <span style="color:#e0b0ff;font-size:13px">${cfgData.shortConfig}</span></div>`;
+      }
+      html += `<div style="font-size:10px;color:#5040a0;line-height:1.7">Valence shell: <span style="color:#e0b0ff;font-weight:bold">${cfgData.valence}</span> — the outermost electrons. When starlight excites these, they jump to a higher energy level and release a photon of a specific colour as they fall back — that's the spectral line you identify in the game.</div>`;
+      html += `</div>`;
+    }
+    return html;
+  }
+
   function showDetail(el){
     const [sym,name,num,block,group,period]=el;
     const poolMatch = ELEMENT_POOL_ALL.find(e=>{
@@ -4704,41 +4914,47 @@ function buildPeriodicTable(container){
     const cfgData = poolMatch ? ELECTRON_CONFIGS[poolMatch.element] : null;
     const inPool  = !!poolMatch;
 
-    let html=`<div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px;flex-wrap:wrap">
-      <span style="font-size:22px;font-weight:bold;color:#d0e0ff">${sym}</span>
-      <span style="font-size:15px;color:#8090c0">${name}</span>
+    // Header
+    let html=`<div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px;flex-wrap:wrap;border-bottom:1px solid rgba(40,60,120,0.3);padding-bottom:8px">
+      <span style="font-size:24px;font-weight:bold;color:#d0e0ff">${sym}</span>
+      <span style="font-size:16px;color:#8090c0">${name}</span>
       <span style="font-size:11px;color:#404060">Atomic number ${num}</span>
-      ${inPool?'<span style="color:#f0c040;font-size:10px">★ In game pool</span>':''}
+      ${inPool?'<span style="color:#f0c040;font-size:10px;background:rgba(60,40,0,0.5);padding:2px 8px;border-radius:3px">★ In game pool</span>':''}
     </div>`;
-    html+=`<div style="font-size:10px;color:#506080;margin-bottom:6px">
+
+    // Period / group / block line
+    html+=`<div style="font-size:10px;color:#506080;margin-bottom:10px">
       Period <strong style="color:#a0b0d0">${period}</strong> &nbsp;·&nbsp;
-      Group <strong style="color:#a0b0d0">${group||'—'}</strong> &nbsp;·&nbsp;
+      Group <strong style="color:#a0b0d0">${group||'f-block'}</strong> &nbsp;·&nbsp;
       <strong style="color:#a0b0d0">${BLOCK_NAME[block]||block}</strong>
-      ${block==='s'?'— outer shell: '+period+'s':''}
-      ${block==='p'?'— outer shell: '+period+'p':''}
-      ${block==='d'?'— filling '+(period-1)+'d':''}
-      ${block==='f'?'— filling f orbital':''}
     </div>`;
-    if(cfgData){
-      html+=`<div style="margin-bottom:4px">
-        <span style="color:#6070a0;font-size:9px;text-transform:uppercase;letter-spacing:1px">Full configuration</span><br>
-        <span style="color:#c090ff;font-size:12px;letter-spacing:1px">${cfgData.config}</span>
-      </div>
-      <div style="margin-bottom:4px">
-        <span style="color:#6070a0;font-size:9px;text-transform:uppercase;letter-spacing:1px">Valence shell (produces emission lines)</span><br>
-        <span style="color:#e0b0ff;font-size:12px">${cfgData.valence}</span>
+
+    // For game-pool elements: show the full fill walkthrough
+    if(inPool && cfgData){
+      html += buildFillWalkthrough(num, cfgData);
+    } else if(cfgData){
+      // Non-pool but has config data
+      html+=`<div style="margin-bottom:6px">
+        <span style="color:#6070a0;font-size:9px;text-transform:uppercase;letter-spacing:1px">Configuration</span><br>
+        <span style="color:#c090ff;font-size:12px">${cfgData.config}</span>
       </div>`;
+    } else {
+      html+=`<div style="color:#3a4060;font-size:10px;font-style:italic;margin-bottom:6px">Not in game element pool — click a gold-bordered element to see the full configuration walkthrough.</div>`;
     }
+
+    // Emission lines (pool only)
     if(poolMatch && poolMatch.pureLines){
-      html+=`<div><span style="color:#6070a0;font-size:9px;text-transform:uppercase;letter-spacing:1px">Visible emission wavelengths</span><br>
+      html+=`<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(40,60,120,0.25)">
+        <span style="color:#6070a0;font-size:9px;text-transform:uppercase;letter-spacing:1px">Visible emission wavelengths</span><br>
+        <div style="margin-top:3px">
         ${poolMatch.pureLines.map(nm=>{
           const col = nm<450?'#9090ff':nm<500?'#60b0ff':nm<570?'#60e080':nm<600?'#e0e060':nm<640?'#f09030':'#e05050';
-          return `<span style="color:${col};margin-right:8px">${nm}nm</span>`;
-        }).join('')}</div>`;
+          return `<span style="color:${col};margin-right:10px;font-size:11px">${nm}nm</span>`;
+        }).join('')}
+        </div>
+      </div>`;
     }
-    if(!cfgData && !poolMatch){
-      html+=`<div style="color:#3a4060;font-size:10px;font-style:italic">Not in game element pool — no configuration data available.</div>`;
-    }
+
     detail.innerHTML=html;
     detail.style.display='block';
   }
@@ -4754,11 +4970,13 @@ function buildPeriodicTable(container){
     cell.style.cssText=`background:${BLOCK_BG[block]||BLOCK_BG.s};border:1.5px solid ${inPool?'rgba(200,160,30,0.85)':BLOCK_BORDER[block]||BLOCK_BORDER.s};border-radius:4px;padding:3px 2px 2px;text-align:center;cursor:pointer;transition:filter 0.12s,transform 0.1s;position:relative`;
 
     cell.innerHTML=`
-      <div style="font-size:8px;color:rgba(160,180,220,0.55);line-height:1.1">${num}</div>
-      <div style="font-size:12px;font-weight:bold;color:${inPool?'#f0c040':'#c8d8f0'};line-height:1.25;letter-spacing:0.3px">${sym}</div>`;
+      <div style="font-size:8px;color:rgba(160,180,220,0.45);line-height:1.1;font-weight:300">${num}</div>
+      <div style="font-size:11px;font-weight:400;color:${inPool?'#f0c040':'#b0c4e0'};line-height:1.25;letter-spacing:0.5px">${sym}</div>`;
 
     cell.addEventListener('mouseenter',()=>{ cell.style.filter='brightness(1.6)'; cell.style.transform='scale(1.12)'; cell.style.zIndex='10'; });
     cell.addEventListener('mouseleave',()=>{ cell.style.filter=''; cell.style.transform=''; cell.style.zIndex=''; });
+    // Store reference to H cell for legend hover pulse
+    if(sym==='H') hCell = cell;
     cell.addEventListener('click',()=>{
       if(pinnedEl===cell){
         pinnedEl=null; cell.style.outline=''; detail.style.display='none';
@@ -4816,6 +5034,77 @@ function buildPeriodicTable(container){
   container.appendChild(fLabel);
   fRow(fBlockLa, 'Lanthanides', '*');
   fRow(fBlockAc, 'Actinides',   '†');
+
+  // Wire hover on the "H" span in the static pane description to pulse the H cell
+  if(hCell){
+    hCell.addEventListener('animationend', ()=> hCell.classList.remove('h-pulse'));
+
+    const hHint = document.getElementById('pt-h-hint');
+    if(hHint){
+      hHint.addEventListener('mouseenter', ()=>{
+        hCell.classList.remove('h-pulse');
+        void hCell.offsetWidth;
+        hCell.classList.add('h-pulse');
+        hCell.scrollIntoView({behavior:'smooth', block:'nearest'});
+      });
+    }
+
+    // ── GUIDED TOUR — after clicking H, suggest the next 4 elements ──
+    // Tour sequence: H(1) → B(5) → Ne(10) → Sc(21) → La(57)
+    // Each time the player clicks a tour element, a small toast suggests the next
+    const TOUR = [
+      {sym:'H',  label:'Hydrogen',    next:'Try Boron (B) next — your first p-block element →'},
+      {sym:'B',  label:'Boron',       next:'Now try Neon (Ne) — a complete noble gas shell →'},
+      {sym:'Ne', label:'Neon',        next:'Try Scandium (Sc) — your first d-block element →'},
+      {sym:'Sc', label:'Scandium',    next:'Finally try Lanthanum (La) — deep in the f-block →'},
+      {sym:'La', label:'Lanthanum',   next:'You\'ve explored all four blocks. You\'re ready to solve any configuration! ✓'},
+    ];
+
+    // Map symbol → cell DOM element
+    const cellMap = {};
+    container.querySelectorAll('div[title]').forEach(cell => {
+      const sym = cell.querySelector('div:nth-child(2)');
+      if(sym) cellMap[sym.textContent.trim()] = cell;
+    });
+
+    // Small non-blocking toast inside the periodic table container
+    function showTourToast(msg, isLast){
+      let toast = document.getElementById('pt-tour-toast');
+      if(!toast){
+        toast = document.createElement('div');
+        toast.id = 'pt-tour-toast';
+        toast.style.cssText = 'margin:8px 0 0;padding:8px 14px;background:rgba(5,20,60,0.85);border:1px solid rgba(60,120,220,0.4);border-radius:5px;font-size:12px;color:#80b0e0;font-family:system-ui,sans-serif;line-height:1.6;transition:opacity 0.4s';
+        container.insertBefore(toast, container.firstChild.nextSibling); // after legend
+      }
+      toast.style.opacity='1';
+      toast.innerHTML = isLast
+        ? `<span style="color:#60d080">${msg}</span>`
+        : `${msg} <span style="color:#4060a0;font-size:10px">(hover to highlight)</span>`;
+
+      // Highlight the next cell
+      if(!isLast){
+        const nextSym = msg.match(/\((\w+)\)/)?.[1];
+        const nextCell = nextSym && cellMap[nextSym];
+        if(nextCell){
+          nextCell.addEventListener('mouseenter', ()=>{
+            nextCell.classList.remove('h-pulse');
+            void nextCell.offsetWidth;
+            nextCell.classList.add('h-pulse');
+          }, {once:true});
+        }
+      }
+    }
+
+    // Wire tour clicks onto each element in the sequence
+    TOUR.forEach((step, idx) => {
+      const cell = cellMap[step.sym];
+      if(!cell) return;
+      cell.addEventListener('click', ()=>{
+        const isLast = idx === TOUR.length - 1;
+        showTourToast(step.next, isLast);
+      }, {once: true}); // fires once per tour sequence
+    });
+  }
 }
 /* ================================================================
    ELECTRON CONFIGURATION PUZZLE
@@ -5600,81 +5889,79 @@ const GLOSSARY_TERMS = [
   {word:'Absorption line',    def:'A dark band in a star\'s spectrum where a specific wavelength of light has been absorbed by atoms in the star\'s outer atmosphere. Each element absorbs at fixed, unique wavelengths — its spectral "fingerprint."'},
   {word:'Absorption spectrum', def:'A continuous rainbow spectrum with dark vertical lines where specific wavelengths have been removed by intervening gas. What we observe from stars passing through their outer atmospheres.'},
   {word:'Angstrom (Å)',       def:'A unit of wavelength equal to 0.1 nanometres. Older spectroscopy texts often use angstroms; modern texts use nanometres. 1nm = 10Å.'},
+  {word:'Anomalous object',   def:'In Spectra Explorer, any stellar object that does not fit the standard OBAFGKM classification system — brown dwarfs, T Tauri stars, and polluted white dwarfs. Selecting "Anomalous Object" in Act III is the correct response when the data contradicts every standard class.'},
   {word:'Astronomical Unit (AU)', def:'The average distance between the Earth and the Sun — approximately 150 million km (93 million miles). Used to measure distances within planetary systems.'},
+  {word:'Aufbau principle',     def:'The rule for filling electron configurations: electrons fill the lowest available energy subshell first, then proceed upward. The order is 1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p, 5s, 4d... Notable exceptions include chromium ([Ar] 3d⁵ 4s¹) and copper ([Ar] 3d¹⁰ 4s¹) where half-filled and fully-filled d-subshells are energetically favourable.'},
   {word:'Balmer series',      def:'A set of hydrogen absorption lines in the visible spectrum: H-alpha (656nm, red), H-beta (486nm, blue-green), H-gamma (434nm, violet), H-delta (410nm). Strongest in A-type stars.'},
   {word:'Binary star',        def:'Two stars gravitationally bound to each other, orbiting a common centre of mass. When viewed through a spectrograph, their combined light produces a composite spectrum with overlapping line patterns.'},
   {word:'Black dwarf',        def:'The theoretical cold, dark remnant of a low-mass star after it has cooled completely. No black dwarfs are believed to exist yet — the universe is not old enough for any to have formed.'},
   {word:'Black hole',         def:'An object with gravity so intense that not even light can escape. Stellar black holes form when massive stars (above ~20 solar masses) collapse after a supernova.'},
   {word:'Blueshift',          def:'A shift of spectral lines toward shorter (bluer) wavelengths, caused by a source moving toward the observer. The Doppler effect applied to light — the electromagnetic equivalent of a train whistle getting higher pitched as it approaches.'},
+  {word:'Brown dwarf',        def:'A sub-stellar object with mass between roughly 13 and 80 Jupiter masses — too cool to sustain hydrogen fusion, but too massive to be a planet. They are classified as types L, T, and Y in the extended spectral system and appear in Spectra Explorer as mystery objects.'},
   {word:'Chandrasekhar limit', def:'The maximum mass (1.4 solar masses) a white dwarf can have without collapsing. Above this limit, electron degeneracy pressure can no longer support the star against gravity.'},
+  {word:'Class Mode',         def:'A URL parameter feature in Spectra Explorer for teachers. Adding ?mode=classify (or spectra, survey, element, kepler) to the game URL focuses the session on that puzzle type. Students see no difference — the parameter works silently. See the Educator panel for full instructions.'},
   {word:'Composite spectrum',  def:'A spectrum showing absorption lines from two different stars superimposed — the result of observing a binary star system. Identifying the two component classes requires separating the overlapping patterns.'},
+  {word:'Configuration notation', def:'How to read an electron configuration like 1s² 2s² 2p⁶ 3s¹: the first number is the principal quantum number (shell), the letter is the subshell type (s, p, d, or f), and the superscript is the number of electrons in that subshell. Reading left to right moves outward from the nucleus. The rightmost term is the valence shell — the one that produces emission lines.'},
   {word:'Continuous spectrum', def:'An uninterrupted rainbow of all wavelengths of light, as produced by a hot, dense object like a star\'s interior. It gains absorption lines as light passes through cooler outer layers.'},
+  {word:'d-block',            def:'The transition metals (groups 3–12) where d-orbitals are filling. These elements have many possible electron transitions between closely spaced d-orbital energy levels, producing rich, complex emission spectra. Chromium, iron, copper, and zinc are all d-block elements.'},
   {word:'Doppler effect',     def:'The change in observed frequency or wavelength of a wave due to relative motion between the source and observer. When a star moves toward Earth, its light is blueshifted; moving away causes redshift.'},
   {word:'Dwarf star',         def:'A star on the main sequence — a hydrogen-burning star of normal size. Our Sun is a yellow dwarf (G-type). Red dwarfs (M-type) are the most common type of star in the galaxy.'},
   {word:'Electromagnetic spectrum', def:'The complete range of electromagnetic radiation, from gamma rays (shortest wavelength) through X-rays, ultraviolet, visible light, infrared, microwaves, to radio waves (longest wavelength).'},
+  {word:'Electron configuration', def:'A description of how electrons are distributed among the atomic orbitals of an element in its ground state. Written as a series of subshell notations (e.g. 1s² 2s² 2p⁶ 3s¹ for sodium). The outermost electrons — the valence shell — are what produce visible emission lines when excited by starlight.'},
+  {word:'Electron shell',       def:'A group of orbitals with the same principal quantum number (n). Shell 1 holds up to 2 electrons (1s²), shell 2 holds up to 8 (2s² 2p⁶), shell 3 holds up to 18 (3s² 3p⁶ 3d¹⁰). Elements in the same period of the periodic table are filling the same shell. When an electron moves between shells, it produces or absorbs a photon whose energy corresponds to a specific spectral line.'},
   {word:'Emission line',      def:'A bright line at a specific wavelength in a spectrum, produced when an electron in an atom drops to a lower energy level and releases a photon. Emission lines appear as bright colours on a dark background.'},
   {word:'Emission spectrum',  def:'Bright coloured lines on a dark background, produced by a hot, low-density gas. Each element has a unique emission spectrum — its atomic fingerprint. The inverse of an absorption spectrum.'},
   {word:'Exoplanet',          def:'A planet orbiting a star other than our Sun. As of 2025, over 5,500 confirmed exoplanets are known. Many are detected via the transit method or radial velocity (Doppler) measurements.'},
+  {word:'f-block',            def:'The section of the periodic table containing the lanthanides and actinides, where the 4f and 5f orbitals are being filled. These elements have complex spectra because the f-subshell has 7 orbitals and many possible electron transitions.'},
+  {word:'Ground state',         def:'The lowest energy arrangement of electrons in an atom — the configuration an atom naturally adopts when not excited. When starlight excites an electron above its ground state, it jumps to a higher energy level. When it falls back, it releases a photon at a specific wavelength. The ground state configuration is what the ⚛️ Configurations glossary tab shows.'},
   {word:'Habitable zone',     def:'The range of orbital distances from a star where liquid water could exist on a planet\'s surface — sometimes called the "Goldilocks zone." Its position depends on the star\'s luminosity.'},
   {word:'Harvard classification', def:'The OBAFGKM stellar classification system developed at Harvard College Observatory in the early 1900s, largely by Annie Jump Cannon. Stars are classified primarily by surface temperature.'},
   {word:'Hertzsprung-Russell diagram', def:'A scatter plot of stars showing luminosity versus surface temperature (or colour). Most stars fall on the "main sequence" diagonal. It is one of the most important tools in stellar astrophysics.'},
+  {word:'Hertzsprung-Russell diagram', def:'A scatter plot of stars showing luminosity versus surface temperature. Most stars fall on the diagonal "main sequence." Giants occupy the upper right; white dwarfs the lower left; supergiants the very top. The HR diagram is the single most important tool in stellar astrophysics for understanding stellar evolution.'},
+  {word:'Interstellar medium (ISM)', def:'The gas and dust that fills the space between stars. Primarily hydrogen and helium, with trace amounts of heavier atoms. Cold ISM gas produces very narrow absorption lines (especially Ca II K at 393nm and Na I D at 589nm) superimposed on stellar spectra — identifiable because they don\'t Doppler shift with the star.'},
   {word:'Ionisation',         def:'The process of removing one or more electrons from an atom, creating a positively charged ion. In O-type stars, the extreme heat ionises hydrogen and helium, fundamentally changing their spectral signatures.'},
   {word:'Kepler\'s Third Law', def:'T² = a³/M — the orbital period squared equals the semi-major axis cubed divided by the stellar mass. This allows astronomers to calculate orbital distances from measured orbital periods.'},
   {word:'Light-year',         def:'The distance light travels in one year — approximately 9.46 trillion km (5.88 trillion miles). The nearest star (Proxima Centauri) is 4.24 light-years away.'},
+  {word:'Lithium depletion',  def:'The gradual destruction of lithium inside stars through proton capture reactions. Lithium is depleted faster in hotter stars and over time. A strong lithium absorption line at 670.8nm indicates a young star; a weak or absent line indicates an old one. Used as a stellar age indicator in The Heliopause sector puzzles.'},
   {word:'Luminosity',         def:'The total amount of energy emitted by a star per unit time. Measured in solar luminosities (L☉), where the Sun\'s luminosity equals 1. Directly related to mass and temperature via the Stefan-Boltzmann law.'},
+  {word:'Luminosity class',   def:'A Roman numeral suffix added to the spectral type letter indicating the star\'s evolutionary stage: I = supergiant, II = bright giant, III = giant, IV = subgiant, V = main sequence dwarf. For example, the Sun is G2V and Betelgeuse is M2I. Luminosity class cannot be determined from temperature alone — luminosity and radius are also required.'},
   {word:'Main sequence',      def:'The diagonal band on the Hertzsprung-Russell diagram where stars spend most of their lives fusing hydrogen into helium. The Sun has been on the main sequence for 4.6 billion years.'},
+  {word:'Main sequence',      def:'The diagonal band on the Hertzsprung-Russell diagram where stars spend most of their lives fusing hydrogen into helium. Designated luminosity class V. The Sun has been on the main sequence for 4.6 billion years and will remain there for another ~5 billion.'},
+  {word:'MK system',          def:'The Morgan-Keenan spectral classification system — an extension of the Harvard OBAFGKM system that adds luminosity class (I through V). Named after William Morgan and Philip Keenan who developed it in the 1940s at Yerkes Observatory. The full MK designation for our Sun is G2V.'},
   {word:'Nanometre (nm)',     def:'A unit of length equal to one billionth of a metre (10⁻⁹ m). The visible light spectrum spans approximately 380–700nm. Ultraviolet light is below 380nm; infrared is above 700nm.'},
   {word:'Nebula',             def:'A cloud of gas and dust in space. Emission nebulae glow from ionised gas; reflection nebulae scatter starlight; dark nebulae block background light. Stars form from collapsing nebulae.'},
   {word:'Neutron star',       def:'The ultra-dense remnant of a massive star after a core-collapse supernova. Composed almost entirely of neutrons, with a mass of 1–3 suns compressed into a sphere ~20km across — denser than an atomic nucleus.'},
+  {word:'Noble gas shorthand',  def:'A condensed way of writing electron configurations using the symbol of the nearest noble gas in square brackets. For example, sodium\'s full config is 1s² 2s² 2p⁶ 3s¹, but since 1s² 2s² 2p⁶ is identical to neon\'s configuration, it\'s written [Ne] 3s¹. The noble gas core is chemically inert — only the valence shell after the bracket matters for spectroscopy.'},
   {word:'Nuclear fusion',     def:'The process by which atomic nuclei combine to form heavier elements, releasing enormous energy. Stars are powered by fusion — primarily converting hydrogen to helium in their cores.'},
+  {word:'Orbital (subshell)', def:'A region of space where electrons are likely to be found around an atomic nucleus. Subshells are labelled s (2 electrons max), p (6 max), d (10 max), and f (14 max). The subshell an electron occupies determines the energy of photons emitted when it drops to a lower level — and therefore which spectral lines appear.'},
   {word:'Orbital period',     def:'The time a planet takes to complete one full orbit around its star. Earth\'s orbital period is one year. Kepler\'s Third Law connects orbital period to orbital distance and stellar mass.'},
+  {word:'p-block',            def:'Groups 13–18 of the periodic table, where the p-orbital is being filled. Includes boron, carbon, nitrogen, oxygen, the halogens, and noble gases. p-block elements produce moderately complex emission patterns.'},
   {word:'Parsec (pc)',        def:'A unit of distance equal to approximately 3.26 light-years. Defined as the distance at which one AU subtends an angle of one arcsecond. Used by professional astronomers more commonly than light-years.'},
+  {word:'Pauli exclusion principle', def:'No two electrons in an atom can have the same four quantum numbers — meaning each orbital holds at most two electrons, with opposite spins. This is why subshells have fixed capacities: s holds 2, p holds 6, d holds 10, f holds 14. Directly determines the shape of the periodic table and the structure of electron configurations.'},
   {word:'Photon',             def:'A quantum (discrete packet) of electromagnetic radiation — a particle of light. Each photon carries a specific energy inversely proportional to its wavelength. Shorter wavelength = higher energy.'},
   {word:'Planetary nebula',   def:'A shell of ionised gas expelled by a dying medium-mass star as it transitions to a white dwarf. Despite the name, planetary nebulae have nothing to do with planets — the term arose from their round appearance through early telescopes.'},
+  {word:'Polluted white dwarf', def:'A white dwarf with heavy elements (calcium, magnesium, iron) visible in its spectrum. At white dwarf temperatures, these elements should sink below the photosphere in days — their presence means the star is actively accreting rocky debris from a disrupted planetary body. This is one of our best methods for studying the composition of exoplanetary material.'},
+  {word:'Principal quantum number', def:'The integer n (1, 2, 3, 4...) in an electron configuration that indicates which shell an electron occupies. Higher n = farther from the nucleus = higher energy = lower ionisation energy. The difference in energy between shells determines the wavelength of light emitted when an electron transitions between them — which is exactly what produces spectral lines.'},
   {word:'Radial velocity',    def:'The component of a star\'s velocity along the line of sight — toward or away from the observer. Measured using the Doppler shift of spectral lines. The primary method for detecting exoplanets before the Kepler mission.'},
   {word:'Redshift',           def:'A shift of spectral lines toward longer (redder) wavelengths, caused by a source moving away from the observer. Cosmological redshift — caused by the expansion of the universe — is how we know the universe is expanding.'},
+  {word:'Research Mode',      def:'An advanced gameplay layer in Spectra Explorer that unlocks after discovering a star in The Heliopause sector. In Research Mode, the standard OBAFGKM classification buttons are replaced with an interactive HR diagram, and a Research Log replaces the Mission Report. Designed for university-level players and educators.'},
+  {word:'s-block',            def:'The first two columns of the periodic table — groups 1 and 2 (plus hydrogen and helium) — where the s-orbital is being filled. Alkali metals (Li, Na, K...) have one s-electron in the outer shell, producing simple, sparse emission spectra.'},
   {word:'Semi-major axis',    def:'Half the longest diameter of an elliptical orbit. For planets, it represents the average distance from the star. In Kepler\'s Third Law (T²=a³/M), \'a\' is the semi-major axis in astronomical units.'},
   {word:'Solar mass (M☉)',    def:'The mass of the Sun — approximately 2 × 10³⁰ kg (330,000 Earth masses). Used as the standard unit for comparing stellar masses. Determines a star\'s luminosity, temperature, and eventual fate.'},
+  {word:'Spectroscopic binary', def:'A binary star system whose dual nature is revealed not by seeing two separate points of light (they are too close for that) but by observing two sets of spectral lines shifting back and forth in opposite directions as each star moves toward and away from us. The velocity amplitudes reveal the mass ratio of the two stars.'},
   {word:'Spectroscopy',       def:'The study of the interaction between matter and electromagnetic radiation. By analysing the spectrum of light from a star, astronomers can determine its temperature, composition, velocity, mass, and distance.'},
   {word:'Spectrum',           def:'The distribution of light by wavelength. A star\'s spectrum reveals its chemical composition (through absorption lines), surface temperature (from the peak wavelength), and radial velocity (from line shifts).'},
   {word:'Stefan-Boltzmann law', def:'L = 4πR²σT⁴ — a star\'s luminosity equals its surface area times the Stefan-Boltzmann constant times the fourth power of temperature. This is used in Tier 4 classification puzzles to derive stellar temperature.'},
   {word:'Stellar classification', def:'The systematic organisation of stars into spectral types based on observable characteristics. The Harvard system (OBAFGKM) classifies by temperature. The MK system adds luminosity class (supergiant, giant, main sequence, etc.).'},
-  {word:'Supernova',          def:'A catastrophic stellar explosion marking the death of a massive star. Core-collapse supernovae (Type II) occur when stars above ~8 solar masses exhaust their nuclear fuel. They are responsible for creating and distributing most heavy elements in the universe.'},
-  {word:'Transit method',     def:'A technique for detecting exoplanets by measuring the tiny dimming of starlight as a planet passes in front of the star. Used by the Kepler and TESS missions to find thousands of planets.'},
-  {word:'Wavelength',         def:'The distance between successive peaks of a wave. Visible light spans wavelengths from ~380nm (violet) to ~700nm (red). Shorter wavelengths carry more energy and correspond to hotter radiation.'},
-  {word:'White dwarf',        def:'The hot, dense remnant of a low-to-medium mass star after it has exhausted its nuclear fuel and shed its outer layers. About the size of Earth but with roughly the mass of the Sun. Cools over billions of years.'},
-
-  // -- New terms added with advanced puzzles and game features --
-  {word:'Anomalous object',   def:'In Spectra Explorer, any stellar object that does not fit the standard OBAFGKM classification system — brown dwarfs, T Tauri stars, and polluted white dwarfs. Selecting "Anomalous Object" in Act III is the correct response when the data contradicts every standard class.'},
-  {word:'Brown dwarf',        def:'A sub-stellar object with mass between roughly 13 and 80 Jupiter masses — too cool to sustain hydrogen fusion, but too massive to be a planet. They are classified as types L, T, and Y in the extended spectral system and appear in Spectra Explorer as mystery objects.'},
-  {word:'Class Mode',         def:'A URL parameter feature in Spectra Explorer for teachers. Adding ?mode=classify (or spectra, survey, element, kepler) to the game URL focuses the session on that puzzle type. Students see no difference — the parameter works silently. See the Educator panel for full instructions.'},
-  {word:'Electron configuration', def:'A description of how electrons are distributed among the atomic orbitals of an element in its ground state. Written as a series of subshell notations (e.g. 1s² 2s² 2p⁶ 3s¹ for sodium). The outermost electrons — the valence shell — are what produce visible emission lines when excited by starlight.'},
-  {word:'f-block',            def:'The section of the periodic table containing the lanthanides and actinides, where the 4f and 5f orbitals are being filled. These elements have complex spectra because the f-subshell has 7 orbitals and many possible electron transitions.'},
-  {word:'Hertzsprung-Russell diagram', def:'A scatter plot of stars showing luminosity versus surface temperature. Most stars fall on the diagonal "main sequence." Giants occupy the upper right; white dwarfs the lower left; supergiants the very top. The HR diagram is the single most important tool in stellar astrophysics for understanding stellar evolution.'},
-  {word:'Interstellar medium (ISM)', def:'The gas and dust that fills the space between stars. Primarily hydrogen and helium, with trace amounts of heavier atoms. Cold ISM gas produces very narrow absorption lines (especially Ca II K at 393nm and Na I D at 589nm) superimposed on stellar spectra — identifiable because they don\'t Doppler shift with the star.'},
-  {word:'Lithium depletion',  def:'The gradual destruction of lithium inside stars through proton capture reactions. Lithium is depleted faster in hotter stars and over time. A strong lithium absorption line at 670.8nm indicates a young star; a weak or absent line indicates an old one. Used as a stellar age indicator in The Heliopause sector puzzles.'},
-  {word:'Luminosity class',   def:'A Roman numeral suffix added to the spectral type letter indicating the star\'s evolutionary stage: I = supergiant, II = bright giant, III = giant, IV = subgiant, V = main sequence dwarf. For example, the Sun is G2V and Betelgeuse is M2I. Luminosity class cannot be determined from temperature alone — luminosity and radius are also required.'},
-  {word:'Main sequence',      def:'The diagonal band on the Hertzsprung-Russell diagram where stars spend most of their lives fusing hydrogen into helium. Designated luminosity class V. The Sun has been on the main sequence for 4.6 billion years and will remain there for another ~5 billion.'},
-  {word:'MK system',          def:'The Morgan-Keenan spectral classification system — an extension of the Harvard OBAFGKM system that adds luminosity class (I through V). Named after William Morgan and Philip Keenan who developed it in the 1940s at Yerkes Observatory. The full MK designation for our Sun is G2V.'},
-  {word:'Orbital (subshell)', def:'A region of space where electrons are likely to be found around an atomic nucleus. Subshells are labelled s (2 electrons max), p (6 max), d (10 max), and f (14 max). The subshell an electron occupies determines the energy of photons emitted when it drops to a lower level — and therefore which spectral lines appear.'},
-  {word:'Polluted white dwarf', def:'A white dwarf with heavy elements (calcium, magnesium, iron) visible in its spectrum. At white dwarf temperatures, these elements should sink below the photosphere in days — their presence means the star is actively accreting rocky debris from a disrupted planetary body. This is one of our best methods for studying the composition of exoplanetary material.'},
-  {word:'Research Mode',      def:'An advanced gameplay layer in Spectra Explorer that unlocks after discovering a star in The Heliopause sector. In Research Mode, the standard OBAFGKM classification buttons are replaced with an interactive HR diagram, and a Research Log replaces the Mission Report. Designed for university-level players and educators.'},
-  {word:'s-block',            def:'The first two columns of the periodic table — groups 1 and 2 (plus hydrogen and helium) — where the s-orbital is being filled. Alkali metals (Li, Na, K...) have one s-electron in the outer shell, producing simple, sparse emission spectra.'},
-  {word:'p-block',            def:'Groups 13–18 of the periodic table, where the p-orbital is being filled. Includes boron, carbon, nitrogen, oxygen, the halogens, and noble gases. p-block elements produce moderately complex emission patterns.'},
-  {word:'d-block',            def:'The transition metals (groups 3–12) where d-orbitals are filling. These elements have many possible electron transitions between closely spaced d-orbital energy levels, producing rich, complex emission spectra. Chromium, iron, copper, and zinc are all d-block elements.'},
-  {word:'Spectroscopic binary', def:'A binary star system whose dual nature is revealed not by seeing two separate points of light (they are too close for that) but by observing two sets of spectral lines shifting back and forth in opposite directions as each star moves toward and away from us. The velocity amplitudes reveal the mass ratio of the two stars.'},
   {word:'Subgiant',           def:'A star that has exhausted hydrogen in its core and begun to expand, but has not yet reached the full giant stage. Luminosity class IV. Subgiants are slightly more luminous than main sequence stars of the same temperature. The oldest stars visible to the naked eye are often subgiants.'},
+  {word:'Supernova',          def:'A catastrophic stellar explosion marking the death of a massive star. Core-collapse supernovae (Type II) occur when stars above ~8 solar masses exhaust their nuclear fuel. They are responsible for creating and distributing most heavy elements in the universe.'},
   {word:'Survey Sprint',      def:'An optional timed game mode in Spectra Explorer, accessible from the Sector Jump screen. Classify 10 stars as quickly as possible within a 10-minute window. A speed bonus of up to +1,000 points is awarded for fast completion. The orange timer bar appears in the HUD during a sprint.'},
   {word:'T Tauri star',       def:'A pre-main-sequence star still contracting under gravity and accreting material from a surrounding disk. Named after T Tauri, the first star of this type to be studied. T Tauri stars show strong hydrogen emission lines (especially H-alpha) and irregular brightness variations. They appear in Spectra Explorer as mystery objects — classifying them as Anomalous is correct.'},
-  {word:'Configuration notation', def:'How to read an electron configuration like 1s² 2s² 2p⁶ 3s¹: the first number is the principal quantum number (shell), the letter is the subshell type (s, p, d, or f), and the superscript is the number of electrons in that subshell. Reading left to right moves outward from the nucleus. The rightmost term is the valence shell — the one that produces emission lines.'},
-  {word:'Ground state',         def:'The lowest energy arrangement of electrons in an atom — the configuration an atom naturally adopts when not excited. When starlight excites an electron above its ground state, it jumps to a higher energy level. When it falls back, it releases a photon at a specific wavelength. The ground state configuration is what the ⚛️ Configurations glossary tab shows.'},
-  {word:'Noble gas shorthand',  def:'A condensed way of writing electron configurations using the symbol of the nearest noble gas in square brackets. For example, sodium\'s full config is 1s² 2s² 2p⁶ 3s¹, but since 1s² 2s² 2p⁶ is identical to neon\'s configuration, it\'s written [Ne] 3s¹. The noble gas core is chemically inert — only the valence shell after the bracket matters for spectroscopy.'},
-  {word:'Principal quantum number', def:'The integer n (1, 2, 3, 4...) in an electron configuration that indicates which shell an electron occupies. Higher n = farther from the nucleus = higher energy = lower ionisation energy. The difference in energy between shells determines the wavelength of light emitted when an electron transitions between them — which is exactly what produces spectral lines.'},
-  {word:'Electron shell',       def:'A group of orbitals with the same principal quantum number (n). Shell 1 holds up to 2 electrons (1s²), shell 2 holds up to 8 (2s² 2p⁶), shell 3 holds up to 18 (3s² 3p⁶ 3d¹⁰). Elements in the same period of the periodic table are filling the same shell. When an electron moves between shells, it produces or absorbs a photon whose energy corresponds to a specific spectral line.'},
-  {word:'Aufbau principle',     def:'The rule for filling electron configurations: electrons fill the lowest available energy subshell first, then proceed upward. The order is 1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p, 5s, 4d... Notable exceptions include chromium ([Ar] 3d⁵ 4s¹) and copper ([Ar] 3d¹⁰ 4s¹) where half-filled and fully-filled d-subshells are energetically favourable.'},
-  {word:'Pauli exclusion principle', def:'No two electrons in an atom can have the same four quantum numbers — meaning each orbital holds at most two electrons, with opposite spins. This is why subshells have fixed capacities: s holds 2, p holds 6, d holds 10, f holds 14. Directly determines the shape of the periodic table and the structure of electron configurations.'},
+  {word:'Transit method',     def:'A technique for detecting exoplanets by measuring the tiny dimming of starlight as a planet passes in front of the star. Used by the Kepler and TESS missions to find thousands of planets.'},
   {word:'Valence electron',   def:'An electron in the outermost shell of an atom. Valence electrons are the ones that participate in chemical bonding and, in stellar atmospheres, are excited by photon absorption and then re-emit photons at specific wavelengths when they fall back to their ground state. The number of valence electrons determines an element\'s position in the periodic table.'},
   {word:'Valence shell',      def:'The outermost electron shell of an atom — the shell containing the valence electrons. Written as the highest-numbered subshell in an element\'s electron configuration. For sodium ([Ne] 3s¹), the valence shell is 3s¹. This single outer electron produces sodium\'s characteristic yellow doublet at 589nm.'},
+  {word:'Wavelength',         def:'The distance between successive peaks of a wave. Visible light spans wavelengths from ~380nm (violet) to ~700nm (red). Shorter wavelengths carry more energy and correspond to hotter radiation.'},
+  {word:'White dwarf',        def:'The hot, dense remnant of a low-to-medium mass star after it has exhausted its nuclear fuel and shed its outer layers. About the size of Earth but with roughly the mass of the Sun. Cools over billions of years.'}
 ];
 
 function switchGlossTab(tab){
@@ -6455,24 +6742,32 @@ document.querySelectorAll('.level-card').forEach(card => {
     playerLevel = card.dataset.level;
     document.getElementById('welcome-screen').style.display = 'none';
     document.getElementById('help-btn').style.display = 'flex';
+    _guideOpenedAt = Date.now();
+    _guidePagesVisited.clear();
+    _guidePagesVisited.add('guide-intro');
     showGuide(playerLevel);
   });
 });
 
-// Guide tabs — only visible tabs for the current level are clickable
+// Guide tabs — track which pages the player actually visits
 document.getElementById('guide-tabs').addEventListener('click', e => {
   const tab = e.target.closest('.guide-tab');
-  if(tab) activateGuideTab(tab.dataset.tab, playerLevel);
+  if(tab){
+    _guidePagesVisited.add(tab.dataset.tab);
+    activateGuideTab(tab.dataset.tab, playerLevel);
+  }
 });
 
-// Guide close
+// Guide close — record when they closed it
 document.getElementById('guide-close').addEventListener('click', () => {
+  _guideClosedAt = Date.now();
   document.getElementById('guide-panel').style.display = 'none';
   hideOverlay();
 });
 
-// Help button — reopens guide at the player's chosen depth level
+// Help button — reopens guide; reset open time so manual re-reads count
 document.getElementById('help-btn').addEventListener('click', () => {
+  _guideOpenedAt = Date.now();
   showGuide(playerLevel);
 });
 
@@ -6600,6 +6895,8 @@ function confirmName(){
   clearNameError();
   playerName = raw.slice(0, 20);
   document.getElementById('name-screen').style.display = 'none';
+  stopTitleAnimation();
+  stopTitleMusic();
 
   // Try to load save — if anything goes wrong, proceed to welcome screen
   tryLoadSave().then(loaded => {
@@ -6966,7 +7263,7 @@ let currentLang = 'en';
 const T = {
   en: {
     // -- Name screen ------------------------------------------
-    ns_sub:    'Galactic Survey Corps — Enlistment',
+    ns_sub:    'Map the cosmos. Decode the light.',
     ns_label:  'Enter your explorer name:',
     ns_input:  'Your name or callsign',
     ns_submit: 'Begin Mission →',
@@ -7191,7 +7488,7 @@ const T = {
 
   es: {
     // -- Name screen ------------------------------------------
-    ns_sub:    'Cuerpo de Exploración Galáctica — Inscripción',
+    ns_sub:    'Cartografía el cosmos. Descifra la luz.',
     ns_label:  'Ingresa tu nombre de explorador:',
     ns_input:  'Tu nombre o indicativo',
     ns_submit: 'Comenzar misión →',
@@ -7991,151 +8288,369 @@ document.getElementById('music-btn').addEventListener('click', ()=>{
 function initNebula(){
   const cvs = document.getElementById('nebula-canvas');
   if(!cvs) return;
-
-  function resize(){
-    cvs.width  = window.innerWidth;
-    cvs.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
+  function resize(){ cvs.width=window.innerWidth; cvs.height=window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
   const ctx = cvs.getContext('2d');
 
-  // Nebula cloud definitions — each is a slowly drifting radial gradient blob
-  // Colours inspired by real emission nebulae:
-  //   H-alpha (656nm) → deep crimson/red
-  //   O III (496,501nm) → cyan/teal
-  //   S II (671nm) → deeper red/magenta
-  //   H-beta (486nm) → blue
-  //   He II (468nm) → violet
+  // Nebula colour clouds — drift slowly toward BH
   const clouds = [
-    // Large background wash — deep red H-alpha
-    { x:0.5, y:0.45, rx:0.8, ry:0.6, col:'rgba(120,10,40,0.18)', drift:{x:0.00003, y:0.00002} },
-    // Teal O III sweep upper right
-    { x:0.78, y:0.28, rx:0.55, ry:0.45, col:'rgba(0,160,180,0.12)', drift:{x:-0.00004, y:0.00003} },
-    // Violet He II — upper left
-    { x:0.18, y:0.22, rx:0.45, ry:0.38, col:'rgba(100,20,180,0.13)', drift:{x:0.00005, y:0.00002} },
-    // Blue H-beta centre-left
-    { x:0.3, y:0.6, rx:0.4, ry:0.35, col:'rgba(20,60,200,0.10)', drift:{x:0.00003, y:-0.00003} },
-    // Warm gold nebular knot — centre-right
-    { x:0.65, y:0.55, rx:0.28, ry:0.25, col:'rgba(200,130,20,0.09)', drift:{x:-0.00003, y:-0.00002} },
-    // Deep magenta S II — lower left
-    { x:0.22, y:0.72, rx:0.38, ry:0.32, col:'rgba(160,10,80,0.11)', drift:{x:0.00004, y:-0.00003} },
-    // Bright teal accent — lower right
-    { x:0.80, y:0.70, rx:0.32, ry:0.28, col:'rgba(0,200,160,0.10)', drift:{x:-0.00005, y:-0.00002} },
-    // Secondary violet bloom
-    { x:0.50, y:0.20, rx:0.30, ry:0.22, col:'rgba(140,40,200,0.08)', drift:{x:0.00002, y:0.00004} },
-    // Faint golden core glow
-    { x:0.52, y:0.50, rx:0.18, ry:0.15, col:'rgba(255,180,60,0.07)', drift:{x:0.00001, y:0.00001} },
+    {x:0.50,y:0.45,rx:0.75,ry:0.55,col:'rgba(120,10,40,0.13)',  drift:{x:0.000025,y:0.000018}},
+    {x:0.78,y:0.28,rx:0.50,ry:0.40,col:'rgba(0,130,160,0.09)',  drift:{x:-0.00003,y:0.000022}},
+    {x:0.18,y:0.22,rx:0.42,ry:0.35,col:'rgba(90,15,170,0.10)',  drift:{x:0.000038,y:0.000016}},
+    {x:0.30,y:0.62,rx:0.38,ry:0.30,col:'rgba(15,50,190,0.08)',  drift:{x:0.000022,y:-0.000024}},
+    {x:0.68,y:0.58,rx:0.25,ry:0.22,col:'rgba(190,110,15,0.07)', drift:{x:-0.000025,y:-0.000018}},
+    {x:0.82,y:0.72,rx:0.28,ry:0.24,col:'rgba(0,180,140,0.08)',  drift:{x:-0.00004,y:-0.000016}},
   ];
 
-  // Nebula dust lane — thin dark arc
-  const dustLanes = [
-    { x:0.4, y:0.3, rx:0.6, ry:0.1, angle:-0.3, col:'rgba(2,4,14,0.25)' },
-    { x:0.7, y:0.65, rx:0.4, ry:0.08, angle:0.4, col:'rgba(2,4,14,0.20)' },
-  ];
-
-  // Foreground bright stars (brightest points in the nebula field)
-  const brightStars = Array.from({length:80}, ()=>({
-    x: Math.random(),
-    y: Math.random(),
-    r: 0.4 + Math.random() * 1.4,
-    a: 0.3 + Math.random() * 0.7,
-    phase: Math.random() * Math.PI * 2,
-    speed: 0.0008 + Math.random() * 0.002,
-    col: ['#ffffff','#9bb0ff','#ffd2a1','#c0e8ff','#ffcc80'][Math.floor(Math.random()*5)]
+  // Background stars — field stars that twinkle
+  const bgStars = Array.from({length:110},()=>({
+    x:Math.random(), y:Math.random(),
+    r:0.3+Math.random()*1.5, a:0.15+Math.random()*0.65,
+    phase:Math.random()*Math.PI*2, spd:0.0006+Math.random()*0.0018,
+    trailLen: Math.random()<0.10 ? 0.025+Math.random()*0.05 : 0,
+    col:['#ffffff','#ffffff','#9bb0ff','#ffd2a1','#c0e8ff'][Math.floor(Math.random()*5)],
   }));
 
-  let t = 0;
-  let running = true;
+  // Accretion disc — fewer particles, tighter, higher contrast
+  const DISC = Array.from({length:180},()=>{
+    const r    = 0.05 + Math.random()*0.14;
+    const ang  = Math.random()*Math.PI*2;
+    const spd  = (0.0005+Math.random()*0.0007)*(Math.random()<0.5?1:-1);
+    const heat = Math.pow(Math.random(),0.6); // bias toward hot end
+    const col  = heat>0.7
+      ? `rgba(255,${Math.floor(220+heat*35)},${Math.floor(heat*60)},`
+      : `rgba(255,${Math.floor(100+heat*130)},10,`;
+    return {r,ang,spd,col,alpha:0.55+Math.random()*0.4,size:0.6+Math.random()*1.4};
+  });
+
+  // Infalling stars — spiral in, brighten, vanish at horizon
+  function spawnInfall(){ return {
+    ang:  Math.random()*Math.PI*2,
+    dist: 0.10 + Math.random()*0.32,
+    spd:  0.00010 + Math.random()*0.00015,
+    wSpd: 0.003  + Math.random()*0.006,
+    r:    0.5 + Math.random()*1.2,
+    a:    0.25 + Math.random()*0.45,
+    col:  ['#ffffff','#c8e4ff','#ffd2a1','#ffffff'][Math.floor(Math.random()*4)],
+  };}
+  const infallStars = Array.from({length:20}, spawnInfall);
+  infallStars.forEach((s,i)=>{ s.dist = 0.06 + (i/20)*0.36; }); // stagger
+
+  // Ship
+  const ship = {ang:Math.PI*0.72, orbitR:0.28, spd:0.00008};
+
+  // Galaxy — cached star field
+  const galaxy = {x:0.21, y:0.25, ang:-0.38};
+
+  let t=0, running=true;
 
   function drawNebula(){
     if(!running) return;
     t += 0.5;
-    const W = cvs.width, H = cvs.height;
+    const W=cvs.width, H=cvs.height;
+    const SX=W*0.5, SY=H*0.46;
+    const BH_R=Math.min(W,H)*0.062;
+
     ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#01020a'; ctx.fillRect(0,0,W,H);
 
-    // Deep space background
-    ctx.fillStyle = '#02040e';
-    ctx.fillRect(0,0,W,H);
-
-    // Draw nebula cloud blobs
-    clouds.forEach(c => {
-      // Drift position slowly
-      c.x += c.drift.x;
-      c.y += c.drift.y;
-      // Wrap at edges
-      if(c.x < -0.3) c.x = 1.3;
-      if(c.x >  1.3) c.x = -0.3;
-      if(c.y < -0.3) c.y = 1.3;
-      if(c.y >  1.3) c.y = -0.3;
-
-      const cx = c.x * W;
-      const cy = c.y * H;
-      const rx = c.rx * W;
-      const ry = c.ry * H;
-
-      ctx.save();
-      ctx.scale(rx / Math.max(ry,1), 1);
-      const outerCol = c.col.replace(/,([\d.]+)\)$/, (_, a) => `,${parseFloat(a)*0.05})`);
-      const grad = ctx.createRadialGradient(cx/(rx/Math.max(ry,1)), cy, 0, cx/(rx/Math.max(ry,1)), cy, ry);
-      grad.addColorStop(0, c.col);
-      grad.addColorStop(0.6, outerCol);
-      grad.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.ellipse(cx/(rx/Math.max(ry,1)), cy, ry, ry, 0, 0, Math.PI*2);
-      ctx.fill();
-      ctx.restore();
-    });
-
-    // Dust lanes — dark absorption features
-    dustLanes.forEach(d => {
-      ctx.save();
-      ctx.translate(d.x*W, d.y*H);
-      ctx.rotate(d.angle);
-      const g = ctx.createRadialGradient(0,0,0,0,0,d.rx*W*0.5);
-      g.addColorStop(0, d.col);
-      g.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.scale(1, d.ry/d.rx);
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.ellipse(0,0,d.rx*W*0.5,d.rx*W*0.5,0,0,Math.PI*2);
-      ctx.fill();
-      ctx.restore();
-    });
-
-    // Foreground stars — twinkle
-    brightStars.forEach(s => {
-      const alpha = s.a * (0.7 + 0.3 * Math.sin(t * s.speed + s.phase));
-      const x = s.x * W, y = s.y * H;
-      // Tiny glow
-      if(s.r > 1.0){
-        const g = ctx.createRadialGradient(x,y,0,x,y,s.r*3);
-        g.addColorStop(0, `rgba(255,255,255,${alpha*0.3})`);
-        g.addColorStop(1,'rgba(0,0,0,0)');
-        ctx.fillStyle=g;
-        ctx.beginPath(); ctx.arc(x,y,s.r*3,0,Math.PI*2); ctx.fill();
+    // ── GALAXY ───────────────────────────────────────────────
+    if(!galaxy._stars){
+      const GW=Math.min(W,H)*0.17;
+      const gCX=galaxy.x*W, gCY=galaxy.y*H;
+      const stars=[];
+      for(let i=0;i<500;i++){
+        const roll=Math.random();
+        let sx,sy,bright,col;
+        if(roll<0.18){
+          const r=Math.pow(Math.random(),1.6)*GW*0.20;
+          const a=Math.random()*Math.PI*2;
+          sx=Math.cos(a)*r; sy=Math.sin(a)*r*0.36;
+          bright=0.4+Math.random()*0.5; col=Math.random()<0.6?'#ffe8b0':'#ffd060';
+        } else if(roll<0.65){
+          const arm=Math.random()<0.5?0:Math.PI;
+          const tt=0.2+Math.random()*1.5;
+          const aa=tt*0.82+arm;
+          const rr=GW*(0.12+tt*0.35);
+          const sc=(Math.random()-0.5)*GW*0.08;
+          sx=Math.cos(aa)*rr+Math.cos(aa+Math.PI/2)*sc;
+          sy=(Math.sin(aa)*rr+Math.sin(aa+Math.PI/2)*sc)*0.36;
+          bright=0.12+Math.random()*0.50;
+          col=Math.random()<0.5?'#b0d0ff':'#90c0ff';
+        } else {
+          const r=GW*(0.08+Math.random()*0.80);
+          const a=Math.random()*Math.PI*2;
+          sx=Math.cos(a)*r; sy=Math.sin(a)*r*0.36;
+          bright=0.05+Math.random()*0.18; col='#d0d8f0';
+        }
+        stars.push({sx,sy,bright,col,r:0.35+Math.random()*1.0,tw:Math.random()*Math.PI*2});
       }
-      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-      ctx.beginPath(); ctx.arc(x,y,s.r,0,Math.PI*2); ctx.fill();
+      galaxy._stars=stars; galaxy._gCX=gCX; galaxy._gCY=gCY; galaxy._GW=GW;
+    }
+    const cosA=Math.cos(galaxy.ang), sinA=Math.sin(galaxy.ang);
+    // Halo
+    const gh=ctx.createRadialGradient(galaxy._gCX,galaxy._gCY,0,galaxy._gCX,galaxy._gCY,galaxy._GW*1.2);
+    gh.addColorStop(0,'rgba(190,170,130,0.09)'); gh.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.ellipse(galaxy._gCX,galaxy._gCY,galaxy._GW*1.2,galaxy._GW*0.45,galaxy.ang,0,Math.PI*2);
+    ctx.fillStyle=gh; ctx.fill();
+    // Stars
+    galaxy._stars.forEach(s=>{
+      const rx=cosA*s.sx-sinA*s.sy+galaxy._gCX;
+      const ry=sinA*s.sx+cosA*s.sy+galaxy._gCY;
+      const al=s.bright*(0.72+0.28*Math.sin(t*0.004+s.tw));
+      const rr=parseInt(s.col.slice(1,3),16),gg2=parseInt(s.col.slice(3,5),16),bb2=parseInt(s.col.slice(5,7),16);
+      ctx.fillStyle=`rgba(${rr},${gg2},${bb2},${al.toFixed(2)})`;
+      ctx.beginPath(); ctx.arc(rx,ry,s.r,0,Math.PI*2); ctx.fill();
     });
+    // Core
+    const gc=ctx.createRadialGradient(galaxy._gCX,galaxy._gCY,0,galaxy._gCX,galaxy._gCY,galaxy._GW*0.085);
+    gc.addColorStop(0,'rgba(255,252,215,0.92)'); gc.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(galaxy._gCX,galaxy._gCY,galaxy._GW*0.085,0,Math.PI*2);
+    ctx.fillStyle=gc; ctx.fill();
+
+    // ── NEBULA CLOUDS ────────────────────────────────────────
+    clouds.forEach(c=>{
+      c.x+=c.drift.x; c.y+=c.drift.y;
+      c.x+=(SX/W-c.x)*0.000010; c.y+=(SY/H-c.y)*0.000010;
+      const cx=c.x*W,cy=c.y*H,rx=c.rx*W,ry=c.ry*H;
+      ctx.save(); ctx.scale(rx/Math.max(ry,1),1);
+      const scale=rx/Math.max(ry,1);
+      const cg=ctx.createRadialGradient(cx/scale,cy,0,cx/scale,cy,ry);
+      cg.addColorStop(0,c.col);
+      cg.addColorStop(1,c.col.replace(/[\d.]+\)$/,'0)'));
+      ctx.fillStyle=cg; ctx.beginPath();
+      ctx.ellipse(cx/scale,cy,ry,ry,0,0,Math.PI*2); ctx.fill(); ctx.restore();
+    });
+
+    // ── BACKGROUND STARS + TRAILS ────────────────────────────
+    bgStars.forEach(s=>{
+      let sx=s.x*W, sy=s.y*H;
+      const dxS=sx-SX,dyS=sy-SY,dS=Math.hypot(dxS,dyS);
+      if(dS<BH_R*7&&dS>0.1){
+        const lens=(BH_R*3)/(dS*dS/BH_R+dS);
+        sx+=(dxS/dS)*lens; sy+=(dyS/dS)*lens;
+      }
+      const al=s.a*(0.7+0.3*Math.sin(t*s.spd+s.phase));
+      if(s.trailLen>0){
+        const ta=Math.atan2(SY-sy,SX-sx);
+        const tx=sx+Math.cos(ta)*s.trailLen*W, ty=sy+Math.sin(ta)*s.trailLen*H;
+        const tg=ctx.createLinearGradient(sx,sy,tx,ty);
+        tg.addColorStop(0,`rgba(255,255,255,${(al*0.9).toFixed(2)})`);
+        tg.addColorStop(1,'rgba(255,255,255,0)');
+        ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(tx,ty);
+        ctx.strokeStyle=tg; ctx.lineWidth=1.4; ctx.stroke();
+      }
+      ctx.fillStyle=`rgba(255,255,255,${al.toFixed(2)})`;
+      ctx.beginPath(); ctx.arc(sx,sy,s.r,0,Math.PI*2); ctx.fill();
+    });
+
+    // ── PHOTON RING ──────────────────────────────────────────
+    const pR=BH_R*2.05;
+    const ringW=BH_R*0.18;
+    const segs=180;
+    const dopOff=t*0.005;
+
+    // Wide soft outer glow
+    for(let i=0;i<segs;i++){
+      const a1=(i/segs)*Math.PI*2,a2=((i+1.5)/segs)*Math.PI*2;
+      const mid=(a1+a2)*0.5+dopOff;
+      const dop=0.5+0.5*Math.cos(mid-Math.PI);
+      ctx.beginPath(); ctx.arc(SX,SY,pR*1.2,a1,a2);
+      ctx.strokeStyle=`rgba(255,${Math.floor(80+dop*120)},10,${(0.04+dop*0.10).toFixed(2)})`;
+      ctx.lineWidth=ringW*2.5; ctx.stroke();
+    }
+    // Main ring
+    for(let i=0;i<segs;i++){
+      const a1=(i/segs)*Math.PI*2,a2=((i+1.5)/segs)*Math.PI*2;
+      const mid=(a1+a2)*0.5+dopOff;
+      const dop=0.5+0.5*Math.cos(mid-Math.PI);
+      const gg=Math.floor(dop>0.5?200+dop*55:80+dop*240);
+      const bb=Math.floor(dop>0.7?60+dop*80:0);
+      ctx.beginPath(); ctx.arc(SX,SY,pR,a1,a2);
+      ctx.strokeStyle=`rgba(255,${gg},${bb},${(0.18+dop*0.72).toFixed(2)})`;
+      ctx.lineWidth=ringW*(0.5+dop*1.5); ctx.stroke();
+    }
+    // Inner crisp edge — approaching side only
+    for(let i=0;i<segs;i++){
+      const a1=(i/segs)*Math.PI*2,a2=((i+1.5)/segs)*Math.PI*2;
+      const mid=(a1+a2)*0.5+dopOff;
+      const dop=0.5+0.5*Math.cos(mid-Math.PI);
+      if(dop<0.5) continue;
+      ctx.beginPath(); ctx.arc(SX,SY,pR*0.91,a1,a2);
+      ctx.strokeStyle=`rgba(255,255,200,${((dop-0.5)*0.6).toFixed(2)})`;
+      ctx.lineWidth=ringW*0.32; ctx.stroke();
+    }
+
+    // ── LENS FLARE ───────────────────────────────────────────
+    const fAng=Math.PI+dopOff;
+    const fX=SX+Math.cos(fAng)*pR*0.97, fY=SY+Math.sin(fAng)*pR*0.97;
+    const fA=0.13+0.04*Math.sin(t*0.018);
+    for(let sp=0;sp<6;sp++){
+      const sa=(sp/6)*Math.PI, sl=pR*(0.65+sp%2*0.45);
+      const fg=ctx.createLinearGradient(fX,fY,fX+Math.cos(sa)*sl,fY+Math.sin(sa)*sl);
+      fg.addColorStop(0,`rgba(255,220,140,${fA})`); fg.addColorStop(1,'rgba(255,220,140,0)');
+      ctx.beginPath(); ctx.moveTo(fX,fY); ctx.lineTo(fX+Math.cos(sa)*sl,fY+Math.sin(sa)*sl);
+      ctx.strokeStyle=fg; ctx.lineWidth=1.3; ctx.stroke();
+    }
+    const fd=ctx.createRadialGradient(fX,fY,0,fX,fY,pR*0.26);
+    fd.addColorStop(0,`rgba(255,245,210,${(fA*2.0).toFixed(2)})`); fd.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(fX,fY,pR*0.26,0,Math.PI*2); ctx.fillStyle=fd; ctx.fill();
+
+    // ── ACCRETION DISC GLOW ──────────────────────────────────
+    const dg=ctx.createRadialGradient(SX,SY,BH_R*1.5,SX,SY,Math.min(W,H)*0.20);
+    dg.addColorStop(0,'rgba(255,100,15,0.18)');
+    dg.addColorStop(0.5,'rgba(160,30,60,0.07)');
+    dg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.ellipse(SX,SY,Math.min(W,H)*0.20,Math.min(W,H)*0.20*0.26,0,0,Math.PI*2);
+    ctx.fillStyle=dg; ctx.fill();
+
+    const drawHalf=(front)=>{
+      DISC.forEach(p=>{
+        p.ang+=p.spd;
+        const sA=Math.sin(p.ang);
+        if(front&&sA<0) return; if(!front&&sA>=0) return;
+        const ox=Math.cos(p.ang)*p.r*W*0.40;
+        const oy=sA*p.r*W*0.40*0.26;
+        const px2=SX+ox, py2=SY+oy;
+        const dist2=Math.hypot(ox,oy);
+        const fade=Math.min(1,dist2/(BH_R*1.6));
+        const al=p.alpha*fade*(front?1:0.5);
+        ctx.beginPath(); ctx.arc(px2,py2,p.size,0,Math.PI*2);
+        ctx.fillStyle=p.col+al.toFixed(2)+')'; ctx.fill();
+      });
+    };
+
+    // ── INFALLING STARS ──────────────────────────────────────
+    infallStars.forEach(s=>{
+      s.ang  += s.wSpd*(1+Math.max(0,0.3-s.dist)*10);
+      s.dist -= s.spd*(1+Math.max(0,0.28-s.dist)*6);
+      if(s.dist<0.038){ Object.assign(s,spawnInfall()); s.dist=0.26+Math.random()*0.14; return; }
+      const px=SX+Math.cos(s.ang)*s.dist*Math.min(W,H);
+      const py=SY+Math.sin(s.ang)*s.dist*Math.min(W,H)*0.58;
+      const tidalT=Math.max(0,1-s.dist/0.36);
+      const bright=s.a*(1+tidalT*2.2);
+      const rad=s.r*(1+tidalT*0.7);
+      // Colour toward blue-white as it heats
+      const rCol=Math.floor(Math.min(255,parseInt(s.col.slice(1,3),16)*(1-tidalT*0.3)+200*tidalT*0.3));
+      const gCol=Math.floor(Math.min(255,parseInt(s.col.slice(3,5)||'ff',16)*(1-tidalT*0.5)+220*tidalT*0.5));
+      const toA=Math.atan2(SY-py,SX-px);
+      const stretch=1+tidalT*3.5;
+      ctx.save(); ctx.translate(px,py); ctx.rotate(toA); ctx.scale(1,1/stretch);
+      ctx.beginPath(); ctx.arc(0,0,rad*stretch,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${rCol},${gCol},255,${Math.min(0.95,bright).toFixed(2)})`; ctx.fill();
+      ctx.restore();
+    });
+
+    drawHalf(false);
+
+    // ── EVENT HORIZON — HIGH CONTRAST ────────────────────────
+    // Key principle: the dark region must be LARGE relative to the photon ring
+    // This creates the "void in the brightness" effect of real BH images
+
+    // 1. Large gravitational darkening — covers 7× BH radius
+    const darkR=BH_R*7;
+    const dark=ctx.createRadialGradient(SX,SY,BH_R*1.5,SX,SY,darkR);
+    dark.addColorStop(0,'rgba(0,0,0,0.96)');
+    dark.addColorStop(0.22,'rgba(0,0,0,0.88)');
+    dark.addColorStop(0.50,'rgba(0,0,0,0.55)');
+    dark.addColorStop(0.78,'rgba(0,0,0,0.22)');
+    dark.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(SX,SY,darkR,0,Math.PI*2);
+    ctx.fillStyle=dark; ctx.fill();
+
+    // 2. Critical shadow — between event horizon and photon ring
+    // This is the distinctive dark band seen in M87* photograph
+    const critR=BH_R*1.55;
+    const crit=ctx.createRadialGradient(SX,SY,BH_R,SX,SY,critR);
+    crit.addColorStop(0,'rgba(0,0,0,1)');
+    crit.addColorStop(0.75,'rgba(0,0,0,0.97)');
+    crit.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(SX,SY,critR,0,Math.PI*2);
+    ctx.fillStyle=crit; ctx.fill();
+
+    // 3. Absolute black event horizon
+    ctx.beginPath(); ctx.arc(SX,SY,BH_R,0,Math.PI*2);
+    ctx.fillStyle='#000000'; ctx.fill();
+
+    drawHalf(true);
+
+    // ── SPACECRAFT ───────────────────────────────────────────
+    ship.ang+=ship.spd;
+    const orbitOffY=-H*0.18;
+    const orbitRx=ship.orbitR*Math.min(W,H);
+    const orbitRy=ship.orbitR*Math.min(W,H)*0.28;
+    const orbitX=SX+Math.cos(ship.ang)*orbitRx;
+    const orbitY=(SY+orbitOffY)+Math.sin(ship.ang)*orbitRy;
+    const shipDist=Math.hypot(orbitX-SX,orbitY-SY);
+
+    if(shipDist>BH_R*2.5){
+      const S=Math.min(W,H)*0.005;
+      const nextX=SX+Math.cos(ship.ang+0.01)*orbitRx;
+      const nextY=(SY+orbitOffY)+Math.sin(ship.ang+0.01)*orbitRy;
+      const heading=Math.atan2(nextY-orbitY,nextX-orbitX);
+
+      ctx.beginPath();
+      ctx.ellipse(SX,SY+orbitOffY,orbitRx,orbitRy,0,Math.PI*1.05,Math.PI*2.1);
+      ctx.strokeStyle='rgba(80,120,200,0.06)'; ctx.lineWidth=0.6;
+      ctx.setLineDash([2,9]); ctx.stroke(); ctx.setLineDash([]);
+
+      ctx.save(); ctx.translate(orbitX,orbitY); ctx.rotate(heading);
+      const pulse=0.5+0.5*Math.sin(t*0.14);
+      const eg=ctx.createRadialGradient(0,S*1.2,0,0,S*1.2,S*8);
+      eg.addColorStop(0,`rgba(80,200,255,${0.9+pulse*0.1})`);
+      eg.addColorStop(0.25,`rgba(40,120,255,${0.35+pulse*0.15})`);
+      eg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(0,S*1.2,S*8,0,Math.PI*2); ctx.fillStyle=eg; ctx.fill();
+      // Exhaust
+      const jet=ctx.createLinearGradient(0,S*1.2,0,S*9);
+      jet.addColorStop(0,`rgba(180,230,255,${0.6+pulse*0.3})`);
+      jet.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.moveTo(-S*0.14,S*1.4);
+      ctx.bezierCurveTo(-S*0.35,S*4,S*0.35,S*5,0,S*9);
+      ctx.bezierCurveTo(-S*0.35,S*5,S*0.35,S*4,S*0.14,S*1.4);
+      ctx.fillStyle=jet; ctx.fill();
+      // Hull
+      ctx.beginPath(); ctx.moveTo(0,-S*3.2);
+      ctx.bezierCurveTo(S*0.38,-S*2,S*0.52,-S*0.4,S*0.32,S*1.4);
+      ctx.lineTo(S*0.14,S*1.8); ctx.lineTo(-S*0.14,S*1.8); ctx.lineTo(-S*0.32,S*1.4);
+      ctx.bezierCurveTo(-S*0.52,-S*0.4,-S*0.38,-S*2,0,-S*3.2); ctx.closePath();
+      ctx.fillStyle='rgba(170,192,232,0.92)'; ctx.fill();
+      ctx.strokeStyle='rgba(220,238,255,0.32)'; ctx.lineWidth=0.4; ctx.stroke();
+      // Cockpit
+      ctx.beginPath(); ctx.ellipse(0,-S*2.0,S*0.20,S*0.30,0,0,Math.PI*2);
+      ctx.fillStyle='rgba(15,55,120,0.88)'; ctx.fill();
+      ctx.strokeStyle='rgba(100,180,255,0.55)'; ctx.lineWidth=0.3; ctx.stroke();
+      // Wings
+      [[1],[-1]].forEach(([side])=>{
+        ctx.beginPath();
+        ctx.moveTo(side*S*0.33,-S*0.18); ctx.lineTo(side*S*3.1,S*1.55);
+        ctx.lineTo(side*S*2.55,S*1.95); ctx.lineTo(side*S*0.28,S*1.18); ctx.closePath();
+        ctx.fillStyle='rgba(128,152,208,0.83)'; ctx.fill();
+        const tipCol=side>0?'rgba(60,255,100,':'rgba(255,60,60,';
+        ctx.beginPath(); ctx.arc(side*S*2.9,S*1.65,S*0.22,0,Math.PI*2);
+        ctx.fillStyle=tipCol+(0.45+pulse*0.55)+')'; ctx.fill();
+      });
+      // Nose beacon
+      if(Math.sin(t*0.07)>0.25){
+        const nb=ctx.createRadialGradient(0,-S*3.2,0,0,-S*3.2,S*0.9);
+        nb.addColorStop(0,'rgba(255,255,255,0.92)'); nb.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.beginPath(); ctx.arc(0,-S*3.2,S*0.9,0,Math.PI*2); ctx.fillStyle=nb; ctx.fill();
+      }
+      ctx.restore();
+    }
 
     requestAnimationFrame(drawNebula);
   }
-
   requestAnimationFrame(drawNebula);
 
-  // Stop when name screen hides
-  const ns = document.getElementById('name-screen');
+  const ns=document.getElementById('name-screen');
   if(ns){
-    const obs = new MutationObserver(()=>{
-      if(ns.style.display === 'none'){ running = false; obs.disconnect(); }
+    const obs=new MutationObserver(()=>{
+      if(ns.style.display==='none'){running=false;obs.disconnect();}
     });
-    obs.observe(ns, {attributes:true, attributeFilter:['style']});
+    obs.observe(ns,{attributes:true,attributeFilter:['style']});
   }
 }
-
 /* ================================================================
    ANIMATED TITLE STARFIELD
    Drawn on the #title-starfield canvas behind the welcome screen.
@@ -10292,82 +10807,82 @@ const GUIDE_ES = {
 /* Spanish glossary terms */
 const GLOSSARY_TERMS_ES = [
   {word:'Absorción',          def:'Proceso por el que los átomos de la atmósfera de una estrella absorben longitudes de onda específicas de luz. Las longitudes de onda absorbidas aparecen como líneas oscuras en el espectro — las líneas de absorción. Cada elemento absorbe en longitudes de onda únicas, actuando como una huella dactilar.'},
-  {word:'Longitud de onda',   def:'La distancia entre dos crestas de onda. En el espectro visible, las longitudes de onda más cortas (~380 nm) son violetas; las más largas (~700 nm) son rojas. Las líneas espectrales se miden en nanómetros (nm).'},
-  {word:'Serie de Balmer',    def:'La serie de líneas de absorción del hidrógeno visible en el rango óptico: H-alfa (656 nm, rojo), H-beta (486 nm, azul-verde), H-gamma (434 nm, violeta), H-delta (410 nm). Son las más intensas en las estrellas de tipo A.'},
-  {word:'Agujero negro',      def:'El remanente de una estrella muy masiva (>20 M☉) tras una supernova. La gravedad es tan extrema que ni la luz puede escapar. Los agujeros negros se detectan por su efecto sobre las estrellas y el gas cercanos, nunca directamente.'},
-  {word:'Desplazamiento azul',def:'El desplazamiento hacia longitudes de onda más cortas (azul) de las líneas espectrales cuando una fuente de luz se acerca al observador. El efecto Doppler aplicado a la luz — igual que el sonido agudo de un vehículo que se acerca.'},
-  {word:'Enana marrón',       def:'Objeto subestelar con masa entre ~13 y 80 veces la de Júpiter — demasiado frío para la fusión sostenida de hidrógeno, pero demasiado masivo para ser un planeta. Se clasifican como tipos L, T e Y en el sistema espectral extendido.'},
-  {word:'Serie de Brackett',  def:'Serie de líneas de absorción/emisión del hidrógeno en el infrarrojo cercano. Menos relevante en la clasificación óptica pero importante en astrofísica infrarroja.'},
-  {word:'Calcio',             def:'Elemento que produce líneas de absorción K y H muy intensas a 393 nm y 397 nm. Dominante en las estrellas de tipo F y G; también aparece en el medio interestelar como trazador de gas frío.'},
-  {word:'Línea Ca II K',      def:'La línea de absorción del calcio ionizado a 393 nm — una de las más fáciles de detectar en la clasificación estelar. Aparece en espectros estelares de tipo F/G y también como línea interestelar en el medio entre estrellas.'},
-  {word:'Clase de luminosidad',def:'Sufijo en números romanos añadido al tipo espectral que indica la etapa evolutiva de la estrella: I = supergigante, II = gigante brillante, III = gigante, IV = subgigante, V = enana de secuencia principal. Por ejemplo, el Sol es G2V.'},
-  {word:'Modo Clase',         def:'Parámetro URL del juego para profesores. Añadir ?mode=classify (o spectra, survey, element, kepler) a la URL enfoca la sesión en ese tipo de rompecabezas. Los estudiantes no perciben ninguna diferencia — el parámetro funciona en silencio.'},
-  {word:'Estrella binaria cercana', def:'Dos estrellas que orbitan tan cerca la una de la otra que se distorsionan mutuamente por la gravedad. Los sistemas binarios espectroscópicos se detectan por las líneas espectrales desdobladas o variables.'},
-  {word:'Masa de colonia',    def:'En el juego, la cantidad de masa total que se ha establecido en un planeta colonizado. Afecta a la puntuación de la ruta de civilización elegida.'},
-  {word:'Espectro compuesto', def:'Cuando dos estrellas en un sistema binario son demasiado cercanas para resolver por separado, su luz combinada produce un espectro compuesto — dos conjuntos de líneas superpuestos, a veces desplazados en sentidos opuestos por el movimiento orbital.'},
-  {word:'Notación de configuración', def:'Cómo leer una configuración electrónica como 1s² 2s² 2p⁶ 3s¹: el primer número es el número cuántico principal (capa), la letra es el tipo de subcapa (s, p, d o f), y el superíndice es el número de electrones en esa subcapa. De izquierda a derecha se avanza hacia el exterior desde el núcleo.'},
-  {word:'Temperatura de color',def:'La temperatura superficial de una estrella inferida de su color. Las estrellas más calientes emiten más luz azul; las más frías, más roja. Medida en kelvin (K).'},
-  {word:'Bloque d',           def:'Los metales de transición (grupos 3–12) en los que se llenan los orbitales d. Tienen muchas transiciones electrónicas posibles entre niveles de energía d estrechamente espaciados, produciendo espectros de emisión complejos.'},
-  {word:'Clase de temperatura', def:'Véase Clase espectral.'},
-  {word:'Enana',              def:'En astronomía, una estrella de la secuencia principal — la mayoría de las estrellas normales. En la notación MK se designa como clase de luminosidad V. Término diferenciado de las enanas blancas, que son objetos degenerados muy distintos.'},
-  {word:'Rompecabezas Doppler',def:'Un rompecabezas bonus en Spectra Explorer (Nivel 2+). Muestra el espectro de la estrella junto a un espectro de referencia. Buscas si las líneas se desplazan a la izquierda (acercándose) o a la derecha (alejándose).'},
-  {word:'Efecto Doppler',     def:'El cambio de longitud de onda de la luz causado por el movimiento relativo entre la fuente y el observador. Las estrellas que se acercan muestran líneas desplazadas al azul; las que se alejan, al rojo. Base física del rompecabezas Doppler y de la detección de planetas por velocidad radial.'},
-  {word:'Enana',              def:'Véase Clase de luminosidad — clase V.'},
-  {word:'Electrón',           def:'Partícula subatómica con carga negativa que orbita el núcleo atómico. Los electrones en los niveles más externos absorben y emiten fotones a longitudes de onda específicas — produciendo las líneas espectrales que se observan en los espectros estelares.'},
-  {word:'Configuración electrónica', def:'Descripción de cómo se distribuyen los electrones entre los orbitales atómicos de un elemento en su estado fundamental. Los electrones más externos — la capa de valencia — son los que producen las líneas de emisión visibles al ser excitados por la luz estelar.'},
-  {word:'Capa electrónica',   def:'Grupo de orbitales con el mismo número cuántico principal (n). La capa 1 contiene hasta 2 electrones, la capa 2 hasta 8, la capa 3 hasta 18. Los elementos del mismo período de la tabla periódica están llenando la misma capa.'},
-  {word:'Espectro de emisión',def:'Espectro con líneas de colores brillantes sobre fondo negro, producidas cuando electrones excitados caen a niveles de energía inferiores y liberan fotones. El opuesto del espectro de absorción, aunque las posiciones de las líneas son idénticas.'},
-  {word:'Bloque f',           def:'Sección de la tabla periódica que contiene los lantánidos y actínidos, donde se llenan los orbitales 4f y 5f. Estos elementos tienen espectros complejos porque la subcapa f tiene 7 orbitales y muchas transiciones electrónicas posibles.'},
-  {word:'Gigante',            def:'Estrella que ha agotado el hidrógeno en su núcleo y se ha expandido enormemente. Las gigantes son entre 10 y 1 000 veces más luminosas que el Sol. Clase de luminosidad III en la notación MK.'},
-  {word:'Estado fundamental', def:'La disposición de electrones de menor energía en un átomo — la configuración que adopta naturalmente un átomo cuando no está excitado. La pestaña ⚛️ Configuraciones del glosario muestra las configuraciones en estado fundamental.'},
-  {word:'Zona habitable',     def:'La región alrededor de una estrella donde las temperaturas superficiales de un planeta permiten la existencia de agua líquida. Depende de la luminosidad estelar. No garantiza la vida, pero es el primer criterio de habitabilidad.'},
-  {word:'Estrella de Hidrógeno', def:'Véase Tipo A.'},
-  {word:'Diagrama de Hertzsprung-Russell', def:'Gráfico de dispersión de estrellas que muestra luminosidad frente a temperatura superficial. La mayoría de las estrellas se sitúan en la "secuencia principal" diagonal. Las gigantes ocupan la parte superior derecha; las enanas blancas, la inferior izquierda.'},
-  {word:'Índice de habitabilidad', def:'Puntuación compuesta (0–100) en Spectra Explorer que combina la clase estelar, la luminosidad y la probabilidad de zona habitable para clasificar estrellas por su potencial para albergar planetas habitables.'},
-  {word:'Helio',              def:'El segundo elemento más abundante del universo. Las líneas de helio son los identificadores clave para las estrellas de tipo O (He ionizado, 468 nm) y tipo B (He neutro, 587 nm).'},
-  {word:'Clase espectral de Harvard', def:'La secuencia OBAFGKM de clasificación estelar por temperatura superficial, de más caliente a más fría. Desarrollada en el Observatorio de Harvard a finales del siglo XIX, principalmente por Williamina Fleming, Antonia Maury y Annie Jump Cannon.'},
-  {word:'Hidrógeno',          def:'El elemento más abundante del universo y el principal combustible de las estrellas. Las líneas H-alfa (656 nm, rojo) y H-beta (486 nm, azul-verde) son identificadores clave en la clasificación estelar, especialmente intensas en las estrellas de tipo A.'},
-  {word:'Clasificación infrarroja', def:'Extensión de la clasificación OBAFGKM a objetos más fríos: L, T e Y (enanas marrones y enanas ultrafuentes). Basada principalmente en bandas moleculares en el infrarrojo que son indetectables en el óptico.'},
-  {word:'Medio interestelar (MIE)', def:'El gas y polvo que llena el espacio entre estrellas. El gas frío del MIE produce líneas de absorción muy estrechas (especialmente Ca II K a 393 nm y Na I D a 589 nm) superpuestas sobre los espectros estelares.'},
-  {word:'Ionización',         def:'Eliminación de uno o más electrones de un átomo, creando un ion con carga positiva. Las estrellas más calientes tienen atmósferas más ionizadas, lo que cambia drásticamente qué líneas espectrales son visibles.'},
-  {word:'Agujero de Hierro',  def:'Región del espectro alrededor de 500–550 nm donde el hierro neutro produce grupos de líneas de absorción densas en las estrellas de tipo K. Una clave útil para identificar estrellas de tipo K en el rompecabezas de clasificación.'},
-  {word:'Rompecabezas de Kepler', def:'Rompecabezas bonus en Spectra Explorer para planetas habitables. Usa la Tercera Ley de Kepler (T²=a³/M) para calcular la distancia orbital semi-mayor de un planeta en UA y determinar si cae dentro de la zona habitable.'},
-  {word:'Tercera Ley de Kepler', def:'P² = a³, donde P es el período orbital en años terrestres y a es la distancia media al Sol en UA (Unidades Astronómicas). Para otras estrellas: P² = a³/M, siendo M la masa estelar. Base del rompecabezas de Kepler.'},
-  {word:'Línea K y H',        def:'Las dos líneas de absorción del calcio ionizado a 393 nm (K) y 397 nm (H). Unos de los identificadores más fuertes para las estrellas de tipo F y G, y también trazadores importantes del medio interestelar.'},
   {word:'Agotamiento de litio', def:'La destrucción gradual del litio dentro de las estrellas mediante reacciones de captura de protones. El litio se agota más rápido en estrellas más calientes y con el tiempo. Una línea de litio fuerte a 670.8 nm indica una estrella joven; débil o ausente indica una vieja.'},
-  {word:'Clase de luminosidad', def:'Sufijo romano del tipo espectral que indica la etapa evolutiva: I = supergigante, II = gigante brillante, III = gigante, IV = subgigante, V = enana de secuencia principal.'},
-  {word:'Secuencia principal', def:'La banda diagonal del diagrama de Hertzsprung-Russell donde las estrellas pasan la mayor parte de su vida fusionando hidrógeno en helio. Clase de luminosidad V.'},
-  {word:'Sistema MK',         def:'El sistema de clasificación espectral Morgan-Keenan — extensión del sistema OBAFGKM de Harvard que añade la clase de luminosidad (I–V). La designación completa para el Sol es G2V.'},
-  {word:'Espectro de microturbulencia', def:'Ensanchamiento de las líneas espectrales causado por movimientos turbulentos dentro de la atmósfera estelar, usados para distinguir supergigantes de gigantes del mismo tipo espectral.'},
-  {word:'Objeto misterioso',  def:'En Spectra Explorer, cualquier objeto estelar que no encaja en el sistema de clasificación OBAFGKM estándar — enanas marrones, estrellas T Tauri y enanas blancas contaminadas. Seleccionar "Objeto Anómalo" en el Acto III es la respuesta correcta.'},
-  {word:'Estrella de neutrones', def:'El remanente compacto de una estrella de 8–20 masas solares tras una supernova de colapso de núcleo. Extremadamente densa — una cucharadita podría pesar miles de millones de toneladas. Gira rápidamente y emite pulsos de radio regulares (púlsar).'},
-  {word:'Línea sodio D',      def:'El doblete de sodio a 589 nm (D1) y 590 nm (D2). Uno de los pares de líneas espectrales más fácilmente reconocibles — produce el color amarillo-naranja de las lámparas de sodio. En el Sol identifica la clase G; en el medio interestelar actúa como trazador de gas frío.'},
-  {word:'Orbital (subcapa)',  def:'Región del espacio donde es probable encontrar electrones alrededor del núcleo atómico. Las subcapas se denominan s (máx. 2 electrones), p (máx. 6), d (máx. 10) y f (máx. 14). La subcapa que ocupa un electrón determina la energía de los fotones emitidos al caer a un nivel inferior.'},
-  {word:'Bloque p',           def:'Grupos 13–18 de la tabla periódica, donde se llena el orbital p. Incluye boro, carbono, nitrógeno, oxígeno, los halógenos y los gases nobles.'},
-  {word:'Principio de exclusión de Pauli', def:'Ningún electrón puede tener los mismos cuatro números cuánticos en un átomo, lo que significa que cada orbital contiene como máximo dos electrones, con giros opuestos. Determina directamente la forma de la tabla periódica.'},
-  {word:'Planck',             def:'La física del cuerpo negro de Planck describe cómo la luz de las estrellas varía con la temperatura. En la práctica del juego, el color general del espectro te dice instantáneamente si la estrella es caliente (azul-blanca) o fría (rojiza).'},
-  {word:'Enana blanca contaminada', def:'Enana blanca con elementos pesados (calcio, magnesio, hierro) visibles en su espectro. A temperaturas de enana blanca, estos elementos deberían hundirse bajo la fotosfera en días — su presencia significa que la estrella está acretando detritos rocosos de un planetesimal destruido.'},
-  {word:'Número cuántico principal', def:'El entero n (1, 2, 3, 4...) en una configuración electrónica que indica qué capa ocupa un electrón. Mayor n = más lejos del núcleo = mayor energía = menor energía de ionización. La diferencia de energía entre capas determina la longitud de onda de la luz emitida en las transiciones.'},
-  {word:'Velocidad radial',   def:'La velocidad de una estrella directamente hacia o alejándose del observador, medida mediante el desplazamiento Doppler de sus líneas espectrales. Si la estrella se acerca, las líneas se desplazan al azul; si se aleja, al rojo. La técnica de velocidad radial fue el primer método para detectar exoplanetas.'},
-  {word:'Desplazamiento al rojo', def:'El desplazamiento hacia longitudes de onda más largas (rojo) de las líneas espectrales cuando una fuente de luz se aleja del observador. El efecto Doppler aplicado a la luz.'},
-  {word:'Modo Investigación', def:'Capa avanzada de juego en Spectra Explorer que se desbloquea tras descubrir una estrella en La Heliopausa. En el Modo Investigación, los botones de clasificación OBAFGKM estándar son reemplazados por un diagrama HR interactivo.'},
-  {word:'Bloque s',           def:'Las dos primeras columnas de la tabla periódica — grupos 1 y 2 (más hidrógeno y helio) — donde se llena el orbital s. Los metales alcalinos (Li, Na, K...) tienen un electrón s en la capa exterior, produciendo espectros de emisión simples y dispersos.'},
+  {word:'Agujero de Hierro',  def:'Región del espectro alrededor de 500–550 nm donde el hierro neutro produce grupos de líneas de absorción densas en las estrellas de tipo K. Una clave útil para identificar estrellas de tipo K en el rompecabezas de clasificación.'},
+  {word:'Agujero negro',      def:'El remanente de una estrella muy masiva (>20 M☉) tras una supernova. La gravedad es tan extrema que ni la luz puede escapar. Los agujeros negros se detectan por su efecto sobre las estrellas y el gas cercanos, nunca directamente.'},
+  {word:'Banda TiO',          def:'Las bandas de absorción molecular del óxido de titanio (TiO) que dominan los espectros de las estrellas de tipo M. El TiO solo puede existir en temperaturas suficientemente bajas como para que las moléculas no se rompan (~3 500 K). Es el identificador espectral clave para las estrellas M.'},
   {word:'Binaria espectroscópica', def:'Sistema de dos estrellas en órbita cercana cuya naturaleza dual se revela por la observación de dos conjuntos de líneas espectrales desplazándose en sentidos opuestos a medida que cada estrella se mueve hacia nosotros y se aleja.'},
-  {word:'Clase espectral',    def:'La temperatura de una estrella expresada como una letra de la secuencia OBAFGKM. O es la más caliente (~50 000 K) y M la más fría (~3 000 K). La temperatura determina qué líneas espectrales son visibles.'},
-  {word:'Líneas espectrales', def:'Longitudes de onda específicas de luz absorbidas o emitidas por los átomos de la atmósfera de una estrella. Cada elemento tiene un conjunto único de longitudes de onda — su huella espectral. El juego usa estas huellas para identificar estrellas y elementos.'},
+  {word:'Bloque d',           def:'Los metales de transición (grupos 3–12) en los que se llenan los orbitales d. Tienen muchas transiciones electrónicas posibles entre niveles de energía d estrechamente espaciados, produciendo espectros de emisión complejos.'},
+  {word:'Bloque f',           def:'Sección de la tabla periódica que contiene los lantánidos y actínidos, donde se llenan los orbitales 4f y 5f. Estos elementos tienen espectros complejos porque la subcapa f tiene 7 orbitales y muchas transiciones electrónicas posibles.'},
+  {word:'Bloque p',           def:'Grupos 13–18 de la tabla periódica, donde se llena el orbital p. Incluye boro, carbono, nitrógeno, oxígeno, los halógenos y los gases nobles.'},
+  {word:'Bloque s',           def:'Las dos primeras columnas de la tabla periódica — grupos 1 y 2 (más hidrógeno y helio) — donde se llena el orbital s. Los metales alcalinos (Li, Na, K...) tienen un electrón s en la capa exterior, produciendo espectros de emisión simples y dispersos.'},
+  {word:'Calcio',             def:'Elemento que produce líneas de absorción K y H muy intensas a 393 nm y 397 nm. Dominante en las estrellas de tipo F y G; también aparece en el medio interestelar como trazador de gas frío.'},
+  {word:'Capa de valencia',   def:'La capa electrónica más externa de un átomo — la capa que contiene los electrones de valencia. Para el sodio ([Ne] 3s¹), la capa de valencia es 3s¹. Este único electrón exterior produce el característico doblete amarillo del sodio a 589 nm.'},
+  {word:'Capa electrónica',   def:'Grupo de orbitales con el mismo número cuántico principal (n). La capa 1 contiene hasta 2 electrones, la capa 2 hasta 8, la capa 3 hasta 18. Los elementos del mismo período de la tabla periódica están llenando la misma capa.'},
   {word:'Carrera de Exploración', def:'Modo de juego opcional cronometrado en Spectra Explorer, accesible desde la pantalla Saltar Sector. Clasifica 10 estrellas lo más rápido posible en un período de 10 minutos. Se otorga hasta +1 000 puntos de bonus de velocidad.'},
+  {word:'Clase de luminosidad',def:'Sufijo en números romanos añadido al tipo espectral que indica la etapa evolutiva de la estrella: I = supergigante, II = gigante brillante, III = gigante, IV = subgigante, V = enana de secuencia principal. Por ejemplo, el Sol es G2V.'},
+  {word:'Clase de luminosidad', def:'Sufijo romano del tipo espectral que indica la etapa evolutiva: I = supergigante, II = gigante brillante, III = gigante, IV = subgigante, V = enana de secuencia principal.'},
+  {word:'Clase de temperatura', def:'Véase Clase espectral.'},
+  {word:'Clase espectral',    def:'La temperatura de una estrella expresada como una letra de la secuencia OBAFGKM. O es la más caliente (~50 000 K) y M la más fría (~3 000 K). La temperatura determina qué líneas espectrales son visibles.'},
+  {word:'Clase espectral de Harvard', def:'La secuencia OBAFGKM de clasificación estelar por temperatura superficial, de más caliente a más fría. Desarrollada en el Observatorio de Harvard a finales del siglo XIX, principalmente por Williamina Fleming, Antonia Maury y Annie Jump Cannon.'},
+  {word:'Clasificación infrarroja', def:'Extensión de la clasificación OBAFGKM a objetos más fríos: L, T e Y (enanas marrones y enanas ultrafuentes). Basada principalmente en bandas moleculares en el infrarrojo que son indetectables en el óptico.'},
+  {word:'Configuración electrónica', def:'Descripción de cómo se distribuyen los electrones entre los orbitales atómicos de un elemento en su estado fundamental. Los electrones más externos — la capa de valencia — son los que producen las líneas de emisión visibles al ser excitados por la luz estelar.'},
+  {word:'Desplazamiento al rojo', def:'El desplazamiento hacia longitudes de onda más largas (rojo) de las líneas espectrales cuando una fuente de luz se aleja del observador. El efecto Doppler aplicado a la luz.'},
+  {word:'Desplazamiento azul',def:'El desplazamiento hacia longitudes de onda más cortas (azul) de las líneas espectrales cuando una fuente de luz se acerca al observador. El efecto Doppler aplicado a la luz — igual que el sonido agudo de un vehículo que se acerca.'},
+  {word:'Diagrama de Hertzsprung-Russell', def:'Gráfico de dispersión de estrellas que muestra luminosidad frente a temperatura superficial. La mayoría de las estrellas se sitúan en la "secuencia principal" diagonal. Las gigantes ocupan la parte superior derecha; las enanas blancas, la inferior izquierda.'},
+  {word:'Efecto Doppler',     def:'El cambio de longitud de onda de la luz causado por el movimiento relativo entre la fuente y el observador. Las estrellas que se acercan muestran líneas desplazadas al azul; las que se alejan, al rojo. Base física del rompecabezas Doppler y de la detección de planetas por velocidad radial.'},
+  {word:'Electrón',           def:'Partícula subatómica con carga negativa que orbita el núcleo atómico. Los electrones en los niveles más externos absorben y emiten fotones a longitudes de onda específicas — produciendo las líneas espectrales que se observan en los espectros estelares.'},
+  {word:'Electrón de valencia', def:'Electrón en la capa más externa de un átomo. Los electrones de valencia participan en los enlaces químicos y, en las atmósferas estelares, son excitados por la absorción de fotones y luego reemiten fotones a longitudes de onda específicas al volver a su estado fundamental.'},
+  {word:'Enana',              def:'En astronomía, una estrella de la secuencia principal — la mayoría de las estrellas normales. En la notación MK se designa como clase de luminosidad V. Término diferenciado de las enanas blancas, que son objetos degenerados muy distintos.'},
+  {word:'Enana',              def:'Véase Clase de luminosidad — clase V.'},
+  {word:'Enana blanca',       def:'El remanente caliente y denso de una estrella de masa baja a media después de haber agotado su combustible nuclear y desprendido sus capas exteriores. Aproximadamente del tamaño de la Tierra con cerca de la masa del Sol. Se enfría durante miles de millones de años.'},
+  {word:'Enana blanca contaminada', def:'Enana blanca con elementos pesados (calcio, magnesio, hierro) visibles en su espectro. A temperaturas de enana blanca, estos elementos deberían hundirse bajo la fotosfera en días — su presencia significa que la estrella está acretando detritos rocosos de un planetesimal destruido.'},
+  {word:'Enana marrón',       def:'Objeto subestelar con masa entre ~13 y 80 veces la de Júpiter — demasiado frío para la fusión sostenida de hidrógeno, pero demasiado masivo para ser un planeta. Se clasifican como tipos L, T e Y en el sistema espectral extendido.'},
+  {word:'Espectro compuesto', def:'Cuando dos estrellas en un sistema binario son demasiado cercanas para resolver por separado, su luz combinada produce un espectro compuesto — dos conjuntos de líneas superpuestos, a veces desplazados en sentidos opuestos por el movimiento orbital.'},
+  {word:'Espectro de emisión',def:'Espectro con líneas de colores brillantes sobre fondo negro, producidas cuando electrones excitados caen a niveles de energía inferiores y liberan fotones. El opuesto del espectro de absorción, aunque las posiciones de las líneas son idénticas.'},
+  {word:'Espectro de microturbulencia', def:'Ensanchamiento de las líneas espectrales causado por movimientos turbulentos dentro de la atmósfera estelar, usados para distinguir supergigantes de gigantes del mismo tipo espectral.'},
+  {word:'Estado fundamental', def:'La disposición de electrones de menor energía en un átomo — la configuración que adopta naturalmente un átomo cuando no está excitado. La pestaña ⚛️ Configuraciones del glosario muestra las configuraciones en estado fundamental.'},
+  {word:'Estrella binaria cercana', def:'Dos estrellas que orbitan tan cerca la una de la otra que se distorsionan mutuamente por la gravedad. Los sistemas binarios espectroscópicos se detectan por las líneas espectrales desdobladas o variables.'},
+  {word:'Estrella de Hidrógeno', def:'Véase Tipo A.'},
+  {word:'Estrella de neutrones', def:'El remanente compacto de una estrella de 8–20 masas solares tras una supernova de colapso de núcleo. Extremadamente densa — una cucharadita podría pesar miles de millones de toneladas. Gira rápidamente y emite pulsos de radio regulares (púlsar).'},
+  {word:'Estrella T Tauri',   def:'Estrella pre-secuencia principal todavía contrayéndose bajo la gravedad y acretando material de un disco circundante. Las estrellas T Tauri muestran fuertes líneas de emisión de hidrógeno y variaciones irregulares de brillo.'},
+  {word:'Gigante',            def:'Estrella que ha agotado el hidrógeno en su núcleo y se ha expandido enormemente. Las gigantes son entre 10 y 1 000 veces más luminosas que el Sol. Clase de luminosidad III en la notación MK.'},
+  {word:'Helio',              def:'El segundo elemento más abundante del universo. Las líneas de helio son los identificadores clave para las estrellas de tipo O (He ionizado, 468 nm) y tipo B (He neutro, 587 nm).'},
+  {word:'Hidrógeno',          def:'El elemento más abundante del universo y el principal combustible de las estrellas. Las líneas H-alfa (656 nm, rojo) y H-beta (486 nm, azul-verde) son identificadores clave en la clasificación estelar, especialmente intensas en las estrellas de tipo A.'},
+  {word:'Ionización',         def:'Eliminación de uno o más electrones de un átomo, creando un ion con carga positiva. Las estrellas más calientes tienen atmósferas más ionizadas, lo que cambia drásticamente qué líneas espectrales son visibles.'},
+  {word:'Longitud de onda',   def:'La distancia entre dos crestas de onda. En el espectro visible, las longitudes de onda más cortas (~380 nm) son violetas; las más largas (~700 nm) son rojas. Las líneas espectrales se miden en nanómetros (nm).'},
+  {word:'Línea Ca II K',      def:'La línea de absorción del calcio ionizado a 393 nm — una de las más fáciles de detectar en la clasificación estelar. Aparece en espectros estelares de tipo F/G y también como línea interestelar en el medio entre estrellas.'},
+  {word:'Línea K y H',        def:'Las dos líneas de absorción del calcio ionizado a 393 nm (K) y 397 nm (H). Unos de los identificadores más fuertes para las estrellas de tipo F y G, y también trazadores importantes del medio interestelar.'},
+  {word:'Línea sodio D',      def:'El doblete de sodio a 589 nm (D1) y 590 nm (D2). Uno de los pares de líneas espectrales más fácilmente reconocibles — produce el color amarillo-naranja de las lámparas de sodio. En el Sol identifica la clase G; en el medio interestelar actúa como trazador de gas frío.'},
+  {word:'Líneas espectrales', def:'Longitudes de onda específicas de luz absorbidas o emitidas por los átomos de la atmósfera de una estrella. Cada elemento tiene un conjunto único de longitudes de onda — su huella espectral. El juego usa estas huellas para identificar estrellas y elementos.'},
+  {word:'Masa de colonia',    def:'En el juego, la cantidad de masa total que se ha establecido en un planeta colonizado. Afecta a la puntuación de la ruta de civilización elegida.'},
+  {word:'Medio interestelar (MIE)', def:'El gas y polvo que llena el espacio entre estrellas. El gas frío del MIE produce líneas de absorción muy estrechas (especialmente Ca II K a 393 nm y Na I D a 589 nm) superpuestas sobre los espectros estelares.'},
+  {word:'Modo Clase',         def:'Parámetro URL del juego para profesores. Añadir ?mode=classify (o spectra, survey, element, kepler) a la URL enfoca la sesión en ese tipo de rompecabezas. Los estudiantes no perciben ninguna diferencia — el parámetro funciona en silencio.'},
+  {word:'Modo Investigación', def:'Capa avanzada de juego en Spectra Explorer que se desbloquea tras descubrir una estrella en La Heliopausa. En el Modo Investigación, los botones de clasificación OBAFGKM estándar son reemplazados por un diagrama HR interactivo.'},
+  {word:'Notación abreviada de gas noble', def:'Forma compacta de escribir configuraciones electrónicas usando el símbolo del gas noble más cercano entre corchetes. Por ejemplo, el sodio es [Ne] 3s¹ en lugar de 1s² 2s² 2p⁶ 3s¹. El núcleo de gas noble es químicamente inerte — solo la capa de valencia después del corchete importa para la espectroscopía.'},
+  {word:'Notación de configuración', def:'Cómo leer una configuración electrónica como 1s² 2s² 2p⁶ 3s¹: el primer número es el número cuántico principal (capa), la letra es el tipo de subcapa (s, p, d o f), y el superíndice es el número de electrones en esa subcapa. De izquierda a derecha se avanza hacia el exterior desde el núcleo.'},
+  {word:'Número cuántico principal', def:'El entero n (1, 2, 3, 4...) en una configuración electrónica que indica qué capa ocupa un electrón. Mayor n = más lejos del núcleo = mayor energía = menor energía de ionización. La diferencia de energía entre capas determina la longitud de onda de la luz emitida en las transiciones.'},
+  {word:'Objeto misterioso',  def:'En Spectra Explorer, cualquier objeto estelar que no encaja en el sistema de clasificación OBAFGKM estándar — enanas marrones, estrellas T Tauri y enanas blancas contaminadas. Seleccionar "Objeto Anómalo" en el Acto III es la respuesta correcta.'},
+  {word:'Orbital (subcapa)',  def:'Región del espacio donde es probable encontrar electrones alrededor del núcleo atómico. Las subcapas se denominan s (máx. 2 electrones), p (máx. 6), d (máx. 10) y f (máx. 14). La subcapa que ocupa un electrón determina la energía de los fotones emitidos al caer a un nivel inferior.'},
+  {word:'Planck',             def:'La física del cuerpo negro de Planck describe cómo la luz de las estrellas varía con la temperatura. En la práctica del juego, el color general del espectro te dice instantáneamente si la estrella es caliente (azul-blanca) o fría (rojiza).'},
+  {word:'Principio de Aufbau', def:'La regla para rellenar configuraciones electrónicas: los electrones llenan la subcapa disponible de menor energía primero, luego ascienden. El orden es 1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p, 5s, 4d... Las excepciones notables incluyen el cromo y el cobre.'},
+  {word:'Principio de exclusión de Pauli', def:'Ningún electrón puede tener los mismos cuatro números cuánticos en un átomo, lo que significa que cada orbital contiene como máximo dos electrones, con giros opuestos. Determina directamente la forma de la tabla periódica.'},
+  {word:'Rompecabezas de Kepler', def:'Rompecabezas bonus en Spectra Explorer para planetas habitables. Usa la Tercera Ley de Kepler (T²=a³/M) para calcular la distancia orbital semi-mayor de un planeta en UA y determinar si cae dentro de la zona habitable.'},
+  {word:'Rompecabezas Doppler',def:'Un rompecabezas bonus en Spectra Explorer (Nivel 2+). Muestra el espectro de la estrella junto a un espectro de referencia. Buscas si las líneas se desplazan a la izquierda (acercándose) o a la derecha (alejándose).'},
+  {word:'Secuencia principal', def:'La banda diagonal del diagrama de Hertzsprung-Russell donde las estrellas pasan la mayor parte de su vida fusionando hidrógeno en helio. Clase de luminosidad V.'},
+  {word:'Serie de Balmer',    def:'La serie de líneas de absorción del hidrógeno visible en el rango óptico: H-alfa (656 nm, rojo), H-beta (486 nm, azul-verde), H-gamma (434 nm, violeta), H-delta (410 nm). Son las más intensas en las estrellas de tipo A.'},
+  {word:'Serie de Brackett',  def:'Serie de líneas de absorción/emisión del hidrógeno en el infrarrojo cercano. Menos relevante en la clasificación óptica pero importante en astrofísica infrarroja.'},
+  {word:'Sistema MK',         def:'El sistema de clasificación espectral Morgan-Keenan — extensión del sistema OBAFGKM de Harvard que añade la clase de luminosidad (I–V). La designación completa para el Sol es G2V.'},
   {word:'Subgigante',         def:'Estrella que ha agotado el hidrógeno en su núcleo y ha comenzado a expandirse, pero aún no ha alcanzado la etapa completa de gigante. Clase de luminosidad IV.'},
   {word:'Supergigante',       def:'La clase de estrellas más grande y luminosa. Clase de luminosidad I. Las supergigantes son entre 10 000 y 1 000 000 veces más luminosas que el Sol y tienen vidas extremadamente cortas.'},
   {word:'Supernova',          def:'La explosión catastrófica de una estrella masiva (>8 M☉) que ha agotado su combustible nuclear. Durante días puede superar en brillo a toda una galaxia.'},
-  {word:'Banda TiO',          def:'Las bandas de absorción molecular del óxido de titanio (TiO) que dominan los espectros de las estrellas de tipo M. El TiO solo puede existir en temperaturas suficientemente bajas como para que las moléculas no se rompan (~3 500 K). Es el identificador espectral clave para las estrellas M.'},
-  {word:'Estrella T Tauri',   def:'Estrella pre-secuencia principal todavía contrayéndose bajo la gravedad y acretando material de un disco circundante. Las estrellas T Tauri muestran fuertes líneas de emisión de hidrógeno y variaciones irregulares de brillo.'},
-  {word:'Unidad Astronómica (UA)', def:'La distancia media de la Tierra al Sol — aproximadamente 150 millones de km. Se usa para medir distancias dentro de los sistemas solares y calcular zonas habitables. La Tierra está a 1.0 UA.'},
-  {word:'Electrón de valencia', def:'Electrón en la capa más externa de un átomo. Los electrones de valencia participan en los enlaces químicos y, en las atmósferas estelares, son excitados por la absorción de fotones y luego reemiten fotones a longitudes de onda específicas al volver a su estado fundamental.'},
-  {word:'Capa de valencia',   def:'La capa electrónica más externa de un átomo — la capa que contiene los electrones de valencia. Para el sodio ([Ne] 3s¹), la capa de valencia es 3s¹. Este único electrón exterior produce el característico doblete amarillo del sodio a 589 nm.'},
-  {word:'Enana blanca',       def:'El remanente caliente y denso de una estrella de masa baja a media después de haber agotado su combustible nuclear y desprendido sus capas exteriores. Aproximadamente del tamaño de la Tierra con cerca de la masa del Sol. Se enfría durante miles de millones de años.'},
-  {word:'Principio de Aufbau', def:'La regla para rellenar configuraciones electrónicas: los electrones llenan la subcapa disponible de menor energía primero, luego ascienden. El orden es 1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p, 5s, 4d... Las excepciones notables incluyen el cromo y el cobre.'},
   {word:'Taquimetría de emisión', def:'Véase Espectro de emisión.'},
-  {word:'Notación abreviada de gas noble', def:'Forma compacta de escribir configuraciones electrónicas usando el símbolo del gas noble más cercano entre corchetes. Por ejemplo, el sodio es [Ne] 3s¹ en lugar de 1s² 2s² 2p⁶ 3s¹. El núcleo de gas noble es químicamente inerte — solo la capa de valencia después del corchete importa para la espectroscopía.'},
+  {word:'Temperatura de color',def:'La temperatura superficial de una estrella inferida de su color. Las estrellas más calientes emiten más luz azul; las más frías, más roja. Medida en kelvin (K).'},
+  {word:'Tercera Ley de Kepler', def:'P² = a³, donde P es el período orbital en años terrestres y a es la distancia media al Sol en UA (Unidades Astronómicas). Para otras estrellas: P² = a³/M, siendo M la masa estelar. Base del rompecabezas de Kepler.'},
+  {word:'Unidad Astronómica (UA)', def:'La distancia media de la Tierra al Sol — aproximadamente 150 millones de km. Se usa para medir distancias dentro de los sistemas solares y calcular zonas habitables. La Tierra está a 1.0 UA.'},
+  {word:'Velocidad radial',   def:'La velocidad de una estrella directamente hacia o alejándose del observador, medida mediante el desplazamiento Doppler de sus líneas espectrales. Si la estrella se acerca, las líneas se desplazan al azul; si se aleja, al rojo. La técnica de velocidad radial fue el primer método para detectar exoplanetas.'},
+  {word:'Zona habitable',     def:'La región alrededor de una estrella donde las temperaturas superficiales de un planeta permiten la existencia de agua líquida. Depende de la luminosidad estelar. No garantiza la vida, pero es el primer criterio de habitabilidad.'},
+  {word:'Índice de habitabilidad', def:'Puntuación compuesta (0–100) en Spectra Explorer que combina la clase estelar, la luminosidad y la probabilidad de zona habitable para clasificar estrellas por su potencial para albergar planetas habitables.'}
 ];
 
 /* Wire translations into applyLanguage */
@@ -10380,6 +10895,613 @@ function applyGuideLanguage(lang){
 }
 
 /* ================================================================
+   ZOOM SYSTEM — uses CSS zoom (not transform) so layout,
+   canvas hit-testing and scroll all work correctly at any scale.
+   Auto-detects screen size and applies a sensible default:
+     ≤1080p  → 100%
+     1440p   → 120%
+     4K+     → 150%
+   Player can override with +/− buttons. Persists via localStorage.
+================================================================ */
+function getAutoZoom(){
+  const h = window.screen.height;
+  if(h >= 2000) return 1.4;
+  if(h >= 1350) return 1.2;
+  return 1.0;
+}
+
+let currentZoom = 1.0;
+
+function applyZoom(z){
+  currentZoom = Math.min(1.4, Math.max(0.7, Math.round(z * 10) / 10));
+  document.body.style.zoom = currentZoom;
+  const val = document.getElementById('zoom-val');
+  if(val) val.textContent = Math.round(currentZoom * 100) + '%';
+  try{ localStorage.setItem('spectra-zoom', currentZoom); }catch(e){}
+}
+
+function initZoom(){
+  let saved = null;
+  try{ saved = parseFloat(localStorage.getItem('spectra-zoom')); }catch(e){}
+  const zoom = (saved && saved >= 0.7 && saved <= 2.0) ? saved : getAutoZoom();
+  applyZoom(zoom);
+
+  document.getElementById('zoom-in-btn').addEventListener('click', ()=> applyZoom(currentZoom + 0.1));
+  document.getElementById('zoom-out-btn').addEventListener('click',()=> applyZoom(currentZoom - 0.1));
+}
+
+/* ================================================================
+   GUIDE READING TRACKER
+   Records when the guide opened, closed, and which tabs were seen.
+   If a New player closes the guide in under 20 seconds without
+   visiting more than the intro tab, the first scan triggers a
+   step-by-step tutorial overlay on the spectra panel.
+================================================================ */
+let _guideOpenedAt   = null;
+let _guideClosedAt   = null;
+let _guidePagesVisited = new Set();
+let _tutorialDone    = false;
+let _tutorialActive  = false;
+
+function shouldShowTutorial(){
+  if(playerLevel !== 'beginner') return false;     // only for New players
+  if(_tutorialDone) return false;                  // only once
+  if(state.found > 0) return false;                // only on first scan
+  // Trigger if guide was never opened, OR closed very quickly
+  if(!_guideOpenedAt) return true;
+  const readTime = (_guideClosedAt || Date.now()) - _guideOpenedAt;
+  const onlyIntro = _guidePagesVisited.size <= 1;
+  return readTime < 20000 && onlyIntro;
+}
+
+/* ================================================================
+   FIRST-SCAN TUTORIAL
+   Three steps, each shown as a positioned bubble over the relevant
+   element. Player must click "Got it →" to advance each step.
+   Does NOT give the answer — just explains what to look for.
+================================================================ */
+function runFirstScanTutorial(onDone){
+  if(_tutorialActive){ if(onDone) onDone(); return; }
+  _tutorialActive = true;
+  _tutorialDone   = true;
+
+  const overlay = document.getElementById('tutorial-overlay');
+  overlay.innerHTML = '';
+  overlay.style.pointerEvents = 'all';
+
+  // Dim everything except the spectra panel
+  const dimmer = document.createElement('div');
+  dimmer.style.cssText = 'position:absolute;inset:0;background:rgba(0,0,0,0.55);pointer-events:none;z-index:1';
+  overlay.appendChild(dimmer);
+
+  const steps = [
+    {
+      targetId: 'target-canvas',   // the target spectrum strip at the top
+      side: 'below',
+      title: 'Step 1 of 3 — The star\'s light signature',
+      body: 'This strip is the star\'s <strong>spectrum</strong> — starlight spread into colours. The dark gaps are elements in the star\'s atmosphere absorbing specific colours. <strong>Look at where the gaps are and how they\'re spaced.</strong>',
+      btn: 'Got it →'
+    },
+    {
+      targetId: 'choice-grid',     // the four candidate strips
+      side: 'above',
+      title: 'Step 2 of 3 — Find the match',
+      body: 'These four strips are your candidates. <strong>Find the one whose gaps appear in the same positions</strong> as the star\'s spectrum above. Ignore colour — focus only on the location and spacing of the dark lines.',
+      btn: 'Got it →'
+    },
+    {
+      targetId: null,              // centred tip, no target
+      side: 'centre',
+      title: 'Step 3 of 3 — Quick tip',
+      body: 'Start by finding the <strong>most distinctive gap</strong> — a lone line or an unusual cluster — and check which candidate also has it in the same spot. That\'s usually enough to eliminate three options immediately.',
+      btn: 'Start scanning →'
+    }
+  ];
+
+  let stepIdx = 0;
+
+  function showStep(idx){
+    const old = overlay.querySelector('.tut-step');
+    if(old) old.remove();
+
+    if(idx >= steps.length){
+      overlay.innerHTML = '';
+      overlay.style.pointerEvents = 'none';
+      _tutorialActive = false;
+      if(onDone) onDone();
+      return;
+    }
+
+    const s = steps[idx];
+    const stepEl = document.createElement('div');
+    stepEl.className = 'tut-step';
+
+    const target = s.targetId ? document.getElementById(s.targetId) : null;
+
+    function positionAndShow(){
+      let topVal, leftVal, transformVal;
+
+      if(target){
+        target.classList.add('tut-highlight');
+        const r   = target.getBoundingClientRect();
+        const oz  = currentZoom || 1;
+        // getBoundingClientRect returns CSS-pixel coords already scaled by zoom,
+        // but the overlay uses unzoomed absolute coords — divide to convert
+        const tr  = {top:r.top/oz, left:r.left/oz, width:r.width/oz, height:r.height/oz};
+
+        if(s.side === 'below'){
+          topVal       = tr.top + tr.height + 16;
+          leftVal      = tr.left + tr.width/2;
+          transformVal = 'translateX(-50%)';
+        } else { // above
+          topVal       = Math.max(10, tr.top - 170);
+          leftVal      = tr.left + tr.width/2;
+          transformVal = 'translateX(-50%)';
+        }
+        stepEl.style.cssText = `position:absolute;top:${topVal}px;left:${leftVal}px;transform:${transformVal};z-index:3`;
+      } else {
+        // Centred — use fixed positioning so zoom doesn't affect it
+        stepEl.style.cssText = 'position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);z-index:3';
+      }
+
+      stepEl.innerHTML = `
+        <div class="tut-bubble">
+          <div style="font-size:9px;color:#4060a0;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px">${s.title}</div>
+          <div>${s.body}</div>
+          <button class="tut-next">${s.btn}</button>
+        </div>`;
+
+      stepEl.querySelector('.tut-next').addEventListener('click', ()=>{
+        if(target) target.classList.remove('tut-highlight');
+        showStep(++stepIdx);
+      });
+
+      overlay.appendChild(stepEl);
+    }
+
+    // If the target element may not be laid out yet (e.g. canvas just became visible),
+    // wait one rAF to ensure the browser has completed layout before reading rects
+    if(target){
+      requestAnimationFrame(()=> requestAnimationFrame(positionAndShow));
+    } else {
+      positionAndShow();
+    }
+  }
+
+  showStep(0);
+}
+
+/* ================================================================
+   TITLE SCREEN — LETTER GLOW + MOON ORBIT ANIMATION
+   Sequential blue-white shimmer across each letter, plus a tiny
+   moon orbiting the "O" in EXPLORER. Runs on #title-anim-canvas
+   which sits over the h1 text.
+   Also starts ambient cosmos music on the title screen.
+================================================================ */
+let titleAnimId = null;
+let titleMusicNode = null;
+
+function initTitleAnimation(){
+  const h1 = document.getElementById('title-h1');
+  const cvs = document.getElementById('title-anim-canvas');
+  if(!h1 || !cvs) return;
+
+  // Size canvas to match h1
+  function sizeCanvas(){
+    const r = h1.getBoundingClientRect();
+    const z = currentZoom || 1;
+    cvs.width  = r.width  / z + 80;
+    cvs.height = r.height / z + 80;
+  }
+  sizeCanvas();
+
+  const ctx = cvs.getContext('2d');
+  const TEXT = 'SPECTRA EXPLORER';
+  const MOON_LETTER_IDX = TEXT.indexOf('O', TEXT.indexOf('EXPLORER')); // O in EXPLORER
+
+  let t2 = 0;
+  function frameTitleAnim(){
+    titleAnimId = requestAnimationFrame(frameTitleAnim);
+    t2 += 0.4;
+    const W = cvs.width, H = cvs.height;
+    ctx.clearRect(0,0,W,H);
+
+    // Sequential letter glow — a shimmer wave travelling left→right
+    // We don't redraw the text (h1 CSS handles that) — we draw glows
+    // positioned over each letter using estimated character width
+    const fontSize = 48;
+    ctx.font = `400 ${fontSize}px 'Share Tech Mono','Courier New',monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const totalW = ctx.measureText(TEXT).width;
+    const startX = W/2 - totalW/2;
+    const cy = H/2;
+
+    // Wave position: 0→TEXT.length, repeating every 3 seconds
+    const waveProg = (t2 * 0.018) % (TEXT.length + 4);
+
+    let cx2 = startX;
+    for(let i = 0; i < TEXT.length; i++){
+      const ch = TEXT[i];
+      const chW = ctx.measureText(ch).width;
+      const chCx = cx2 + chW/2;
+
+      // Distance of this letter from the wave crest
+      const dist = Math.abs(i - waveProg);
+      if(dist < 2.5){
+        const intensity = Math.max(0, 1 - dist/2.5);
+        // Outer glow
+        ctx.shadowBlur = 18 * intensity;
+        ctx.shadowColor = `rgba(140,200,255,${intensity})`;
+        ctx.fillStyle = `rgba(200,230,255,${intensity * 0.55})`;
+        ctx.fillText(ch, chCx, cy);
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = 'transparent';
+      }
+
+      // Moon orbit — draws on the O in EXPLORER
+      if(i === MOON_LETTER_IDX){
+        const moonAng = t2 * 0.035;
+        const moonR   = chW * 0.72;
+        const moonX   = chCx + Math.cos(moonAng) * moonR;
+        const moonY   = cy   + Math.sin(moonAng) * moonR * 0.45;
+        // Orbit ring (faint)
+        ctx.beginPath();
+        ctx.ellipse(chCx, cy, moonR, moonR*0.45, 0, 0, Math.PI*2);
+        ctx.strokeStyle = 'rgba(100,160,255,0.12)';
+        ctx.lineWidth = 0.6; ctx.stroke();
+        // Moon dot
+        const mg = ctx.createRadialGradient(moonX,moonY,0,moonX,moonY,3.5);
+        mg.addColorStop(0,'rgba(220,230,255,0.95)');
+        mg.addColorStop(0.5,'rgba(160,190,240,0.6)');
+        mg.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.beginPath(); ctx.arc(moonX,moonY,3.5,0,Math.PI*2);
+        ctx.fillStyle=mg; ctx.fill();
+      }
+
+      cx2 += chW;
+    }
+  }
+  frameTitleAnim();
+}
+
+function stopTitleAnimation(){
+  if(titleAnimId){ cancelAnimationFrame(titleAnimId); titleAnimId=null; }
+}
+
+function initTitleMusic(){
+  if(!window.AudioContext && !window.webkitAudioContext) return;
+  const ac = new (window.AudioContext||window.webkitAudioContext)();
+  if(ac.state==='suspended') ac.resume();
+
+  const master = ac.createGain();
+  master.gain.value = 0;
+  master.connect(ac.destination);
+  master.gain.linearRampToValueAtTime(0.28, ac.currentTime+3);
+
+  // ── MUSIC BOX / VIBRAPHONE STYLE ──────────────────────────
+  // Triangle waves with quick decay — ring and fade, never drone.
+  // Each note blooms then completely silences before the next.
+  // Silence between notes is as important as the notes themselves.
+
+  function note(freq, startT, decay){
+    const o = ac.createOscillator();
+    const g = ac.createGain();
+    o.type = 'triangle';
+    o.frequency.value = freq;
+    // Quick attack, natural exponential decay — sounds like struck metal/glass
+    g.gain.setValueAtTime(0, ac.currentTime + startT);
+    g.gain.linearRampToValueAtTime(0.28, ac.currentTime + startT + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + startT + decay);
+    o.connect(g); g.connect(master);
+    o.start(ac.currentTime + startT);
+    o.stop(ac.currentTime + startT + decay + 0.05);
+  }
+
+  // Soft bass triangle — very gentle, single note, fades slowly
+  function bass(freq, startT){
+    const o = ac.createOscillator();
+    const g = ac.createGain();
+    o.type = 'triangle';
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(0, ac.currentTime + startT);
+    g.gain.linearRampToValueAtTime(0.12, ac.currentTime + startT + 0.04);
+    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + startT + 3.5);
+    o.connect(g); g.connect(master);
+    o.start(ac.currentTime + startT);
+    o.stop(ac.currentTime + startT + 4.0);
+  }
+
+  // ── PHRASE 1 — simple ascending wonder phrase (bars 1-8)
+  // Lots of silence. Each note fully decays before next.
+  //        C5    E5    G5    C6   (hold/silence)     E5    G5    A5    G5
+  const P1 = [
+    [523.25, 4.0,  1.8],
+    [659.25, 5.5,  1.8],
+    [783.99, 6.8,  2.2],
+    [1046.5, 8.2,  3.0],  // C6 — held longer, fades out
+    // Silence 11.2 → 13.5
+    [659.25, 13.5, 1.4],
+    [783.99, 14.6, 1.4],
+    [880.00, 15.6, 1.6],
+    [783.99, 16.8, 2.4],  // resolve back to G5
+    // Bass under phrase 1
+  ];
+  P1.forEach(([f,t,d]) => note(f, t, d));
+  bass(130.81, 4.0);   // C2 bass under first phrase
+  bass(196.00, 13.5);  // G2 bass under second half
+
+  // ── PHRASE 2 — repeated 21s later, slightly varied (bars 9-16)
+  const offset = 21.0;
+  const P2 = [
+    [523.25, 0.0, 1.6],
+    [587.33, 1.3, 1.4],   // D5 — new note for variety
+    [659.25, 2.4, 1.6],
+    [783.99, 3.6, 1.8],
+    [880.00, 5.0, 2.8],   // A5 — climbs a little higher
+    // Silence
+    [659.25, 9.5,  1.4],
+    [523.25, 10.7, 1.4],
+    [392.00, 11.7, 2.6],  // G4 — descend and rest
+  ];
+  P2.forEach(([f,t,d]) => note(f, t+offset, d));
+  bass(130.81, offset);
+  bass(98.00,  offset+9.5);  // G1 bass under descent
+
+  // ── PHRASE 3 — again at 46s, back to opening feeling
+  const offset3 = 46.0;
+  P1.forEach(([f,t,d]) => note(f, t+offset3, d));
+  bass(130.81, offset3);
+  bass(196.00, offset3+13.5);
+
+  // ── PHRASE 4 — final phrase at 72s, gentle close
+  const offset4 = 72.0;
+  const P4 = [
+    [783.99, 0.0, 1.8],
+    [659.25, 1.6, 1.6],
+    [523.25, 3.0, 2.2],
+    [392.00, 5.0, 3.5],  // resolve to G4 — peaceful close
+  ];
+  P4.forEach(([f,t,d]) => note(f, t+offset4, d));
+  bass(130.81, offset4);
+
+  titleMusicNode = {ac, volNode:master};
+
+  const volSlider = document.getElementById('title-music-vol');
+  if(volSlider){
+    volSlider.addEventListener('input',()=>{
+      if(titleMusicNode)
+        titleMusicNode.volNode.gain.setTargetAtTime(
+          parseInt(volSlider.value)/100*0.38,
+          titleMusicNode.ac.currentTime, 0.1);
+    });
+  }
+
+  let musicPlaying=true;
+  const btn=document.getElementById('title-music-btn');
+  if(btn){
+    btn.textContent='♪ Music on'; btn.style.color='#5080c0';
+    btn.addEventListener('click',()=>{
+      musicPlaying=!musicPlaying;
+      if(titleMusicNode)
+        titleMusicNode.volNode.gain.linearRampToValueAtTime(
+          musicPlaying ? (parseInt(volSlider?.value||50)/100*0.38) : 0,
+          titleMusicNode.ac.currentTime+0.6);
+      btn.textContent=musicPlaying?'♪ Music on':'♪ Music off';
+      btn.style.color=musicPlaying?'#5080c0':'#402020';
+    });
+  }
+}
+
+function stopTitleMusic(){
+  if(!titleMusicNode) return;
+  try{
+    titleMusicNode.volNode.gain.linearRampToValueAtTime(0, titleMusicNode.ac.currentTime+1.2);
+    setTimeout(()=>{ try{ titleMusicNode.ac.close(); }catch(e){} }, 1300);
+  }catch(e){}
+  titleMusicNode = null;
+}
+
+/* ================================================================
+   ENDGAME CELEBRATION
+   Fires when all 10 sectors have been discovered. Full-screen
+   fireworks overlay with euphoric ascending music, stats reveal,
+   and a shimmer ring expanding from centre.
+================================================================ */
+function playEndgameCelebration(){
+  if(reduceMotion){ showEndgameCard(); return; }
+
+  // ── OVERLAY ─────────────────────────────────────────────────
+  const overlay = document.createElement('div');
+  overlay.id = 'endgame-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0)';
+  document.body.appendChild(overlay);
+
+  const cvs = document.createElement('canvas');
+  cvs.style.cssText = 'position:absolute;inset:0;width:100%;height:100%';
+  cvs.width  = window.innerWidth;
+  cvs.height = window.innerHeight;
+  overlay.appendChild(cvs);
+  const ctx = cvs.getContext('2d');
+  const W = cvs.width, H = cvs.height;
+
+  // ── PARTICLES ───────────────────────────────────────────────
+  const COLS=['#f0e060','#80e0ff','#ff8060','#80ff80','#c080ff','#ffa040','#60d0ff','#ff60a0','#ffffff'];
+  const particles=[];
+  function burst(x,y,n,col){
+    for(let i=0;i<n;i++){
+      const ang=Math.random()*Math.PI*2;
+      const spd=2+Math.random()*5;
+      particles.push({
+        x,y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd-2,
+        life:1,decay:0.008+Math.random()*0.015,
+        r:1.5+Math.random()*3,
+        col:col||COLS[Math.floor(Math.random()*COLS.length)],
+        trail:[]
+      });
+    }
+  }
+
+  // ── MUSIC — ascending major fanfare ─────────────────────────
+  let ac2=null;
+  try{
+    ac2 = new (window.AudioContext||window.webkitAudioContext)();
+    const master = ac2.createGain(); master.gain.value=0; master.connect(ac2.destination);
+    master.gain.linearRampToValueAtTime(0.35, ac2.currentTime+0.3);
+
+    // Fanfare sequence — C major ascending arpeggio then chord
+    const notes=[
+      {f:523.25,t:0.0,dur:0.18},{f:659.25,t:0.15,dur:0.18},{f:783.99,t:0.28,dur:0.18},
+      {f:1046.5,t:0.40,dur:0.4},{f:880,t:0.40,dur:0.4},{f:659.25,t:0.40,dur:0.4},
+      {f:523.25,t:0.40,dur:0.4},
+      // Second sweep up
+      {f:523.25,t:0.85,dur:0.14},{f:587.33,t:0.96,dur:0.14},{f:659.25,t:1.06,dur:0.14},
+      {f:783.99,t:1.15,dur:0.14},{f:880,t:1.24,dur:0.14},{f:1046.5,t:1.32,dur:0.5},
+      // Final triumphant chord
+      {f:523.25,t:1.9,dur:1.5},{f:659.25,t:1.9,dur:1.5},{f:783.99,t:1.9,dur:1.5},{f:1046.5,t:1.9,dur:1.5},
+    ];
+    notes.forEach(n=>{
+      const o=ac2.createOscillator(); const g=ac2.createGain();
+      o.type='triangle'; o.frequency.value=n.f;
+      g.gain.setValueAtTime(0, ac2.currentTime+n.t);
+      g.gain.linearRampToValueAtTime(0.22, ac2.currentTime+n.t+0.04);
+      g.gain.linearRampToValueAtTime(0, ac2.currentTime+n.t+n.dur);
+      o.connect(g); g.connect(master);
+      o.start(ac2.currentTime+n.t); o.stop(ac2.currentTime+n.t+n.dur+0.05);
+    });
+
+    // Sustained ambient shimmer underneath
+    [523.25,659.25,783.99,1046.5].forEach((f,i)=>{
+      const o=ac2.createOscillator(); const g=ac2.createGain();
+      o.type='sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0, ac2.currentTime+2);
+      g.gain.linearRampToValueAtTime(0.06, ac2.currentTime+2.5);
+      o.connect(g); g.connect(master);
+      o.start(ac2.currentTime+2);
+    });
+  }catch(e){}
+
+  // ── BURST SCHEDULE ──────────────────────────────────────────
+  const schedule=[
+    {t:100, x:0.5, y:0.3},{t:300, x:0.2, y:0.4},{t:500, x:0.75, y:0.25},
+    {t:700, x:0.35, y:0.5},{t:900, x:0.65, y:0.45},{t:1100,x:0.15, y:0.35},
+    {t:1300,x:0.85, y:0.38},{t:1500,x:0.5, y:0.2},{t:1700,x:0.3, y:0.55},
+    {t:1900,x:0.7, y:0.3},{t:2100,x:0.45, y:0.4},{t:2300,x:0.55, y:0.35},
+    // Finale cluster at centre
+    {t:2800,x:0.5,y:0.35,n:80},{t:2900,x:0.48,y:0.33,n:60},{t:3000,x:0.52,y:0.37,n:60},
+  ];
+  schedule.forEach(s=>{
+    setTimeout(()=> burst(s.x*W, s.y*H, s.n||50), s.t);
+  });
+
+  // Show card after 3 seconds
+  setTimeout(()=> showEndgameCard(overlay), 3200);
+
+  // ── DRAW LOOP ────────────────────────────────────────────────
+  const startT = performance.now();
+  let animId;
+  function drawFrame(now){
+    animId = requestAnimationFrame(drawFrame);
+    const elapsed = (now - startT) / 1000;
+
+    ctx.fillStyle='rgba(2,4,14,0.22)';
+    ctx.fillRect(0,0,W,H);
+
+    // Shimmer ring — expands from centre in the finale
+    if(elapsed > 2.5){
+      const rp = (elapsed - 2.5) * 0.6;
+      const rg = ctx.createRadialGradient(W/2,H/2,rp*W*0.3,W/2,H/2,rp*W*0.35);
+      rg.addColorStop(0,'rgba(240,220,80,0)');
+      rg.addColorStop(0.5,`rgba(240,220,80,${Math.max(0,0.25-rp*0.15)})`);
+      rg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(W/2,H/2,rp*W*0.35,0,Math.PI*2);
+      ctx.fillStyle=rg; ctx.fill();
+    }
+
+    // Particles
+    for(let i=particles.length-1;i>=0;i--){
+      const p=particles[i];
+      p.trail.push({x:p.x,y:p.y,life:p.life});
+      if(p.trail.length>10) p.trail.shift();
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.05; p.vx*=0.985;
+      p.life-=p.decay;
+      if(p.life<=0){particles.splice(i,1);continue;}
+      // Trail
+      p.trail.forEach((pt,ti)=>{
+        const ta=(ti/p.trail.length)*p.life*0.35;
+        ctx.beginPath(); ctx.arc(pt.x,pt.y,p.r*0.5,0,Math.PI*2);
+        ctx.fillStyle=p.col+'44'; ctx.fill();
+      });
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.col; ctx.globalAlpha=p.life; ctx.fill(); ctx.globalAlpha=1;
+    }
+
+    if(elapsed > 8 && particles.length===0) cancelAnimationFrame(animId);
+  }
+  requestAnimationFrame(drawFrame);
+}
+
+function showEndgameCard(overlay){
+  // Build the victory card on top of the fireworks (or standalone if reduceMotion)
+  const card = document.createElement('div');
+  card.style.cssText = `
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+    z-index:210;background:rgba(2,8,30,0.97);
+    border:1px solid rgba(240,220,80,0.5);border-radius:12px;
+    padding:32px 40px;text-align:center;
+    font-family:'Share Tech Mono','Courier New',monospace;
+    max-width:480px;width:90%;
+    animation:endCardIn 0.8s cubic-bezier(0.2,1,0.3,1) both`;
+
+  if(!document.getElementById('endCardStyle')){
+    const st = document.createElement('style');
+    st.id='endCardStyle';
+    st.textContent=`@keyframes endCardIn{from{opacity:0;transform:translate(-50%,-50%) scale(0.85)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}`;
+    document.head.appendChild(st);
+  }
+
+  const h = state.found||0, c = state.colonies||0, sc = state.score||0;
+  const acc = state.session && state.session.attempts && Object.values(state.session.attempts).reduce((a,b)=>a+b,0) > 0
+    ? Math.round(Object.values(state.session.correct||{}).reduce((a,b)=>a+b,0) /
+        Object.values(state.session.attempts).reduce((a,b)=>a+b,0) * 100) + '%'
+    : '—';
+
+  card.innerHTML=`
+    <div style="font-size:11px;letter-spacing:3px;color:#806020;text-transform:uppercase;margin-bottom:10px">Mission Complete</div>
+    <div style="font-size:28px;letter-spacing:6px;color:#f0e060;margin-bottom:4px;text-shadow:0 0 20px rgba(240,220,80,0.4)">GALAXY CHARTED</div>
+    <div style="font-size:11px;color:#404828;letter-spacing:2px;margin-bottom:24px">All 10 sectors surveyed · The cosmos is yours</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
+      ${[['Stars',h],['Colonies',c],['Score',sc.toLocaleString()],['Accuracy',acc]].map(([l,v])=>`
+        <div style="background:rgba(5,15,40,0.6);border:1px solid rgba(40,60,130,0.3);border-radius:6px;padding:10px 4px">
+          <div style="font-size:18px;color:#80e0ff;font-weight:bold">${v}</div>
+          <div style="font-size:8px;letter-spacing:1px;color:#304060;text-transform:uppercase;margin-top:3px">${l}</div>
+        </div>`).join('')}
+    </div>
+    <div style="font-size:10px;color:#2a3a20;line-height:1.8;margin-bottom:20px;font-family:system-ui,sans-serif">
+      You've surveyed every sector from the Home Nebula to the Heliopause,<br>
+      classified hundreds of stars, and decoded the light of the cosmos.<br>
+      <span style="color:#405030">That's real astronomy.</span>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button id="eg-replay" style="background:rgba(20,60,20,0.9);border:1px solid rgba(80,200,80,0.5);color:#60d060;font-family:inherit;font-size:11px;letter-spacing:2px;padding:10px 24px;border-radius:5px;cursor:pointer">↺ Play Again</button>
+      <button id="eg-close" style="background:rgba(10,25,60,0.8);border:1px solid rgba(60,100,180,0.4);color:#4060a0;font-family:inherit;font-size:11px;letter-spacing:2px;padding:10px 24px;border-radius:5px;cursor:pointer">✕ Continue</button>
+    </div>`;
+
+  document.body.appendChild(card);
+
+  document.getElementById('eg-close').addEventListener('click',()=>{
+    card.remove();
+    if(overlay) overlay.remove();
+  });
+  document.getElementById('eg-replay').addEventListener('click',()=>{
+    card.remove();
+    if(overlay) overlay.remove();
+    location.reload();
+  });
+}
+
+/* ================================================================
    STARTUP
 ================================================================ */
 applyLanguage('en');
@@ -10387,6 +11509,7 @@ snapshotEnglishGuideContent();
 detectClassMode();
 initFontSize();
 initEpilepsyWarning();
+initZoom();
 if(state.researchUnlocked) addResearchGuideTab();
 // Safety reset
 document.getElementById('overlay').style.display = 'none';
@@ -10400,6 +11523,8 @@ document.getElementById('overlay').style.display = 'none';
 });
 initTitleStarfield();
 initNebula();
+initTitleAnimation();
+initTitleMusic();
 resize();
 loadSector('home');
 requestAnimationFrame(drawMain);
