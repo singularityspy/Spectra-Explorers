@@ -1470,6 +1470,16 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
             <p>After correctly identifying an element, a follow-up question asks you to identify its ground-state electron configuration. This closes the loop between the spectrum you matched visually and the atomic physics that produced it.</p>
             <p>The valence electrons — the outermost shell — are what produce the emission lines you see. When a photon from the star excites one of those electrons to a higher energy level, the specific wavelength emitted as it falls back is exactly the line you matched.</p>
             <p>Three difficulty tiers: choose the correct config from four options (0–4 correct) → only valence shell shown (5–9 correct) → all steps blank (10+ correct). The <span class="highlight">⚛️ Configurations</span> tab in the 📖 Glossary is a full reference for all 86 elements.</p>
+            <details style="margin-top:10px">
+              <summary style="cursor:pointer;font-size:10px;color:#6090c0;padding:6px 0;letter-spacing:1px">▸ How to work out any configuration yourself</summary>
+              <div style="margin-top:8px;font-size:11px;color:#4a6080;line-height:1.9">
+                <p>Two steps: (1) count the electrons — equal to the atomic number. (2) Fill subshells in order: <span class="highlight">1s → 2s → 2p → 3s → 3p → 4s → 3d → 4p → 5s → 4d → 5p → 6s → 4f → 5d → 6p</span>. Stop when you've placed all electrons. Capacities: s=2, p=6, d=10, f=14.</p>
+                <p style="margin-top:6px"><strong style="color:#8090c0">Example 1 — Hydrogen (H), atomic number 1:</strong><br>1 electron → fills 1s partially → <span class="highlight">1s¹</span></p>
+                <p style="margin-top:6px"><strong style="color:#8090c0">Example 2 — Sodium (Na), atomic number 11:</strong><br>11 electrons → 1s²(2) + 2s²(4) + 2p⁶(10) + one left → 3s¹ → <span class="highlight">[Ne] 3s¹</span><br>Since 1s²2s²2p⁶ = neon's core, we write [Ne] as shorthand.</p>
+                <p style="margin-top:6px"><strong style="color:#8090c0">Example 3 — Iron (Fe), atomic number 26:</strong><br>26 electrons → [Ar]=18 → 4s²(20) → 3d⁶(26) → <span class="highlight">[Ar] 3d⁶ 4s²</span><br>Note: 4s fills before 3d (energy rule), but 3d is written first by convention.</p>
+                <div class="tip-box" style="margin-top:8px">Exceptions to memorise: Chromium is [Ar] 3d⁵ 4s¹ (not 3d⁴ 4s²) and Copper is [Ar] 3d¹⁰ 4s¹ (not 3d⁹ 4s²) — half-filled and fully-filled d subshells are energetically favourable.</div>
+              </div>
+            </details>
           </div>
         </details>
 
@@ -3286,48 +3296,62 @@ function aimTelescope(){
 
 function animateScopeView(){
   const canvas=document.getElementById('scope-canvas');
-  canvas.width=520; canvas.height=200; // fixed dimensions — no offsetWidth
-  const W=520, H=200;
+  canvas.width=520; canvas.height=200;
+  const W=520, H=200, cx=W/2, cy=H/2;
   const ctx=canvas.getContext('2d');
   if(scopeAnim)cancelAnimationFrame(scopeAnim);
 
-  const fieldStars=Array.from({length:120},()=>({
+  const fieldStars=Array.from({length:140},()=>({
     x:Math.random()*W, y:Math.random()*H,
-    r:0.3+Math.random()*1.8,
-    a:0.15+Math.random()*0.85,
+    r:0.3+Math.random()*1.8, a:0.15+Math.random()*0.85,
     twinkle:Math.random()*Math.PI*2,
-    col: Math.random()<0.2 ? '#ffd2a1' : Math.random()<0.15 ? '#9bb0ff' : '#ffffff'
+    col:['#ffffff','#ffffff','#ffd2a1','#9bb0ff','#c0e8ff'][Math.floor(Math.random()*5)]
   }));
 
-  let lastScopeFrame = 0;
+  // Pre-compute eyepiece vignette — circular telescope view
+  const radius = Math.min(W,H)*0.47;
+  const vigCanvas=document.createElement('canvas'); vigCanvas.width=W; vigCanvas.height=H;
+  const vigCtx=vigCanvas.getContext('2d');
+  vigCtx.fillStyle='#010208'; vigCtx.fillRect(0,0,W,H);
+  vigCtx.globalCompositeOperation='destination-out';
+  vigCtx.beginPath(); vigCtx.arc(cx,cy,radius,0,Math.PI*2);
+  vigCtx.fillStyle='rgba(0,0,0,1)'; vigCtx.fill();
+  vigCtx.globalCompositeOperation='source-over';
+  const edgeGrad=vigCtx.createRadialGradient(cx,cy,radius*0.80,cx,cy,radius);
+  edgeGrad.addColorStop(0,'rgba(1,2,8,0)'); edgeGrad.addColorStop(1,'rgba(1,2,8,0.97)');
+  vigCtx.beginPath(); vigCtx.arc(cx,cy,radius,0,Math.PI*2);
+  vigCtx.fillStyle=edgeGrad; vigCtx.fill();
+  vigCtx.beginPath(); vigCtx.arc(cx,cy,radius,0,Math.PI*2);
+  vigCtx.strokeStyle='rgba(60,80,130,0.5)'; vigCtx.lineWidth=1.5; vigCtx.stroke();
+
+  // Pre-compute crosshair
+  const chCanvas=document.createElement('canvas'); chCanvas.width=W; chCanvas.height=H;
+  const chCtx=chCanvas.getContext('2d');
+  chCtx.strokeStyle='rgba(60,100,60,0.3)'; chCtx.lineWidth=0.5;
+  chCtx.beginPath(); chCtx.moveTo(cx,cy-radius*0.85); chCtx.lineTo(cx,cy+radius*0.85); chCtx.stroke();
+  chCtx.beginPath(); chCtx.moveTo(cx-radius*0.85,cy); chCtx.lineTo(cx+radius*0.85,cy); chCtx.stroke();
+  chCtx.beginPath(); chCtx.arc(cx,cy,radius*0.28,0,Math.PI*2); chCtx.stroke();
+
+  let lastScopeFrame=0;
   function frame(t){
     scopeAnim=requestAnimationFrame(frame);
-    if(t - lastScopeFrame < 16) return; // 60fps cap
-    lastScopeFrame = t;
-
+    if(t-lastScopeFrame<16) return;
+    lastScopeFrame=t;
     ctx.fillStyle='#010208'; ctx.fillRect(0,0,W,H);
-
-    // Draw field stars — no gradients
+    // Gentle breathing zoom
+    const zoom=1.0+Math.sin(t*0.0003)*0.025;
+    ctx.save(); ctx.translate(cx,cy); ctx.scale(zoom,zoom); ctx.translate(-cx,-cy);
     fieldStars.forEach(s=>{
       const alpha=s.a*(0.65+Math.sin(t*0.0015+s.twinkle)*0.35);
-      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-      ctx.fillStyle=s.col.replace(')',`,${alpha})`).replace('#','rgba(').replace(/([0-9a-f]{2})/gi,
-        (_,h)=>parseInt(h,16)+',').replace(/,$/,`,${ alpha})`);
-      // Simpler: just use rgba directly
-      const hex = s.col;
-      ctx.fillStyle = `rgba(${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)},${alpha.toFixed(2)})`;
-      ctx.fill();
+      const r=parseInt(s.col.slice(1,3),16),g=parseInt(s.col.slice(3,5),16),b=parseInt(s.col.slice(5,7),16);
+      ctx.fillStyle=`rgba(${r},${g},${b},${alpha.toFixed(2)})`;
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
     });
-
-    // Scan line sweep — very subtle
-    const scanY=(t*0.03)%H;
-    ctx.fillStyle='rgba(200,100,30,0.025)';
-    ctx.fillRect(0,scanY,W,2);
-
-    // Vignette edges — pure CSS would be better but this works
-    ctx.fillStyle='rgba(1,2,8,0.35)';
-    ctx.fillRect(0,0,W,20);
-    ctx.fillRect(0,H-20,W,20);
+    ctx.restore();
+    const scanY=(t*0.025)%H;
+    ctx.fillStyle='rgba(200,100,30,0.018)'; ctx.fillRect(0,scanY,W,1.5);
+    ctx.drawImage(chCanvas,0,0);
+    ctx.drawImage(vigCanvas,0,0); // eyepiece mask always on top
   }
   scopeAnim=requestAnimationFrame(frame);
 }
@@ -3801,9 +3825,9 @@ function openKepler(star, onDone){
       <div class="kd-unit">Solar masses</div>
     </div>
     <div class="kepler-data-card">
-      <div class="kd-label">Habitable Zone</div>
-      <div class="kd-val">${data.hzInner}–${data.hzOuter}</div>
-      <div class="kd-unit">AU from star</div>
+      <div class="kd-label">Your goal</div>
+      <div class="kd-val" style="font-size:13px">Calculate a</div>
+      <div class="kd-unit">semi-major axis in AU</div>
     </div>`;
 
   // Determine scaffold tier based on correct Kepler answers so far
@@ -3915,9 +3939,9 @@ function openKepler(star, onDone){
   const choicesEl = document.getElementById('kepler-choices');
   choicesEl.innerHTML = '';
   const options = [
-    { val:'too-close', label:'🔥 Too Close',      sub:`Inside ${data.hzInner} AU` },
-    { val:'habitable', label:'🌍 Habitable Zone',  sub:`${data.hzInner}–${data.hzOuter} AU` },
-    { val:'too-far',   label:'❄️ Too Far',          sub:`Beyond ${data.hzOuter} AU` },
+    { val:'too-close', label:'🔥 Too Close to Star',  sub:'Planet receives too much radiation for liquid water' },
+    { val:'habitable', label:'🌍 Habitable Zone',      sub:'Planet could support liquid water on its surface'    },
+    { val:'too-far',   label:'❄️ Too Far from Star',   sub:'Planet surface temperature too cold for liquid water'},
   ];
   options.forEach(opt => {
     const btn = document.createElement('button');
@@ -3993,35 +4017,56 @@ function drawKeplerDiagram(star, data){
     bgCtx.beginPath(); bgCtx.arc(bx,by,0.7,0,Math.PI*2);
     bgCtx.fillStyle='rgba(180,190,220,0.4)'; bgCtx.fill();
   });
-  // HZ band
-  bgCtx.beginPath(); bgCtx.arc(cx,cy,hzOutPx,0,Math.PI*2);
-  bgCtx.fillStyle='rgba(40,180,60,0.08)'; bgCtx.fill();
-  bgCtx.beginPath(); bgCtx.arc(cx,cy,hzInPx,0,Math.PI*2);
-  bgCtx.fillStyle='#02040e'; bgCtx.fill();
-  [hzInPx,hzOutPx].forEach(r=>{
-    bgCtx.beginPath(); bgCtx.arc(cx,cy,r,0,Math.PI*2);
-    bgCtx.strokeStyle='rgba(40,180,60,0.3)'; bgCtx.lineWidth=1;
-    bgCtx.setLineDash([3,4]); bgCtx.stroke(); bgCtx.setLineDash([]);
-  });
-  // Planet orbit path
+  // Orbit path only — no HZ band, no labels (those would give away the answer)
   bgCtx.beginPath(); bgCtx.arc(cx,cy,orbitPx,0,Math.PI*2);
-  bgCtx.strokeStyle='rgba(100,140,220,0.3)'; bgCtx.lineWidth=1;
+  bgCtx.strokeStyle='rgba(100,140,220,0.25)'; bgCtx.lineWidth=1;
   bgCtx.setLineDash([3,5]); bgCtx.stroke(); bgCtx.setLineDash([]);
   // Star
   bgCtx.beginPath(); bgCtx.arc(cx,cy,22,0,Math.PI*2);
   bgCtx.fillStyle=starGrad; bgCtx.fill();
   bgCtx.beginPath(); bgCtx.arc(cx,cy,7,0,Math.PI*2);
   bgCtx.fillStyle='#ffffff'; bgCtx.fill();
-  // Labels
+  // Star name only
   bgCtx.textAlign='left'; bgCtx.font='8px Share Tech Mono,Courier New';
-  bgCtx.fillStyle='rgba(40,180,60,0.6)';
-  bgCtx.fillText(`HZ: ${data.hzInner}–${data.hzOuter} AU`, W*0.58, cy-14);
-  bgCtx.fillStyle='rgba(100,140,220,0.7)';
-  bgCtx.fillText(`Orbit: ${data.semiMajorAU} AU`, W*0.58, cy+2);
-  bgCtx.fillStyle='rgba(180,160,100,0.6)';
-  bgCtx.fillText(`T = ${data.periodYears} yr`, W*0.58, cy+18);
   bgCtx.fillStyle = star.cls.color+'99';
   bgCtx.fillText(star.name, cx, cy+26);
+
+  // Reveal canvas — drawn on top AFTER submit to show HZ band
+  const revealCanvas  = document.createElement('canvas');
+  revealCanvas.width  = W; revealCanvas.height = H;
+  const rvCtx = revealCanvas.getContext('2d');
+  revealCanvas.style.display = 'none'; // hidden until student submits
+  canvas.insertAdjacentElement('afterend', revealCanvas);
+  revealCanvas.style.cssText = 'display:none;position:absolute;top:0;left:0;width:100%;height:120px;pointer-events:none';
+
+  // Store reference so confirmKepler can reveal it
+  state._keplerRevealCanvas = revealCanvas;
+
+  function buildReveal(){
+    rvCtx.clearRect(0,0,W,H);
+    rvCtx.beginPath(); rvCtx.arc(cx,cy,hzOutPx,0,Math.PI*2);
+    rvCtx.fillStyle='rgba(40,180,60,0.12)'; rvCtx.fill();
+    rvCtx.beginPath(); rvCtx.arc(cx,cy,hzInPx,0,Math.PI*2);
+    rvCtx.fillStyle='rgba(2,4,14,0.9)'; rvCtx.fill();
+    [hzInPx,hzOutPx].forEach(r=>{
+      rvCtx.beginPath(); rvCtx.arc(cx,cy,r,0,Math.PI*2);
+      rvCtx.strokeStyle='rgba(40,180,60,0.5)'; rvCtx.lineWidth=1;
+      rvCtx.setLineDash([3,4]); rvCtx.stroke(); rvCtx.setLineDash([]);
+    });
+    rvCtx.textAlign='left'; rvCtx.font='8px Share Tech Mono,Courier New';
+    rvCtx.fillStyle='rgba(40,180,60,0.8)';
+    rvCtx.fillText(`HZ: ${data.hzInner}–${data.hzOuter} AU`, W*0.58, cy-14);
+    rvCtx.fillStyle='rgba(100,140,220,0.9)';
+    rvCtx.fillText(`Your orbit: ${data.semiMajorAU} AU`, W*0.58, cy+2);
+    rvCtx.fillStyle='rgba(180,160,100,0.7)';
+    rvCtx.fillText(`T = ${data.periodYears} yr`, W*0.58, cy+18);
+  }
+  buildReveal();
+
+  // Wrap the canvas in a container so reveal can be positioned over it
+  if(!canvas.parentElement.style.position){
+    canvas.parentElement.style.position = 'relative';
+  }
 
   // Frame loop — only draws the moving planet on top of the static background
   // 60fps cap: skip frame if less than 16ms since last draw
@@ -4057,6 +4102,11 @@ function drawKeplerDiagram(star, data){
 function confirmKepler(){
   if(!state.keplerChoice || state.keplerDone) return;
   state.keplerDone = true;
+
+  // Reveal the HZ band overlay now that the student has committed
+  if(state._keplerRevealCanvas){
+    state._keplerRevealCanvas.style.display = 'block';
+  }
 
   const data    = state.keplerData;
   const correct = state.keplerChoice === data.correctAnswer;
@@ -4407,10 +4457,14 @@ function openElementID(star, onDone, mandatory){
   const hintContent = document.getElementById('element-hint-content');
   if(hintContent) hintContent.style.display = 'none';
 
-  document.getElementById('element-result').style.display = 'none';
-  document.getElementById('element-confirm').disabled     = true;
-  document.getElementById('element-confirm').textContent  = 'Identify Element';
-  document.getElementById('element-confirm').onclick      = confirmElementID;
+  document.getElementById('element-result').style.display    = 'none';
+  document.getElementById('element-confirm').disabled        = true;
+  document.getElementById('element-confirm').textContent     = 'Identify Element';
+  document.getElementById('element-confirm').onclick         = confirmElementID;
+  document.getElementById('element-confirm').style.display   = '';  // restore if hidden by config puzzle
+  // Remove any leftover config panel from previous run
+  const oldCfg = document.getElementById('econfig-panel');
+  if(oldCfg) oldCfg.remove();
 }
 
 /* ================================================================
@@ -4683,7 +4737,17 @@ function confirmElementID(){
   btn.textContent = correct ? 'What\'s the configuration? →' : 'Continue →';
   btn.disabled    = false;
   btn.onclick     = correct
-    ? () => { btn.style.display='none'; openElectronConfig(activeEl, closeElementID); }
+    ? () => {
+        btn.style.display='none';
+        // Hide the element hint button — it's irrelevant during config puzzle
+        const hintBtn = document.getElementById('element-hint-btn');
+        if(hintBtn) hintBtn.style.display = 'none';
+        openElectronConfig(activeEl, ()=>{
+          // Restore hint button after config puzzle done
+          if(hintBtn) hintBtn.style.display = 'block';
+          closeElementID();
+        });
+      }
     : closeElementID;
 }
 
@@ -9103,18 +9167,17 @@ function openHRDiagram(star, onDone){
 ================================================================ */
 function checkSectorComplete(){
   const stars = state.sectorStars[state.currentSectorId] || [];
-  if(stars.length === 0) return;
-  const allFound = stars.every(s => s.discovered);
+  // Only count naturally generated stars — telescope stars are bonus, not required
+  const required = stars.filter(s => !s.telescope);
+  if(required.length === 0) return;
+  const allFound = required.every(s => s.discovered);
   if(!allFound) return;
-  // Don't fire more than once per sector load
   if(state._sectorCompleted && state._sectorCompleted[state.currentSectorId]) return;
   if(!state._sectorCompleted) state._sectorCompleted = {};
   state._sectorCompleted[state.currentSectorId] = true;
 
   const sector = SECTORS.find(s => s.id === state.currentSectorId) || SECTORS[0];
   const tier   = sector.tier || 1;
-
-  // Delay slightly so it plays after the scan flash settles
   setTimeout(() => playSectorCompleteChime(tier, sector.name), 1200);
 }
 
