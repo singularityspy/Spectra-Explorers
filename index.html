@@ -4582,7 +4582,7 @@ const ELECTRON_CONFIGS = {
 function buildPeriodicTable(container){
   container.innerHTML = '';
 
-  // Full 118-element dataset: [symbol, name, atomicNum, block, group, period]
+  // Complete 118-element dataset [symbol, name, atomicNum, block, group, period]
   const ALL_ELEMENTS = [
     ['H','Hydrogen',1,'s',1,1],['He','Helium',2,'noble',18,1],
     ['Li','Lithium',3,'s',1,2],['Be','Beryllium',4,'s',2,2],
@@ -4606,22 +4606,22 @@ function buildPeriodicTable(container){
     ['Sb','Antimony',51,'p',15,5],['Te','Tellurium',52,'p',16,5],['I','Iodine',53,'p',17,5],
     ['Xe','Xenon',54,'noble',18,5],
     ['Cs','Caesium',55,'s',1,6],['Ba','Barium',56,'s',2,6],
-    ['La','Lanthanum',57,'f',3,6],['Ce','Cerium',58,'f',4,6],['Pr','Praseodymium',59,'f',5,6],
-    ['Nd','Neodymium',60,'f',6,6],['Pm','Promethium',61,'f',7,6],['Sm','Samarium',62,'f',8,6],
-    ['Eu','Europium',63,'f',9,6],['Gd','Gadolinium',64,'f',10,6],['Tb','Terbium',65,'f',11,6],
-    ['Dy','Dysprosium',66,'f',12,6],['Ho','Holmium',67,'f',13,6],['Er','Erbium',68,'f',14,6],
-    ['Tm','Thulium',69,'f',15,6],['Yb','Ytterbium',70,'f',16,6],['Lu','Lutetium',71,'d',3,6],
+    ['La','Lanthanum',57,'f',0,6],['Ce','Cerium',58,'f',0,6],['Pr','Praseodymium',59,'f',0,6],
+    ['Nd','Neodymium',60,'f',0,6],['Pm','Promethium',61,'f',0,6],['Sm','Samarium',62,'f',0,6],
+    ['Eu','Europium',63,'f',0,6],['Gd','Gadolinium',64,'f',0,6],['Tb','Terbium',65,'f',0,6],
+    ['Dy','Dysprosium',66,'f',0,6],['Ho','Holmium',67,'f',0,6],['Er','Erbium',68,'f',0,6],
+    ['Tm','Thulium',69,'f',0,6],['Yb','Ytterbium',70,'f',0,6],['Lu','Lutetium',71,'d',3,6],
     ['Hf','Hafnium',72,'d',4,6],['Ta','Tantalum',73,'d',5,6],['W','Tungsten',74,'d',6,6],
     ['Re','Rhenium',75,'d',7,6],['Os','Osmium',76,'d',8,6],['Ir','Iridium',77,'d',9,6],
     ['Pt','Platinum',78,'d',10,6],['Au','Gold',79,'d',11,6],['Hg','Mercury',80,'d',12,6],
     ['Tl','Thallium',81,'p',13,6],['Pb','Lead',82,'p',14,6],['Bi','Bismuth',83,'p',15,6],
     ['Po','Polonium',84,'p',16,6],['At','Astatine',85,'p',17,6],['Rn','Radon',86,'noble',18,6],
     ['Fr','Francium',87,'s',1,7],['Ra','Radium',88,'s',2,7],
-    ['Ac','Actinium',89,'f',3,7],['Th','Thorium',90,'f',4,7],['Pa','Protactinium',91,'f',5,7],
-    ['U','Uranium',92,'f',6,7],['Np','Neptunium',93,'f',7,7],['Pu','Plutonium',94,'f',8,7],
-    ['Am','Americium',95,'f',9,7],['Cm','Curium',96,'f',10,7],['Bk','Berkelium',97,'f',11,7],
-    ['Cf','Californium',98,'f',12,7],['Es','Einsteinium',99,'f',13,7],['Fm','Fermium',100,'f',14,7],
-    ['Md','Mendelevium',101,'f',15,7],['No','Nobelium',102,'f',16,7],['Lr','Lawrencium',103,'d',3,7],
+    ['Ac','Actinium',89,'f',0,7],['Th','Thorium',90,'f',0,7],['Pa','Protactinium',91,'f',0,7],
+    ['U','Uranium',92,'f',0,7],['Np','Neptunium',93,'f',0,7],['Pu','Plutonium',94,'f',0,7],
+    ['Am','Americium',95,'f',0,7],['Cm','Curium',96,'f',0,7],['Bk','Berkelium',97,'f',0,7],
+    ['Cf','Californium',98,'f',0,7],['Es','Einsteinium',99,'f',0,7],['Fm','Fermium',100,'f',0,7],
+    ['Md','Mendelevium',101,'f',0,7],['No','Nobelium',102,'f',0,7],['Lr','Lawrencium',103,'d',3,7],
     ['Rf','Rutherfordium',104,'d',4,7],['Db','Dubnium',105,'d',5,7],['Sg','Seaborgium',106,'d',6,7],
     ['Bh','Bohrium',107,'d',7,7],['Hs','Hassium',108,'d',8,7],['Mt','Meitnerium',109,'d',9,7],
     ['Ds','Darmstadtium',110,'d',10,7],['Rg','Roentgenium',111,'d',11,7],['Cn','Copernicium',112,'d',12,7],
@@ -4629,128 +4629,194 @@ function buildPeriodicTable(container){
     ['Lv','Livermorium',116,'p',16,7],['Ts','Tennessine',117,'p',17,7],['Og','Oganesson',118,'noble',18,7],
   ];
 
-  // Build set of game-pool element names for quick lookup
-  const poolNames = new Set(ELEMENT_POOL_ALL.map(e => e.element.split(' ')[0]));
-  // Also match by full name for multi-word elements
-  const poolFull  = new Set(ELEMENT_POOL_ALL.map(e => e.element));
-
-  // Block colours
-  const BLOCK_STYLES = {
-    s:     'background:rgba(20,50,120,0.55);border-color:rgba(60,120,220,0.4)',
-    p:     'background:rgba(10,70,30,0.55);border-color:rgba(40,160,70,0.4)',
-    d:     'background:rgba(60,35,5,0.55);border-color:rgba(160,100,20,0.4)',
-    f:     'background:rgba(50,10,80,0.55);border-color:rgba(120,40,180,0.4)',
-    noble: 'background:rgba(0,60,60,0.55);border-color:rgba(20,160,160,0.4)',
+  // Block colours — kept from original design
+  const BLOCK_BG = {
+    s:'rgba(15,40,110,0.7)', p:'rgba(8,65,25,0.7)',
+    d:'rgba(55,30,4,0.7)',   f:'rgba(45,8,75,0.7)', noble:'rgba(0,55,55,0.7)'
   };
-  const BLOCK_LABELS = { s:'s-block', p:'p-block', d:'d-block (transition)', f:'f-block (lanthanide/actinide)', noble:'noble gas' };
+  const BLOCK_BORDER = {
+    s:'rgba(70,130,230,0.5)', p:'rgba(50,170,80,0.5)',
+    d:'rgba(170,110,25,0.5)', f:'rgba(130,50,190,0.5)', noble:'rgba(25,170,170,0.5)'
+  };
+  const BLOCK_NAME = {s:'s-block',p:'p-block',d:'d-block',f:'f-block',noble:'noble gas'};
 
-  // Legend
-  const legend = document.createElement('div');
-  legend.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;font-size:9px';
-  [['s','s-block','rgba(20,50,120,0.7)'],['p','p-block','rgba(10,70,30,0.7)'],
-   ['d','d-block','rgba(60,35,5,0.7)'],['f','f-block','rgba(50,10,80,0.7)'],
-   ['noble','noble gas','rgba(0,60,60,0.7)'],['pool','in game pool','rgba(100,80,0,0.8)']
-  ].forEach(([,label,bg])=>{
-    const s=document.createElement('span');
-    s.style.cssText=`background:${bg};border:1px solid rgba(255,255,255,0.15);border-radius:3px;padding:2px 8px;color:#a0b0c0;letter-spacing:0.5px`;
-    s.textContent=label; legend.appendChild(s);
+  // Build game-pool lookup by symbol
+  const poolBySymbol = new Set();
+  const poolByElement = {};
+  ELEMENT_POOL_ALL.forEach(e => {
+    const sym = e.element.match(/\((\w+)\)/);
+    if(sym) poolBySymbol.add(sym[1]);
+    poolByElement[e.element] = e;
   });
-  container.appendChild(legend);
 
-  // Grid wrapper — 18 columns standard layout
-  const grid = document.createElement('div');
-  grid.style.cssText = 'display:grid;grid-template-columns:repeat(18,1fr);gap:2px;margin-bottom:12px';
+  // ── ALWAYS-VISIBLE LEGEND + HOW TO USE ───────────────────────
+  const guide = document.createElement('div');
+  guide.style.cssText = 'margin-bottom:12px;padding:10px 14px;background:rgba(5,12,35,0.7);border:1px solid rgba(40,70,130,0.3);border-radius:6px';
+  guide.innerHTML = `
+    <div style="font-size:9px;color:#3050a0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">How to use this table to find an electron configuration</div>
+    <div style="font-size:10px;color:#4a6080;line-height:1.9">
+      <span style="color:#a0b8e0">Step 1</span> — Find the element by its symbol or atomic number. Gold-outlined elements appear in game puzzles.<br>
+      <span style="color:#a0b8e0">Step 2</span> — Note its <strong>period</strong> (row 1–7) and <strong>group</strong> (column 1–18). Period = outermost electron shell. Group = valence electrons.<br>
+      <span style="color:#a0b8e0">Step 3</span> — The <strong>block colour</strong> tells you which subshell is being filled: <span style="color:#6090e0">s</span> (groups 1–2), <span style="color:#50c070">p</span> (groups 13–18), <span style="color:#d09030">d</span> (groups 3–12), <span style="color:#b060e0">f</span> (lanthanides/actinides).<br>
+      <span style="color:#a0b8e0">Step 4</span> — Click any element to see its full configuration, valence shell, and spectral lines.
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
+      ${[['s-block','rgba(15,40,110,0.8)','rgba(70,130,230,0.6)','Groups 1–2 · fills s orbital (max 2e)'],
+         ['p-block','rgba(8,65,25,0.8)','rgba(50,170,80,0.6)','Groups 13–18 · fills p orbital (max 6e)'],
+         ['d-block','rgba(55,30,4,0.8)','rgba(170,110,25,0.6)','Groups 3–12 · fills d orbital (max 10e)'],
+         ['f-block','rgba(45,8,75,0.8)','rgba(130,50,190,0.6)','Lanthanides/actinides · fills f orbital (max 14e)'],
+         ['Noble gas','rgba(0,55,55,0.8)','rgba(25,170,170,0.6)','Group 18 · full outer shell'],
+         ['★ In game','rgba(60,45,0,0.8)','rgba(200,160,30,0.7)','Element appears in ID puzzles'],
+      ].map(([label,bg,border,tip])=>`
+        <div title="${tip}" style="display:flex;align-items:center;gap:5px;cursor:help">
+          <div style="width:14px;height:14px;border-radius:2px;background:${bg};border:1px solid ${border}"></div>
+          <span style="font-size:9px;color:#506080">${label}</span>
+        </div>`).join('')}
+    </div>`;
+  container.appendChild(guide);
 
-  // Sparse grid: map [period, group] → element
-  const byPos = {};
-  ALL_ELEMENTS.forEach(([sym,name,num,block,group,period])=>{
-    byPos[`${period},${group}`] = [sym,name,num,block,group,period];
-  });
-  // F-block elements go in rows 8-9 (lanthanides period 6 groups 4-17, actinides period 7)
-  // Standard layout: la/ac series displaced to rows below
-  const fBlockLa = ALL_ELEMENTS.filter(e=>e[5]===6 && e[3]==='f');
-  const fBlockAc = ALL_ELEMENTS.filter(e=>e[5]===7 && e[3]==='f');
-
-  // Detail popup
+  // ── DETAIL CARD — shown on click, pinned above table ──────────
   const detail = document.createElement('div');
   detail.id = 'pt-detail';
-  detail.style.cssText = 'display:none;margin:10px 0;padding:10px 14px;background:rgba(5,10,30,0.8);border:1px solid rgba(60,100,200,0.3);border-radius:6px;font-size:11px;color:#8090c0;line-height:1.8';
+  detail.style.cssText = 'display:none;margin-bottom:10px;padding:12px 16px;background:rgba(5,12,35,0.85);border:1px solid rgba(80,120,220,0.4);border-radius:6px;font-size:11px;color:#8090c0;line-height:1.9';
+  container.appendChild(detail);
 
-  function makeCell(el, row, col){
-    if(!el) return;
-    const [sym,name,num,block,group,period] = el;
-    const inPool = poolNames.has(sym) ||
-      ELEMENT_POOL_ALL.some(e => e.element.toLowerCase().includes(name.toLowerCase()));
-    const cell = document.createElement('div');
-    cell.style.cssText = `${BLOCK_STYLES[block]||BLOCK_STYLES.s};border:1px solid;border-radius:3px;padding:2px 1px;text-align:center;cursor:pointer;min-width:0;transition:filter 0.1s;${inPool?'border-color:rgba(200,160,30,0.8)!important;box-shadow:0 0 4px rgba(200,160,30,0.3)':''}`;
-    cell.innerHTML = `<div style="font-size:7px;color:rgba(150,170,200,0.6);line-height:1">${num}</div><div style="font-size:10px;font-weight:bold;color:${inPool?'#f0c040':'#c0d0e0'};line-height:1.2">${sym}</div><div style="font-size:6px;color:rgba(120,140,180,0.55);line-height:1;overflow:hidden;white-space:nowrap">${name.length>8?name.slice(0,7)+'…':name}</div>`;
-    cell.title = `${name} (${num}) — ${BLOCK_LABELS[block]}`;
-    cell.addEventListener('mouseenter',()=>{ cell.style.filter='brightness(1.5)'; });
-    cell.addEventListener('mouseleave',()=>{ cell.style.filter=''; });
+  // ── MAIN TABLE ───────────────────────────────────────────────
+  // Standard 18-column grid, periods 1-7
+  // f-block gaps (period 6 groups 3, period 7 groups 3) show asterisk placeholder
+  const mainGrid = document.createElement('div');
+  mainGrid.style.cssText = 'display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:3px;margin-bottom:8px';
+
+  // Map (period,group) → element for non-f-block
+  const byPG = {};
+  ALL_ELEMENTS.forEach(el=>{
+    if(el[3]!=='f') byPG[`${el[5]},${el[4]}`]=el;
+  });
+
+  let pinnedEl = null;
+
+  function showDetail(el){
+    const [sym,name,num,block,group,period]=el;
+    const poolMatch = ELEMENT_POOL_ALL.find(e=>{
+      const s=e.element.match(/\((\w+)\)/);
+      return s && s[1]===sym;
+    });
+    const cfgData = poolMatch ? ELECTRON_CONFIGS[poolMatch.element] : null;
+    const inPool  = !!poolMatch;
+
+    let html=`<div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px;flex-wrap:wrap">
+      <span style="font-size:22px;font-weight:bold;color:#d0e0ff">${sym}</span>
+      <span style="font-size:15px;color:#8090c0">${name}</span>
+      <span style="font-size:11px;color:#404060">Atomic number ${num}</span>
+      ${inPool?'<span style="color:#f0c040;font-size:10px">★ In game pool</span>':''}
+    </div>`;
+    html+=`<div style="font-size:10px;color:#506080;margin-bottom:6px">
+      Period <strong style="color:#a0b0d0">${period}</strong> &nbsp;·&nbsp;
+      Group <strong style="color:#a0b0d0">${group||'—'}</strong> &nbsp;·&nbsp;
+      <strong style="color:#a0b0d0">${BLOCK_NAME[block]||block}</strong>
+      ${block==='s'?'— outer shell: '+period+'s':''}
+      ${block==='p'?'— outer shell: '+period+'p':''}
+      ${block==='d'?'— filling '+(period-1)+'d':''}
+      ${block==='f'?'— filling f orbital':''}
+    </div>`;
+    if(cfgData){
+      html+=`<div style="margin-bottom:4px">
+        <span style="color:#6070a0;font-size:9px;text-transform:uppercase;letter-spacing:1px">Full configuration</span><br>
+        <span style="color:#c090ff;font-size:12px;letter-spacing:1px">${cfgData.config}</span>
+      </div>
+      <div style="margin-bottom:4px">
+        <span style="color:#6070a0;font-size:9px;text-transform:uppercase;letter-spacing:1px">Valence shell (produces emission lines)</span><br>
+        <span style="color:#e0b0ff;font-size:12px">${cfgData.valence}</span>
+      </div>`;
+    }
+    if(poolMatch && poolMatch.pureLines){
+      html+=`<div><span style="color:#6070a0;font-size:9px;text-transform:uppercase;letter-spacing:1px">Visible emission wavelengths</span><br>
+        ${poolMatch.pureLines.map(nm=>{
+          const col = nm<450?'#9090ff':nm<500?'#60b0ff':nm<570?'#60e080':nm<600?'#e0e060':nm<640?'#f09030':'#e05050';
+          return `<span style="color:${col};margin-right:8px">${nm}nm</span>`;
+        }).join('')}</div>`;
+    }
+    if(!cfgData && !poolMatch){
+      html+=`<div style="color:#3a4060;font-size:10px;font-style:italic">Not in game element pool — no configuration data available.</div>`;
+    }
+    detail.innerHTML=html;
+    detail.style.display='block';
+  }
+
+  function makeCell(el){
+    const [sym,name,num,block,group,period]=el;
+    const poolMatch = ELEMENT_POOL_ALL.find(e=>{
+      const s=e.element.match(/\((\w+)\)/); return s&&s[1]===sym;
+    });
+    const inPool = !!poolMatch;
+
+    const cell=document.createElement('div');
+    cell.style.cssText=`background:${BLOCK_BG[block]||BLOCK_BG.s};border:1.5px solid ${inPool?'rgba(200,160,30,0.85)':BLOCK_BORDER[block]||BLOCK_BORDER.s};border-radius:4px;padding:3px 2px 2px;text-align:center;cursor:pointer;transition:filter 0.12s,transform 0.1s;position:relative`;
+
+    cell.innerHTML=`
+      <div style="font-size:8px;color:rgba(160,180,220,0.55);line-height:1.1">${num}</div>
+      <div style="font-size:12px;font-weight:bold;color:${inPool?'#f0c040':'#c8d8f0'};line-height:1.25;letter-spacing:0.3px">${sym}</div>`;
+
+    cell.addEventListener('mouseenter',()=>{ cell.style.filter='brightness(1.6)'; cell.style.transform='scale(1.12)'; cell.style.zIndex='10'; });
+    cell.addEventListener('mouseleave',()=>{ cell.style.filter=''; cell.style.transform=''; cell.style.zIndex=''; });
     cell.addEventListener('click',()=>{
-      // Find config data
-      const cfgKey = ELEMENT_POOL_ALL.find(e=>e.element.startsWith(name)||e.element.startsWith(sym));
-      const cfgData = cfgKey ? ELECTRON_CONFIGS[cfgKey.element] : null;
-      detail.style.display = 'block';
-      let html = `<span style="color:#d0e0ff;font-size:13px;font-weight:bold">${sym}</span> &nbsp; <span style="color:#8090c0">${name}</span> &nbsp; <span style="color:#506080">Atomic number ${num}</span><br>`;
-      html += `<span style="color:#506080">${BLOCK_LABELS[block]} · Period ${period} · Group ${group||'—'}</span><br>`;
-      if(cfgData){
-        html += `<span style="color:#a080c0">Config:</span> <span style="color:#c090ff">${cfgData.config}</span><br>`;
-        html += `<span style="color:#a080c0">Valence:</span> <span style="color:#e0b0ff">${cfgData.valence}</span> &nbsp;&nbsp; `;
+      if(pinnedEl===cell){
+        pinnedEl=null; cell.style.outline=''; detail.style.display='none';
+      } else {
+        if(pinnedEl) pinnedEl.style.outline='';
+        pinnedEl=cell; cell.style.outline='2px solid rgba(180,200,255,0.7)';
+        showDetail(el);
+        detail.scrollIntoView({behavior:'smooth',block:'nearest'});
       }
-      if(cfgKey && cfgKey.pureLines){
-        html += `<span style="color:#a080c0">Visible emission lines:</span> ${cfgKey.pureLines.map(nm=>`<span style="color:#80c0e0">${nm}nm</span>`).join(', ')}`;
-      }
-      if(inPool){
-        html += `<br><span style="color:#f0c040;font-size:10px">★ In game pool — appears in Element ID puzzles</span>`;
-      }
-      detail.innerHTML = html;
-      detail.scrollIntoView({behavior:'smooth',block:'nearest'});
     });
     return cell;
   }
 
-  // Render rows 1-7 (main table, 18 columns)
-  for(let period=1; period<=7; period++){
-    for(let group=1; group<=18; group++){
-      const el = ALL_ELEMENTS.find(e=>e[5]===period && e[4]===group && e[3]!=='f');
-      const cell = document.createElement('div');
+  // Render 7 periods × 18 groups
+  for(let period=1;period<=7;period++){
+    for(let group=1;group<=18;group++){
+      const el=byPG[`${period},${group}`];
       if(el){
-        const built = makeCell(el);
-        if(built){ grid.appendChild(built); continue; }
+        mainGrid.appendChild(makeCell(el));
+      } else if((period===6||period===7)&&group===3){
+        // f-block placeholder
+        const ph=document.createElement('div');
+        ph.style.cssText='background:rgba(30,5,60,0.4);border:1px dashed rgba(100,40,160,0.3);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;color:rgba(120,60,180,0.5)';
+        ph.textContent=period===6?'*La':'†Ac';
+        mainGrid.appendChild(ph);
+      } else {
+        const blank=document.createElement('div');
+        mainGrid.appendChild(blank);
       }
-      // Placeholder for f-block gap (period 6/7, groups 3-17 show as spacers in main grid)
-      cell.style.cssText='min-height:36px';
-      grid.appendChild(cell);
     }
   }
+  container.appendChild(mainGrid);
 
-  container.appendChild(grid);
+  // ── F-BLOCK ROWS ─────────────────────────────────────────────
+  const fBlockLa=ALL_ELEMENTS.filter(e=>e[5]===6&&e[3]==='f');
+  const fBlockAc=ALL_ELEMENTS.filter(e=>e[5]===7&&e[3]==='f');
 
-  // F-block rows (lanthanides + actinides) below the main table
-  const fLabel6 = document.createElement('div');
-  fLabel6.style.cssText='font-size:8px;color:#4050a0;letter-spacing:1px;margin:6px 0 3px;text-transform:uppercase';
-  fLabel6.textContent='Lanthanides (Period 6, f-block)';
-  container.appendChild(fLabel6);
+  function fRow(elements, label, marker){
+    const wrap=document.createElement('div');
+    wrap.style.cssText='display:flex;align-items:center;gap:4px;margin-bottom:4px';
+    const lbl=document.createElement('div');
+    lbl.style.cssText='font-size:8px;color:rgba(120,60,180,0.6);min-width:14px;text-align:center';
+    lbl.textContent=marker;
+    wrap.appendChild(lbl);
+    const g=document.createElement('div');
+    g.style.cssText='display:grid;grid-template-columns:repeat(15,minmax(0,1fr));gap:3px;flex:1';
+    elements.forEach(el=>g.appendChild(makeCell(el)));
+    wrap.appendChild(g);
+    container.appendChild(wrap);
+  }
 
-  const fGrid6 = document.createElement('div');
-  fGrid6.style.cssText='display:grid;grid-template-columns:repeat(15,1fr);gap:2px;margin-bottom:6px';
-  fBlockLa.forEach(el=>{ const c=makeCell(el); if(c) fGrid6.appendChild(c); });
-  container.appendChild(fGrid6);
-
-  const fLabel7 = document.createElement('div');
-  fLabel7.style.cssText='font-size:8px;color:#4050a0;letter-spacing:1px;margin:4px 0 3px;text-transform:uppercase';
-  fLabel7.textContent='Actinides (Period 7, f-block)';
-  container.appendChild(fLabel7);
-
-  const fGrid7 = document.createElement('div');
-  fGrid7.style.cssText='display:grid;grid-template-columns:repeat(15,1fr);gap:2px;margin-bottom:10px';
-  fBlockAc.forEach(el=>{ const c=makeCell(el); if(c) fGrid7.appendChild(c); });
-  container.appendChild(fGrid7);
-
-  container.appendChild(detail);
+  const fLabel=document.createElement('div');
+  fLabel.style.cssText='font-size:8px;color:rgba(120,60,180,0.5);letter-spacing:1px;text-transform:uppercase;margin:4px 0 3px 18px';
+  fLabel.textContent='f-block — lanthanides (*) and actinides (†)';
+  container.appendChild(fLabel);
+  fRow(fBlockLa, 'Lanthanides', '*');
+  fRow(fBlockAc, 'Actinides',   '†');
 }
-
 /* ================================================================
    ELECTRON CONFIGURATION PUZZLE
    Appears inline after a correct element ID answer.
