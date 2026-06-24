@@ -2143,6 +2143,16 @@ function generateSectorStars(sectorId){
   }
 }
 function loadSector(sectorId){
+  // Hyperspace animation when jumping to a different sector
+  const isJump = state.currentSectorId && state.currentSectorId !== sectorId;
+  if(isJump && document.getElementById('hyperspace-canvas')){
+    playHyperspaceJump(sectorId, ()=> _doLoadSector(sectorId));
+  } else {
+    _doLoadSector(sectorId);
+  }
+}
+
+function _doLoadSector(sectorId){
   state.currentSectorId=sectorId;
   state.selected=null;
   document.getElementById('scan-btn').disabled=true;
@@ -2531,6 +2541,8 @@ function openAct1(star){
   if(hasEvent){
     showSpecialEventBadge(pendingEvent);
     pendingEvent = null;
+    // Glitch effect specifically for mystery objects
+    if(star._mystery) setTimeout(playGlitchEffect, 400);
   } else if(star._telescopeNote && loreEl){
     loreEl.style.display     = 'block';
     loreEl.style.color       = '#c09040';
@@ -2632,7 +2644,9 @@ function confirmAct1(){
     checkUnlocks(state.colonies);
     if(state.found === 20) showUnlockToast('🔬 Element Analysis now required for all scans');
     if(state.found === 40) showUnlockToast('🌟 Stellar Evolution puzzles now available after classification');
-    // Check if the entire current sector is now complete
+    // First discovery in this sector — play radar sweep
+    const sectorDiscoveries = (state.sectorStars[state.currentSectorId]||[]).filter(s=>s.discovered).length;
+    if(sectorDiscoveries === 1) setTimeout(()=>playFirstDiscoverySweep(star), 600);
     checkSectorComplete();
   }
   state.act1pts=pts;
@@ -5973,18 +5987,20 @@ const LEVEL_TABS = {
 };
 
 function addResearchGuideTab(){
-  // Show the Research tab button
   const btn = document.getElementById('guide-tab-research');
   if(btn) btn.style.display = 'block';
-  // Add to all level tab sets
   Object.keys(LEVEL_TABS).forEach(level => {
     if(!LEVEL_TABS[level].includes('guide-research')){
       LEVEL_TABS[level].push('guide-research');
     }
   });
-  // Show the research section
   const section = document.getElementById('guide-research');
   if(section) section.style.display = 'block';
+  // Aurora only on first unlock — not on save restore
+  if(!state._auroraPlayed){
+    state._auroraPlayed = true;
+    setTimeout(playResearchAurora, 800);
+  }
 }
 
 function showGuide(level){
@@ -9090,6 +9106,7 @@ function checkSectorComplete(){
 
   // Delay slightly so it plays after the scan flash settles
   setTimeout(() => playSectorCompleteChime(tier, sector.name), 1200);
+  setTimeout(() => playConstellationDraw(state.currentSectorId), 2600);
 }
 
 function playSectorCompleteChime(tier, sectorName){
@@ -9616,62 +9633,6 @@ function playResearchAurora(){
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
-}
-
-/* ================================================================
-   WIRE ALL ANIMATIONS INTO GAME EVENTS
-================================================================ */
-
-// 1. Hyperspace on sector jump
-const _origLoadSector = loadSector;
-function loadSector(sectorId){
-  const isFirstLoad = !state.currentSectorId || state.currentSectorId === sectorId;
-  if(!isFirstLoad && document.getElementById('hyperspace-canvas')){
-    playHyperspaceJump(sectorId, ()=> _origLoadSector(sectorId));
-  } else {
-    _origLoadSector(sectorId);
-  }
-}
-
-// 3 & 4. Scan sweep on first sector discovery + glitch on mystery objects
-// Hooked into confirmAct1 — check after star.discovered is set
-const _origCheckSectorComplete = checkSectorComplete;
-function checkSectorComplete(){
-  const stars = state.sectorStars[state.currentSectorId]||[];
-  const prevFound = stars.filter(s=>s.discovered).length;
-  _origCheckSectorComplete();
-  // If this is the first discovery in the sector, play sweep
-  if(prevFound === 0 && state.currentStar){
-    setTimeout(()=> playFirstDiscoverySweep(state.currentStar), 500);
-  }
-}
-
-// 4. Glitch — hooked into openAct1 via state._mystery check
-// (called inside openAct1 already — just need to trigger after badge shows)
-const _origShowSpecialEventBadge = showSpecialEventBadge;
-function showSpecialEventBadge(event){
-  _origShowSpecialEventBadge(event);
-  // Glitch only on actual mystery object anomaly — not regular special events
-  if(state.currentStar && state.currentStar._mystery){
-    setTimeout(playGlitchEffect, 400);
-  }
-}
-
-// 5. Score burst at streak milestones — hooked into confirmAct1
-// (called after streak is updated)
-
-// 2. Colony pulse — hooked into civ button click (after state.colonies++)
-// 6. Constellation draw — hooked into checkSectorComplete
-// 7. Research aurora — hooked into addResearchGuideTab
-
-const _origAddResearchGuideTab = addResearchGuideTab;
-function addResearchGuideTab(){
-  _origAddResearchGuideTab();
-  // Play aurora only on first unlock (not on save restore)
-  if(!state._auroraPlayed){
-    state._auroraPlayed = true;
-    setTimeout(playResearchAurora, 800);
-  }
 }
 
 /* ================================================================
