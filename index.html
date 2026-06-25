@@ -2846,6 +2846,7 @@ function openAct1(star){
 
   if(hasEvent){
     showSpecialEventBadge(pendingEvent);
+    star._event = pendingEvent; // store on star for pulse animation and bonus
     pendingEvent = null;
     // Glitch effect specifically for mystery objects
     if(star._mystery && !reduceMotion) setTimeout(playGlitchEffect, 400);
@@ -2871,13 +2872,41 @@ function openAct1(star){
   badge.className = 'spec-mode-badge ' + (badgeInfo[specMode]?.cls || 'mode-absorption');
   badge.textContent = badgeInfo[specMode]?.text || '';
 
-  // Draw target spectrum immediately — canvas has fixed width/height attributes
-  drawSpectrum(
-    document.getElementById('target-canvas'),
-    star.cls, 52,
-    specMode,
-    star.secondaryCls
-  );
+  // Draw target spectrum — animated pulse if variable star event
+  const targetCvs = document.getElementById('target-canvas');
+  if(star._event?.id === 'variable'){
+    // Animate the spectrum brightness to pulse rhythmically
+    // giving the player visible evidence of variability
+    if(state._variableAnim) cancelAnimationFrame(state._variableAnim);
+    const pulseStart = performance.now();
+    // Random pulsation period 4–12 seconds (like real Cepheids)
+    const pulsePeriodMs = (4 + Math.random()*8) * 1000;
+    star._pulsePeriod = pulsePeriodMs;
+    function drawPulseFrame(now){
+      // Brightness oscillates 0.4→1.0 on a sine curve
+      const phase = ((now - pulseStart) % pulsePeriodMs) / pulsePeriodMs;
+      const brightness = 0.4 + 0.6 * Math.pow(Math.sin(phase * Math.PI * 2) * 0.5 + 0.5, 1.2);
+      // Redraw spectrum with alpha modulation via a white overlay
+      drawSpectrum(targetCvs, star.cls, 52, specMode, star.secondaryCls);
+      const octx = targetCvs.getContext('2d');
+      // Darken overlay at low brightness
+      octx.fillStyle = `rgba(1,2,8,${(1-brightness)*0.65})`;
+      octx.fillRect(0,0,targetCvs.width,52);
+      state._variableAnim = requestAnimationFrame(drawPulseFrame);
+    }
+    state._variableAnim = requestAnimationFrame(drawPulseFrame);
+
+    // Show pulsation period hint in the badge area
+    const loreEl = document.getElementById('sp-lore');
+    if(loreEl){
+      loreEl.style.display = 'block';
+      loreEl.innerHTML = `<strong style="color:#d0a0ff">🔮 Pulsating Variable Detected</strong> — the spectrum is oscillating in brightness with a period of <strong style="color:#c0d8ff">${(pulsePeriodMs/1000).toFixed(1)} seconds</strong> (simulated — real Cepheids pulse over days to months). Classify the base stellar class from the line pattern. After correct classification, you can use this period to calculate the star's distance.`;
+    }
+  } else {
+    // Static spectrum for all non-variable stars
+    if(state._variableAnim){ cancelAnimationFrame(state._variableAnim); state._variableAnim=null; }
+    drawSpectrum(targetCvs, star.cls, 52, specMode, star.secondaryCls);
+  }
 
   // Choice grid always shows absorption spectra so the player can map formats
   buildChoiceGrid(star);
@@ -3016,8 +3045,86 @@ function confirmAct1(){
   if(correct){
     recordCorrect('emission');
     state.streak++;state.score+=pts;state.credits+=20;showFlash(t('act1_flash_correct')(pts),'#38e060');
-    if(sprintActive) sprintStarCompleted();
-    maybePlayScoreBurst(state.streak);
+    // ── FLARE EVENT BONUS — habitability impact assessment ────
+    if(star._event?.id === 'flare'){
+      setTimeout(()=>{
+        const analysisEl = document.getElementById('act1-analysis');
+        if(analysisEl){
+          const flareX = Math.random(); // 0=weak, 1=extreme
+          const impactLevel = flareX > 0.6 ? 'SEVERE' : flareX > 0.3 ? 'MODERATE' : 'MINOR';
+          const impactColor = flareX > 0.6 ? '#ff6040' : flareX > 0.3 ? '#f0c040' : '#60c060';
+          const uvIncrease = Math.round(50 + flareX * 950); // ×50 to ×1000
+          const note = document.createElement('div');
+          note.style.cssText = 'margin-top:10px;padding:8px 12px;background:rgba(120,30,10,0.3);border:1px solid rgba(220,80,30,0.4);border-radius:5px;font-size:10px;color:#e08060;line-height:1.7';
+          note.innerHTML = `
+            <div style="font-size:9px;letter-spacing:1.5px;color:#904030;text-transform:uppercase;margin-bottom:4px">☀️ Flare Habitability Impact Analysis</div>
+            UV output increase: <strong style="color:${impactColor}">×${uvIncrease} above baseline</strong><br>
+            Atmospheric erosion risk: <strong style="color:${impactColor}">${impactLevel}</strong><br>
+            <span style="color:#603020;font-size:9px;display:block;margin-top:3px">This flare ${flareX > 0.6 ? 'would likely strip an unshielded atmosphere in geological time — severe habitability risk for any planet in the HZ' : flareX > 0.3 ? 'poses a moderate risk to planetary atmospheres — magnetic field strength would be critical for habitability' : 'is within tolerable range for shielded planets with strong magnetic fields'}.</span>`;
+          analysisEl.style.display='block';
+          analysisEl.appendChild(note);
+          state.score += 50; state.credits += 8; updateHUD();
+          showFlash('+50  FLARE IMPACT LOGGED!', '#e08060');
+        }
+      }, 600);
+    }
+
+    // ── BINARY EVENT BONUS — mass ratio from Doppler shift ───
+    if(star._event?.id === 'binary'){
+      setTimeout(()=>{
+        const analysisEl = document.getElementById('act1-analysis');
+        if(analysisEl){
+          const m1 = (0.8 + Math.random()*2.0).toFixed(2);  // primary mass
+          const ratio = (0.4 + Math.random()*0.8).toFixed(2); // q = m2/m1
+          const m2 = (parseFloat(m1)*parseFloat(ratio)).toFixed(2);
+          const note = document.createElement('div');
+          note.style.cssText = 'margin-top:10px;padding:8px 12px;background:rgba(20,60,120,0.3);border:1px solid rgba(60,140,220,0.4);border-radius:5px;font-size:10px;color:#80b0e0;line-height:1.7';
+          note.innerHTML = `
+            <div style="font-size:9px;letter-spacing:1.5px;color:#4060a0;text-transform:uppercase;margin-bottom:4px">⚡ Binary Mass Ratio Derived</div>
+            Primary mass (M₁): <strong>${m1} M☉</strong> · Secondary mass (M₂): <strong>${m2} M☉</strong><br>
+            Mass ratio q = M₂/M₁: <strong>${ratio}</strong><br>
+            <span style="color:#304060;font-size:9px;display:block;margin-top:3px">Derived from the Doppler velocity amplitude ratio K₁/K₂. Binary systems like this ${parseFloat(ratio) > 0.8 ? 'may eventually merge — a source of gravitational wave events' : 'will transfer mass as the primary evolves off the main sequence'}.</span>`;
+          analysisEl.style.display='block';
+          analysisEl.appendChild(note);
+          state.score += 60; state.credits += 10; updateHUD();
+          showFlash('+60  BINARY PARAMETERS DERIVED!', '#60a0e0');
+        }
+      }, 600);
+    }
+
+    // ── VARIABLE STAR BONUS — period-luminosity distance reveal ──
+    // After correct classification of a variable star, reveal the
+    // simulated distance using the period-luminosity relation.
+    if(star._event?.id === 'variable' && star._pulsePeriod){
+      const periodDays = (star._pulsePeriod / 1000) / 86400 * 365; // scale to ~days
+      // Leavitt's law approximation: M = -2.81·log₁₀(P) - 1.43 (Cepheid)
+      const logP  = Math.log10(Math.max(0.1, periodDays));
+      const absMag = -2.81 * logP - 1.43;
+      // Apparent magnitude — random between 6 and 12 (observable but faint)
+      const appMag = 6 + Math.random() * 6;
+      const distPc = Math.pow(10, (appMag - absMag + 5) / 5); // parsecs
+      const distLy = Math.round(distPc * 3.26);
+
+      // Show the distance in the analysis panel
+      setTimeout(()=>{
+        const analysisEl = document.getElementById('act1-analysis');
+        if(analysisEl){
+          const distNote = document.createElement('div');
+          distNote.style.cssText = 'margin-top:10px;padding:8px 12px;background:rgba(60,20,120,0.3);border:1px solid rgba(140,80,220,0.4);border-radius:5px;font-size:10px;color:#c090ff;line-height:1.7';
+          distNote.innerHTML = `
+            <div style="font-size:9px;letter-spacing:1.5px;color:#8060b0;text-transform:uppercase;margin-bottom:4px">🔮 Period-Luminosity Distance Calculation</div>
+            Pulsation period: <strong>${(star._pulsePeriod/1000).toFixed(1)}s</strong> (simulated) ·
+            Absolute magnitude: <strong>M = ${absMag.toFixed(2)}</strong><br>
+            Apparent magnitude: <strong>m = ${appMag.toFixed(2)}</strong><br>
+            <strong style="color:#e0b0ff">Estimated distance: ${distLy.toLocaleString()} light-years</strong>
+            <span style="color:#604090;font-size:9px;display:block;margin-top:3px">Using Leavitt's Period-Luminosity Law — the same method used to measure the Milky Way and prove other galaxies exist.</span>`;
+          analysisEl.style.display='block';
+          analysisEl.appendChild(distNote);
+          state.score += 75; state.credits += 10; updateHUD();
+          showFlash('+75  DISTANCE CALCULATED!', '#c090ff');
+        }
+      }, 600);
+    }
   } else {
     recordError('emission');
     state.streak=0;state.score=Math.max(0,state.score+pts);showFlash(t('act1_flash_wrong'),'#e03030');
@@ -3064,6 +3171,8 @@ function confirmAct1(){
   btn.disabled=false;
   btn.onclick=()=>{
     document.getElementById('spectra-panel').style.display='none';
+    // Cancel variable star pulse animation if running
+    if(state._variableAnim){ cancelAnimationFrame(state._variableAnim); state._variableAnim=null; }
     if(!correct){ closeAllPanels(); return; }
 
     const sector  = SECTORS.find(s=>s.id===state.currentSectorId)||SECTORS[0];
@@ -4892,6 +5001,13 @@ function openElementID(star, onDone, mandatory){
   // Phase 3 (15+ correct):  Free-type — no choices at all, must type the element
   const choicesEl = document.getElementById('element-choices');
   choicesEl.innerHTML = '';
+
+  // Build shuffled options array from the active element's pool (used by Tier A and B)
+  const options = [...activeOptions];
+  for(let oi = options.length-1; oi > 0; oi--){
+    const oj = Math.floor(Math.random()*(oi+1));
+    [options[oi],options[oj]] = [options[oj],options[oi]];
+  }
 
   const tierBCorrect = state.session.correct.elementID || 0;
   const freeTypeMode = displayTier === 'stellar' && tierBCorrect >= 15;
@@ -10329,8 +10445,8 @@ const SPECIAL_EVENTS = [
     badge:'🔮 Variable Star Event',
     badgeColor:'rgba(140,60,200,0.9)',
     title:'Pulsating Variable Star Detected',
-    desc:'This star is varying in brightness on a regular cycle — a pulsating variable. Watch how the spectrum brightness shifts as the star expands and contracts. Cepheid variables pulse in a way directly tied to their luminosity, making them cosmic distance markers. Identify the base stellar class from the line pattern.',
-    scienceNote:'Variable stars like Cepheids and RR Lyrae are among astronomy\'s most important tools. Their pulsation period reveals their true luminosity, which in turn gives their distance — independently of parallax. Henrietta Swan Leavitt discovered this period-luminosity relation in 1908.'
+    desc:'This star\'s spectrum is changing in brightness as you watch — it\'s a pulsating variable. Classify the base stellar class, then answer the bonus question to unlock its distance from Earth.',
+    scienceNote:'Henrietta Swan Leavitt discovered in 1908 that Cepheid variables pulse at a rate directly tied to their luminosity — the first "standard candle" for measuring cosmic distances. This single discovery let astronomers prove other galaxies exist.'
   },
   {
     id:'flare',
