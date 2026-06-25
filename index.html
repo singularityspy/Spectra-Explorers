@@ -363,7 +363,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 @keyframes scoreBurst{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-200%) scale(0.5)}}
 
 /* -- GLOSSARY PANEL --------------------------------------------- */
-#glossary-panel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;max-width:96vw;max-height:90vh;overflow-y:auto;padding:0;display:none;z-index:30;scrollbar-width:thin;scrollbar-color:rgba(60,100,160,0.3) transparent}
+#glossary-panel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;max-width:96vw;max-height:85vh;overflow-y:auto;padding:0;display:none;z-index:30;scrollbar-width:thin;scrollbar-color:rgba(60,100,160,0.3) transparent}
 .gloss-tab{background:rgba(8,18,50,0.7);border:none;border-bottom:2px solid transparent;color:#304060;font-family:inherit;font-size:10px;letter-spacing:1px;padding:8px 16px;cursor:pointer;transition:all 0.15s;text-transform:uppercase}
 .gloss-tab.active{color:#90b8ff;border-bottom-color:#5090ff;background:rgba(12,28,70,0.8)}
 .gloss-tab:hover{color:#6080c0}
@@ -502,10 +502,10 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 .guide-section.active{display:block}
 
 /* Guide typography — 15px body, proper line height, sans-serif for reading comfort */
-.guide-section h2{font-size:11px;letter-spacing:3px;color:#4070b0;text-transform:uppercase;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid rgba(40,70,130,0.3);font-family:'Share Tech Mono','Courier New',monospace}
-.guide-section h3{font-size:15px;color:#80a8e0;margin:18px 0 10px;font-weight:600;letter-spacing:0}
-.guide-section p{font-size:15px;color:#5070a0;line-height:1.9;margin-bottom:12px}
-.guide-section ul li,.guide-section ol li{font-size:15px;color:#5070a0;line-height:1.9;margin-bottom:4px}
+.guide-section h2{font-size:11px;letter-spacing:3px;color:#4070b0;text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(40,70,130,0.3);font-family:'Share Tech Mono','Courier New',monospace}
+.guide-section h3{font-size:clamp(12px,1.2vh,14px);color:#80a8e0;margin:14px 0 8px;font-weight:600;letter-spacing:0}
+.guide-section p{font-size:clamp(12px,1.25vh,14px);color:#5070a0;line-height:1.8;margin-bottom:10px}
+.guide-section ul li,.guide-section ol li{font-size:clamp(12px,1.25vh,14px);color:#5070a0;line-height:1.8;margin-bottom:3px}
 .guide-section details summary{font-size:13px;list-style:none}
 .guide-section details summary::-webkit-details-marker{display:none}
 .guide-section details summary{
@@ -1015,6 +1015,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <button id="element-hint-btn">💡 Hint</button>
         <button id="element-spectra-ref-btn" style="background:rgba(5,25,60,0.8);border:1px solid rgba(40,100,200,0.4);color:#5080c0;font-family:inherit;font-size:10px;padding:6px 14px;border-radius:4px;cursor:pointer;display:none">🔬 Spectra Reference</button>
+        <button id="element-block-table-btn" style="background:rgba(20,10,60,0.85);border:1px solid rgba(80,50,180,0.4);color:#8060c0;font-family:inherit;font-size:10px;padding:6px 14px;border-radius:4px;cursor:pointer">⊞ Block Table</button>
         <button class="pbtn pbtn-close" id="element-skip">Skip Bonus</button>
         <button class="pbtn pbtn-action" id="element-confirm" disabled>Identify Element</button>
       </div>
@@ -1544,218 +1545,154 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
       <!-- -- TAB: READING SPECTRA ---------------------------- -->
       <div class="guide-section" id="guide-spectra">
-        <h2>Reading Spectra</h2>
-        <p>Starlight spread into a rainbow reveals <span class="highlight">dark gaps</span> where elements in the star's atmosphere absorbed specific colours. These gaps are called <span class="highlight">absorption lines</span> — each element always absorbs at the same wavelengths, making the pattern a unique fingerprint.</p>
-
-        <div class="tip-box">Think of it like a barcode. Hydrogen always absorbs at 656nm (red), 486nm (blue-green), 434nm (violet). Calcium always absorbs at 393nm and 397nm. Match the barcode, identify the star.</div>
-
-        <h3>What to look for</h3>
-        <ul style="font-size:11px;color:#5070a0;line-height:2.2;margin:0 0 14px 20px">
-          <li><span class="highlight">Count the lines</span> — hot stars (O, B) have few lines. Cool stars (M) have so many the spectrum looks nearly black.</li>
-          <li><span class="highlight">Where they cluster</span> — lines bunched on the left (blue end) = hot. Spread across the right (red end) = cool.</li>
-          <li><span class="highlight">Spacing</span> — evenly spaced bold lines = A-type hydrogen. Tight, irregular clusters = cooler metal-rich stars.</li>
+        <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:17px;letter-spacing:0;text-transform:none;color:#90c0ff;font-weight:normal;border-bottom:1px solid rgba(40,70,130,0.3);padding-bottom:10px;margin-bottom:14px">Reading the Light</h2>
+        <p style="font-family:Georgia,'Times New Roman',serif;font-style:italic;color:#6080a0;margin-bottom:12px">Every star sends us a message. It's written in missing colours.</p>
+        <p>When starlight spreads into a rainbow, certain colours are <span class="highlight">absorbed</span> by elements in the star's outer layers. Those missing colours appear as <span class="highlight">dark gaps — absorption lines</span>. The pattern is a fingerprint: hydrogen always absorbs at the same wavelengths, calcium at the same wavelengths.</p>
+        <div class="tip-box">Think barcode. Match the barcode → identify the star.<br>Hydrogen: 656nm (red), 486nm (blue-green), 434nm (violet). Calcium: 393nm and 397nm.</div>
+        <h3 style="font-family:Georgia,'Times New Roman',serif;font-size:15px;font-weight:normal;color:#80a8e0;margin:16px 0 8px">Three things to look for</h3>
+        <ul style="font-size:15px;color:#5070a0;line-height:2.2;margin:0 0 14px 20px">
+          <li><span class="highlight">How many lines</span> — hot stars have few. Cool stars have so many the spectrum looks nearly black.</li>
+          <li><span class="highlight">Where they cluster</span> — heavy on the left (blue) = hot. Spread through the right (red) = cool.</li>
+          <li><span class="highlight">Spacing</span> — evenly spaced bold lines = A-type hydrogen. Tight dense clusters = cooler metal-rich stars.</li>
         </ul>
-
-        <h3>Emission vs absorption</h3>
-        <p>Some puzzles show an <span class="highlight">emission spectrum</span> — bright coloured lines on black instead of dark lines on rainbow. The line positions are the same; only the format is inverted. Match the positions, not the colours.</p>
-
-        <h3>Spectral reference card</h3>
-        <div class="spec-ref-row header">
-          <div>Class</div><div>Temperature</div><div>Spectrum preview</div><div>Key lines</div><div>Hab. index</div>
-        </div>
-        <div id="spec-ref-rows"><!-- filled by JS --></div>
-
-        <div class="tip-box amber">The wavelength scale always runs 380nm (violet, left) → 700nm (red, right). A line at the far left is violet; far right is deep red.</div>
+        <p><span class="highlight">Emission spectra</span> are the inverse — bright lines on black. The positions are identical. Match the positions, not the colour.</p>
+        <details style="margin-top:12px">
+          <summary>Spectral reference card — all seven classes</summary>
+          <div>
+            <div class="spec-ref-row header">
+              <div>Class</div><div>Temperature</div><div>Spectrum preview</div><div>Key lines</div><div>Hab. index</div>
+            </div>
+            <div id="spec-ref-rows"></div>
+            <div class="tip-box amber" style="margin-top:10px">Scale: 380nm (violet, left) → 700nm (red, right).</div>
+          </div>
+        </details>
       </div>
 
       <!-- -- TAB: OBAFGKM ------------------------------------ -->
       <div class="guide-section" id="guide-obafgkm">
-        <h2>Star Classes — OBAFGKM</h2>
-        <p>Stars are classified by surface temperature from hottest (O) to coolest (M). Temperature determines which absorption lines appear — hotter stars strip electrons from atoms, changing what light gets absorbed. The mnemonic: <span class="highlight good">Oh Be A Fine Girl/Guy, Kiss Me.</span></p>
-
-        <div class="tip-box">In the game's Act III, you already know the temperature, luminosity and radius from earlier steps. Use temperature first — it narrows you to 1–2 classes immediately. The spectral description then confirms it.</div>
-
-        <h3>Quick reference</h3>
-        <div style="margin:10px 0">
-          <div style="display:grid;grid-template-columns:32px 1fr;gap:8px 14px;font-size:11px;line-height:1.8;align-items:baseline">
-            <div style="color:#9bb0ff;font-size:14px;font-weight:bold">O</div><div style="color:#5070a0"><span class="highlight">30,000–50,000 K · Blue-white · Very few, widely-spaced lines.</span> Rarest and hottest. Uninhabitable — lethal UV radiation. Explodes as a supernova after just a few million years.</div>
-            <div style="color:#aabfff;font-size:14px;font-weight:bold">B</div><div style="color:#5070a0"><span class="highlight">10,000–30,000 K · Blue-white · Few lines, some helium.</span> Still extremely hot. Hydrogen lines present but not dominant. Examples: Rigel, Regulus.</div>
-            <div style="color:#cad7ff;font-size:14px;font-weight:bold">A</div><div style="color:#5070a0"><span class="highlight">7,500–10,000 K · White · Strong, evenly-spaced hydrogen lines.</span> Easiest class to identify — the Balmer series (656, 486, 434, 410nm) is strongest here. Examples: Sirius, Vega.</div>
-            <div style="color:#f8f7ff;font-size:14px;font-weight:bold">F</div><div style="color:#5070a0"><span class="highlight">6,000–7,500 K · Yellow-white · Hydrogen weakens, calcium and iron appear.</span> More lines than A-type, slightly more crowded. Examples: Procyon, Polaris.</div>
-            <div style="color:#fff4ea;font-size:14px;font-weight:bold">G</div><div style="color:#5070a0"><span class="highlight">5,200–6,000 K · Yellow · Dense, rich spectrum. Many lines across the middle.</span> Our Sun's class. Best habitability — stable, long-lived. Examples: Sun, Tau Ceti.</div>
-            <div style="color:#ffd2a1;font-size:14px;font-weight:bold">K</div><div style="color:#5070a0"><span class="highlight">3,700–5,200 K · Orange · Very dense spectrum with molecular bands beginning.</span> Excellent habitability — lives even longer than G stars. Examples: Epsilon Eridani.</div>
-            <div style="color:#ffcc6f;font-size:14px;font-weight:bold">M</div><div style="color:#5070a0"><span class="highlight">2,400–3,700 K · Red · Extremely dense lines — nearly solid black in the red half.</span> Most common star type. TiO molecular bands are the key identifier. Examples: Proxima Centauri, TRAPPIST-1.</div>
+        <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:17px;letter-spacing:0;text-transform:none;color:#90c0ff;font-weight:normal;border-bottom:1px solid rgba(40,70,130,0.3);padding-bottom:10px;margin-bottom:14px">Seven Kinds of Star</h2>
+        <p style="font-family:Georgia,'Times New Roman',serif;font-style:italic;color:#6080a0;margin-bottom:12px">Oh Be A Fine Girl/Guy, Kiss Me — the mnemonic astronomers have used for over a century.</p>
+        <p>Stars are sorted hottest (O) to coolest (M) by surface temperature. In Act III, use temperature first to narrow to 1–2 classes, then confirm with the spectral description.</p>
+        <div class="tip-box" style="margin-bottom:14px">In Act III you already know temperature, luminosity, and radius — classification should feel like confirmation, not guesswork.</div>
+        <div style="margin:0 0 14px">
+          <div style="display:grid;grid-template-columns:32px 1fr;gap:8px 14px;font-size:15px;line-height:1.8;align-items:baseline">
+            <div style="color:#9bb0ff;font-size:18px;font-weight:bold;font-family:Georgia,serif">O</div><div style="color:#5070a0"><span class="highlight">30,000–50,000 K · Blue-white · Very few, widely-spaced lines.</span> Hottest and rarest. Lethal UV output. Lives only a few million years before exploding.</div>
+            <div style="color:#aabfff;font-size:18px;font-weight:bold;font-family:Georgia,serif">B</div><div style="color:#5070a0"><span class="highlight">10,000–30,000 K · Blue-white · Few lines, some helium.</span> Still extremely hot. Rigel and Regulus are B stars.</div>
+            <div style="color:#cad7ff;font-size:18px;font-weight:bold;font-family:Georgia,serif">A</div><div style="color:#5070a0"><span class="highlight">7,500–10,000 K · White · Bold, evenly-spaced hydrogen lines.</span> Easiest to spot — Balmer series is strongest here. Sirius and Vega are A stars.</div>
+            <div style="color:#f8f7ff;font-size:18px;font-weight:bold;font-family:Georgia,serif">F</div><div style="color:#5070a0"><span class="highlight">6,000–7,500 K · Yellow-white · Hydrogen weakens, calcium and iron appear.</span> Procyon and Polaris are F stars.</div>
+            <div style="color:#fff4ea;font-size:18px;font-weight:bold;font-family:Georgia,serif">G</div><div style="color:#5070a0"><span class="highlight">5,200–6,000 K · Yellow · Rich, dense spectrum across the middle.</span> Our Sun's class. Long-lived and stable. Tau Ceti is a G star.</div>
+            <div style="color:#ffd2a1;font-size:18px;font-weight:bold;font-family:Georgia,serif">K</div><div style="color:#5070a0"><span class="highlight">3,700–5,200 K · Orange · Very dense, molecular bands beginning.</span> Lives even longer than G stars. Epsilon Eridani is a K star.</div>
+            <div style="color:#ffcc6f;font-size:18px;font-weight:bold;font-family:Georgia,serif">M</div><div style="color:#5070a0"><span class="highlight">2,400–3,700 K · Red · Extremely dense — nearly black in the red half.</span> Most common star in the galaxy. TiO bands are the key identifier. Proxima Centauri is an M star.</div>
           </div>
         </div>
-
-        <div class="tip-box amber">The game does <span class="fact">not</span> show temperature ranges on the classification buttons — you must use the data above to decide. Temperature is your fastest shortcut; the spectral description is your confirmation.</div>
+        <div class="tip-box amber">Classification buttons don't show temperature ranges — use the data above. Temperature first, spectral description confirms.</div>
       </div>
 
       <!-- -- TAB: PLANET SURVEY ------------------------------- -->
       <div class="guide-section" id="guide-survey">
-        <h2>Planet Survey</h2>
-        <p>Four instruments scan the candidate planet. Read the numbers and choose a verdict. Labels are hidden until you submit — trust the numbers, not the bars.</p>
-
-        <!-- Quick reference card — the only thing a new player needs -->
+        <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:17px;letter-spacing:0;text-transform:none;color:#90c0ff;font-weight:normal;border-bottom:1px solid rgba(40,70,130,0.3);padding-bottom:10px;margin-bottom:14px">Could Something Live There?</h2>
+        <p style="font-family:Georgia,'Times New Roman',serif;font-style:italic;color:#6080a0;margin-bottom:12px">Four instruments. Four readings. One question.</p>
+        <p>Act II scans the candidate planet. Read the numbers, pick your verdict — labels are hidden until you submit. Trust the numbers.</p>
         <div style="background:rgba(5,20,10,0.6);border:1px solid rgba(40,120,60,0.3);border-radius:6px;padding:12px 14px;margin:10px 0 14px">
-          <div style="font-size:9px;color:#306040;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Quick reference — is the reading in range?</div>
+          <div style="font-size:9px;color:#306040;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Quick reference</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
-            <div style="padding:6px 8px;background:rgba(5,15,8,0.6);border-radius:4px">
-              <div style="color:#50d878;margin-bottom:2px">Pressure</div>
-              <div style="color:#306040">0.3 – 3.0 atm ✓</div>
-            </div>
-            <div style="padding:6px 8px;background:rgba(5,15,8,0.6);border-radius:4px">
-              <div style="color:#50d878;margin-bottom:2px">Temperature</div>
-              <div style="color:#306040">−20°C to +70°C ✓</div>
-            </div>
-            <div style="padding:6px 8px;background:rgba(5,15,8,0.6);border-radius:4px">
-              <div style="color:#50d878;margin-bottom:2px">Magnetic field</div>
-              <div style="color:#306040">≥ 8 μT ✓</div>
-            </div>
-            <div style="padding:6px 8px;background:rgba(5,15,8,0.6);border-radius:4px">
-              <div style="color:#50d878;margin-bottom:2px">Orbital stability</div>
-              <div style="color:#306040">≥ 55 / 100 ✓</div>
-            </div>
+            <div style="padding:6px 8px;background:rgba(5,15,8,0.6);border-radius:4px"><div style="color:#50d878;margin-bottom:2px">Pressure</div><div style="color:#306040">0.3 – 3.0 atm ✓</div></div>
+            <div style="padding:6px 8px;background:rgba(5,15,8,0.6);border-radius:4px"><div style="color:#50d878;margin-bottom:2px">Temperature</div><div style="color:#306040">−20°C to +70°C ✓</div></div>
+            <div style="padding:6px 8px;background:rgba(5,15,8,0.6);border-radius:4px"><div style="color:#50d878;margin-bottom:2px">Magnetic field</div><div style="color:#306040">≥ 8 μT ✓</div></div>
+            <div style="padding:6px 8px;background:rgba(5,15,8,0.6);border-radius:4px"><div style="color:#50d878;margin-bottom:2px">Orbital stability</div><div style="color:#306040">≥ 55 / 100 ✓</div></div>
           </div>
           <div style="font-size:10px;color:#204030;margin-top:10px;line-height:1.7">
-            <span style="color:#50d878">4 in range</span> = Viable &nbsp;·&nbsp;
-            <span style="color:#d0b040">2–3 in range</span> = Marginal &nbsp;·&nbsp;
-            <span style="color:#e06060">0–1 in range</span> = Hostile
+            <span style="color:#50d878">4 in range</span> = Viable &nbsp;·&nbsp; <span style="color:#d0b040">2–3 in range</span> = Marginal &nbsp;·&nbsp; <span style="color:#e06060">0–1 in range</span> = Hostile
           </div>
         </div>
-
-        <div class="tip-box green">That's all you need to play. The details behind each instrument are below if you're curious.</div>
-
-        <!-- Collapsible science detail -->
+        <div class="tip-box green">That's all you need. The science behind each threshold is below.</div>
         <details style="margin-top:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Why these thresholds? (science detail)</summary>
-          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
-            <p><span class="highlight">Pressure (0.3–3.0 atm)</span> — Earth is 1.0 atm. Too thin and water evaporates or freezes. Too thick and you get a crushing greenhouse. Mars is 0.006 atm — far too low.</p>
-            <p style="margin-top:6px"><span class="highlight">Temperature (−20 to +70°C)</span> — liquid water range with a margin for extremophiles. Wider than 0–100°C because some microbes survive at −20°C in brine, and up to +120°C in hydrothermal vents at pressure.</p>
-            <p style="margin-top:6px"><span class="highlight">Magnetic field (≥ 8 μT)</span> — Earth's field is ~50 μT. Without it, stellar wind strips the atmosphere over geological time. Mars lost its field ~4 billion years ago and its atmosphere soon after.</p>
-            <p style="margin-top:6px"><span class="highlight">Orbital stability (≥ 55)</span> — a highly elliptical orbit causes extreme seasonal swings. A planet passing from boiling to frozen each year cannot maintain liquid water long enough for life to take hold.</p>
+          <summary>Why these thresholds? (the real science)</summary>
+          <div>
+            <p><span class="highlight">Pressure (0.3–3.0 atm)</span> — Earth is 1.0 atm. Too thin and water evaporates. Too thick and you get a crushing greenhouse. Mars is 0.006 atm — far too low.</p>
+            <p style="margin-top:8px"><span class="highlight">Temperature (−20 to +70°C)</span> — liquid water range with a margin for extremophiles. Some microbes survive at −20°C in brine and up to +120°C in hydrothermal vents.</p>
+            <p style="margin-top:8px"><span class="highlight">Magnetic field (≥ 8 μT)</span> — without it, stellar wind strips the atmosphere over geological time. Mars lost its field ~4 billion years ago and its atmosphere soon after.</p>
+            <p style="margin-top:8px"><span class="highlight">Orbital stability (≥ 55)</span> — a highly elliptical orbit causes extreme seasonal swings. A planet swinging from boiling to frozen can't maintain liquid water long enough for life.</p>
           </div>
         </details>
       </div>
 
       <!-- -- TAB: BONUS PUZZLES ------------------------------- -->
       <div class="guide-section" id="guide-bonuses">
-        <h2>Bonus Puzzles</h2>
-        <p>Bonus puzzles appear after a correct emission match. They're always <span class="highlight">optional</span> — a Skip button is always available and there's no penalty for skipping. Extra points only.</p>
-
-        <!-- One-line overview of each bonus -->
-        <div style="background:rgba(5,15,40,0.6);border:1px solid rgba(40,70,140,0.3);border-radius:6px;padding:12px 14px;margin:10px 0 14px">
-          <div style="font-size:9px;color:#304070;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Bonus puzzle summary</div>
-          <div style="font-size:11px;color:#4a6080;line-height:2.2">
-            <div><span class="highlight">◈ Doppler</span> (Tier 2+) — is the star moving toward or away from us? Compare two spectrum strips. +75 pts</div>
-            <div><span class="highlight">✦ Element ID</span> (20+ stars) — which element made this emission pattern? Pick from four. +125–500 pts</div>
-            <div><span class="highlight">⬡ Kepler</span> (habitable worlds) — is the planet's orbit in the habitable zone? A calculator guides you through the maths. +100 pts</div>
-            <div><span class="highlight">🌟 Stellar Evolution</span> (40+ stars) — what will this star become when it dies? +150 pts</div>
+        <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:17px;letter-spacing:0;text-transform:none;color:#90c0ff;font-weight:normal;border-bottom:1px solid rgba(40,70,130,0.3);padding-bottom:10px;margin-bottom:14px">Going Deeper</h2>
+        <p style="font-family:Georgia,'Times New Roman',serif;font-style:italic;color:#6080a0;margin-bottom:12px">Every bonus puzzle is optional. Extra points if you try. No penalty if you skip.</p>
+        <div style="background:rgba(5,15,40,0.6);border:1px solid rgba(40,70,140,0.3);border-radius:6px;padding:12px 14px;margin:0 0 14px">
+          <div style="font-size:9px;color:#304070;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">What unlocks and when</div>
+          <div style="font-size:15px;color:#4a6080;line-height:2.4">
+            <div><span class="highlight">◈ Doppler</span> — is this star moving toward or away from us? +75 pts · Tier 2+</div>
+            <div><span class="highlight">✦ Element ID</span> — which element made this emission pattern? +125–500 pts · 20+ stars</div>
+            <div><span class="highlight">⬡ Kepler</span> — is the planet's orbit in the habitable zone? +100 pts · habitable worlds</div>
+            <div><span class="highlight">🌟 Stellar Evolution</span> — what will this star become? +150 pts · 40+ stars</div>
           </div>
         </div>
-
-        <div class="tip-box green">You don't need to understand these puzzles to play the main game. Just hit Skip and come back to this guide when you're ready to try one.</div>
-
-        <!-- Doppler detail -->
+        <div class="tip-box green">Hit Skip anytime — come back here when you're ready to try one.</div>
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">How Doppler shift works</summary>
-          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
-            <p>When a star moves toward Earth its light waves compress — all its spectral lines shift slightly left (toward shorter/bluer wavelengths). Moving away stretches the waves — lines shift right (longer/redder). The puzzle shows two strips: the observed spectrum and a reference. Find the same distinctive line in both and check which direction it moved.</p>
-            <div class="tip-box" style="margin-top:8px">Easiest line to track: hydrogen H-alpha at 656nm (the rightmost prominent line). If it appears slightly left of its reference position, the star is approaching. Slightly right — receding.</div>
+          <summary>Doppler shift — is it moving?</summary>
+          <div>
+            <p>When a star moves toward us its light waves compress — spectral lines shift left (bluer). Moving away stretches them right (redder). Find the same line in both strips and check which direction it moved.</p>
+            <div class="tip-box" style="margin-top:10px">Easiest line: H-alpha at 656nm — rightmost prominent line. Left of reference = approaching. Right = receding.</div>
           </div>
         </details>
-
-        <!-- Kepler detail -->
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">How the Kepler puzzle works</summary>
-          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
-            <p>The formula is <span class="highlight">a = ∛(T² × M)</span> where T is the planet's orbital period in years, M is the stellar mass, and a is the distance from the star in AU. The in-game calculator walks you through all three steps — just enter your answer in the input field.</p>
-            <div class="tip-box green" style="margin-top:8px">Worked example: T=1yr, M=1 → 1² × 1 = 1 → ∛1 = <span class="good">1.0 AU</span> — Earth's orbit. Inside the Sun's habitable zone (0.95–1.37 AU). ✓</div>
-            <p style="margin-top:8px;font-size:10px;color:#3a5060">The in-game calculator automatically fills in Steps 1 and 2 for your first 10 correct answers, then progressively removes scaffolding — after 10 correct it leaves only Step 1 pre-filled, and after 20 correct all steps are blank. This is intentional: the goal is for you to eventually work through the formula independently.</p>
+          <summary>Kepler's Law — where does this planet orbit?</summary>
+          <div>
+            <p>Formula: <span class="highlight">a = ∛(T² × M)</span> — T = orbital period in years, M = stellar mass, a = distance in AU. The in-game calculator walks you through all three steps.</p>
+            <div class="tip-box green" style="margin-top:10px">Example: T=1yr, M=1 → 1² × 1 = 1 → ∛1 = <span class="good">1.0 AU</span> — Earth's orbit. ✓</div>
           </div>
         </details>
-
-        <!-- Element ID detail -->
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">How element identification works</summary>
-          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
-            <p>Each element emits light at specific wavelengths — its spectral fingerprint. The puzzle shows an emission pattern and asks which element produced it. Early on, the four answer choices each show their own emission strip so you can compare visually. After 5 correct answers the strips disappear — you'll need to recall the patterns from memory or use the 📖 Glossary's Element Spectra tab.</p>
+          <summary>Element ID — read the emission fingerprint</summary>
+          <div>
+            <p>Each element emits at specific wavelengths — its fingerprint. The puzzle shows an emission pattern and asks which element produced it. Early on, four answer strips help you compare. After 5 correct the strips disappear — you're recalling from memory. The 🔬 Spectra Reference button in the puzzle gives you a lifeline for your first 10 correct answers.</p>
           </div>
         </details>
-
-        <!-- Stellar Evolution detail -->
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">How stellar evolution works</summary>
-          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
-            <p>A star's mass determines its entire life and death. The puzzle gives you the star's mass in solar masses (M☉) and asks what it will eventually become:</p>
-            <ul style="margin:6px 0 0 16px;line-height:2">
-              <li>Below 0.5 M☉ → <span class="highlight">Black Dwarf</span> (fades out slowly)</li>
-              <li>0.5–8 M☉ → <span class="highlight">White Dwarf</span> (our Sun's fate)</li>
-              <li>8–20 M☉ → <span class="highlight">Neutron Star</span> (supernova remnant)</li>
-              <li>Above 20 M☉ → <span class="highlight">Black Hole</span> (complete collapse)</li>
+          <summary>Stellar evolution — what will this star become?</summary>
+          <div>
+            <ul style="margin:6px 0 0 16px;line-height:2.2;font-size:15px">
+              <li>Below 0.5 M☉ → <span class="highlight">Black Dwarf</span></li>
+              <li>0.5 – 8 M☉ → <span class="highlight">White Dwarf</span> (our Sun's fate)</li>
+              <li>8 – 20 M☉ → <span class="highlight">Neutron Star</span></li>
+              <li>Above 20 M☉ → <span class="highlight">Black Hole</span></li>
             </ul>
           </div>
         </details>
-
-        <!-- Electron Configuration detail -->
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Electron configuration (appears after correct Element ID)</summary>
-          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
-            <p>After correctly identifying an element, a follow-up question asks you to identify its ground-state electron configuration. This closes the loop between the spectrum you matched visually and the atomic physics that produced it.</p>
-            <p>The valence electrons — the outermost shell — are what produce the emission lines you see. When a photon from the star excites one of those electrons to a higher energy level, the specific wavelength emitted as it falls back is exactly the line you matched.</p>
-            <p>Three difficulty tiers: choose the correct config from four options (0–4 correct) → only valence shell shown (5–9 correct) → all steps blank (10+ correct). The <span class="highlight">⚛️ Configurations</span> tab in the 📖 Glossary is a full reference for all 86 elements.</p>
-            <details style="margin-top:10px">
-              <summary style="cursor:pointer;font-size:10px;color:#6090c0;padding:6px 0;letter-spacing:1px">How to work out any configuration yourself</summary>
-              <div style="margin-top:8px;font-size:11px;color:#4a6080;line-height:1.9">
-                <p>Two steps: (1) count the electrons — equal to the atomic number. (2) Fill subshells in order: <span class="highlight">1s → 2s → 2p → 3s → 3p → 4s → 3d → 4p → 5s → 4d → 5p → 6s → 4f → 5d → 6p</span>. Stop when you've placed all electrons. Capacities: s=2, p=6, d=10, f=14.</p>
-                <p style="margin-top:6px"><strong style="color:#8090c0">Example 1 — Hydrogen (H), atomic number 1:</strong><br>1 electron → fills 1s partially → <span class="highlight">1s¹</span></p>
-                <p style="margin-top:6px"><strong style="color:#8090c0">Example 2 — Sodium (Na), atomic number 11:</strong><br>11 electrons → 1s²(2) + 2s²(4) + 2p⁶(10) + one left → 3s¹ → <span class="highlight">[Ne] 3s¹</span><br>Since 1s²2s²2p⁶ = neon's core, we write [Ne] as shorthand.</p>
-                <p style="margin-top:6px"><strong style="color:#8090c0">Example 3 — Iron (Fe), atomic number 26:</strong><br>26 electrons → [Ar]=18 → 4s²(20) → 3d⁶(26) → <span class="highlight">[Ar] 3d⁶ 4s²</span><br>Note: 4s fills before 3d (energy rule), but 3d is written first by convention.</p>
-                <div class="tip-box" style="margin-top:8px">Exceptions to memorise: Chromium is [Ar] 3d⁵ 4s¹ (not 3d⁴ 4s²) and Copper is [Ar] 3d¹⁰ 4s¹ (not 3d⁹ 4s²) — half-filled and fully-filled d subshells are energetically favourable.</div>
-              </div>
-            </details>
+          <summary>Electron configuration — what's inside that atom?</summary>
+          <div>
+            <p>After a correct element ID, a follow-up asks for the ground-state electron configuration. The valence electrons — outermost shell — are exactly what produced the spectral lines you matched. Three difficulty tiers unlock automatically. The ⚛️ Configurations tab in 🔭 Glossary has every element's full config.</p>
           </div>
         </details>
-
-        <!-- Survey Sprint detail -->
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Survey Sprint — timed challenge mode</summary>
-          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
-            <p>Survey Sprint is an optional timed mode accessible from the <span class="highlight">⬡ Sector Jump</span> screen. Classify 10 stars correctly within 10 minutes. An orange timer bar appears in the HUD showing time remaining.</p>
-            <p>A speed bonus of up to +1,000 points is awarded on completion — the faster you finish, the more points. The sprint counts correct emission matches only; other puzzle types continue normally. Hit <span class="highlight">Quit</span> on the timer bar to end early without penalty.</p>
-          </div>
-        </details>
-
-        <!-- Mystery Objects detail -->
-        <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Mystery objects — anomalous classifications</summary>
-          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
-            <p>Every 8–14 stars, you may encounter an object that doesn't fit any OBAFGKM class. These appear with a coloured badge and distinctive prefix:</p>
-            <ul style="margin:6px 0 0 16px;line-height:2">
-              <li><span class="highlight">BD prefix</span> — Brown Dwarf. Too cool for hydrogen fusion. Classify as Anomalous.</li>
-              <li><span class="highlight">TT prefix</span> — T Tauri star. Pre-main-sequence protostar still forming. Classify as Anomalous.</li>
-              <li><span class="highlight">WD prefix</span> — Polluted White Dwarf. Heavy metal lines that shouldn't exist at this temperature. Classify as Anomalous.</li>
+          <summary>Mystery objects — when the rules break down</summary>
+          <div>
+            <p>Every 8–14 stars you may find something that doesn't fit OBAFGKM. An <span class="highlight">? Anomalous Object</span> button appears in Act III. Noticing the rules don't apply — and naming it correctly — is exactly what real scientists do. +175 pts.</p>
+            <ul style="margin:8px 0 0 16px;line-height:2.2;font-size:15px">
+              <li><span class="highlight">BD</span> — Brown Dwarf. Too cool for hydrogen fusion.</li>
+              <li><span class="highlight">TT</span> — T Tauri star. Still forming.</li>
+              <li><span class="highlight">WD</span> — Polluted White Dwarf. Heavy metal lines at the wrong temperature.</li>
             </ul>
-            <p>In Act III, an <span class="highlight">? Anomalous Object</span> button appears alongside the normal OBAFGKM choices. Selecting it correctly awards +175 pts. The explanation shown is real astrophysics — these objects genuinely don't fit the classification system, and noticing that is what real scientists do.</p>
           </div>
         </details>
-
-        <!-- Special Events detail -->
         <details>
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Special events — variable stars, flares, binaries</summary>
-          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
-            <p>Every 6–9 correct scans, a special event star appears. You'll hear a three-note chime and see a coloured badge below the star name with a science explanation. Three event types:</p>
-            <ul style="margin:6px 0 0 16px;line-height:2">
-              <li><span class="highlight">🔮 Variable Star</span> — a pulsating star whose brightness varies cyclically. The puzzle mechanic is identical — classify from the line pattern. The event note explains the science of Cepheid and RR Lyrae variables.</li>
-              <li><span class="highlight">☀️ Stellar Flare</span> — an energetic magnetic reconnection event on an M-dwarf, causing anomalous blue brightening. The science note explains why flares matter for planetary habitability.</li>
-              <li><span class="highlight">⚡ Spectroscopic Binary</span> — two stars in a close orbit producing a composite spectrum. The science note explains how binary stars are detected from Doppler line splitting.</li>
+          <summary>Special events — variable stars, flares, binaries</summary>
+          <div>
+            <p>Every 6–9 scans, a special event star appears with a chime and coloured badge. The puzzle is identical — classify from the spectrum. The badge adds science context.</p>
+            <ul style="margin:8px 0 0 16px;line-height:2.2;font-size:15px">
+              <li><span class="highlight">🔮 Variable Star</span> — brightness varies cyclically.</li>
+              <li><span class="highlight">☀️ Stellar Flare</span> — magnetic reconnection event.</li>
+              <li><span class="highlight">⚡ Spectroscopic Binary</span> — composite spectrum from two stars.</li>
             </ul>
-            <p>Special events don't change how you play Act I — they add context and science. The mission lore below the star name is grounded in real observational astronomy.</p>
           </div>
         </details>
       </div>
 
-      <!-- -- TAB: HOW TO PLAY --------------------------------- -->
+            <!-- -- TAB: HOW TO PLAY --------------------------------- -->
       <div class="guide-section" id="guide-howto">
         <h2>How to Play</h2>
 
@@ -1819,7 +1756,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
           <ul style="font-size:11px;color:#5070a0;line-height:2;margin:10px 0 4px 20px">
             <li><span class="good">Colony 1</span> — Sector Jump unlocked</li>
             <li><span class="good">Colony 3</span> — Telescope Deep Scan (50 cr/scan)</li>
-            <li><span class="good">20 discoveries</span> — Element ID mandatory · Tier B active</li>
+            <li><span class="good">10 discoveries</span> — Element ID mandatory · Tier B active</li>
             <li><span class="good">40 discoveries</span> — Stellar Evolution puzzles · Element ID Tier C</li>
             <li><span class="good">All 6 sectors visited</span> — Tier IV sectors unlock</li>
           </ul>
@@ -2094,32 +2031,34 @@ const SECTORS=[
   },
   {
     id:'habitable',name:'Habitable Belt',
-    desc:'A quiet stellar backwater rich in long-lived G and K stars. Prime colonization territory.',
+    desc:'A quiet stellar backwater rich in long-lived G and K stars. Prime colonization territory — but not exclusively.',
     diff:'★★☆',tags:['warm','cool'],
-    tier:1,  // absorption only
-    bias:{O:1,B:1,A:2,F:3,G:7,K:6,M:3},
+    tier:1,
+    bias:{O:1,B:2,A:3,F:4,G:6,K:5,M:2},
     starCount:35,
     bgTint:'rgba(10,40,20,0.3)',
     realStars:[
-      {name:'HD 40307',cls:'G'},{name:'Mu Arae',cls:'G'},{name:'55 Cancri',cls:'G'},
-      {name:'Tau Ceti',cls:'G'},{name:'82 Eridani',cls:'G'},{name:'HD 189733',cls:'K'},
-      {name:'Kepler-442',cls:'K'},{name:'Kepler-62',cls:'K'},{name:'Gliese 667C',cls:'K'},
-      {name:'HD 85512',cls:'K'},{name:'Gliese 832',cls:'M'},{name:'Kepler-186',cls:'M'},
+      // Mix in hot stars early so players see variety
+      {name:'Alpha Centauri A',cls:'G'},{name:'Tau Ceti',cls:'G'},{name:'55 Cancri',cls:'G'},
+      {name:'HD 189733',cls:'K'},{name:'Kepler-442',cls:'K'},{name:'Kepler-62',cls:'K'},
+      {name:'Sirius',cls:'A'},{name:'Procyon',cls:'F'},{name:'Achernar',cls:'B'},
+      {name:'Gliese 667C',cls:'K'},{name:'Gliese 832',cls:'M'},{name:'Kepler-186',cls:'M'},
     ]
   },
   {
     id:'redfield',name:'Red Dwarf Field',
-    desc:'Vast expanse of dim M-type red dwarfs. Numerous but faint — bring a good spectrometer.',
+    desc:'Vast expanse of dim M-type red dwarfs — but a few hot intruders have wandered in.',
     diff:'★★☆',tags:['cool'],
-    tier:2,  // emission vs absorption mix
-    bias:{O:0,B:0,A:1,F:1,G:2,K:3,M:10},
+    tier:2,
+    bias:{O:1,B:1,A:2,F:2,G:2,K:3,M:8},
     starCount:40,
     bgTint:'rgba(40,10,10,0.3)',
     realStars:[
       {name:'Proxima Centauri',cls:'M'},{name:"Barnard's Star",cls:'M'},{name:'Wolf 359',cls:'M'},
-      {name:'Ross 128',cls:'M'},{name:'Betelgeuse',cls:'M'},{name:'Antares',cls:'M'},
-      {name:'TRAPPIST-1',cls:'M'},{name:'Teegarden\'s Star',cls:'M'},{name:'Gliese 667C',cls:'M'},
-      {name:'YZ Ceti',cls:'M'},{name:'Luyten b',cls:'M'},{name:'Ross 154',cls:'M'},
+      {name:'TRAPPIST-1',cls:'M'},{name:'Teegarden\'s Star',cls:'M'},{name:'YZ Ceti',cls:'M'},
+      // Intruders — visually striking variety when players find them
+      {name:'Vega',cls:'A'},{name:'Regulus',cls:'B'},{name:'Polaris',cls:'F'},
+      {name:'Epsilon Eridani',cls:'K'},{name:'Luyten b',cls:'M'},{name:'Ross 154',cls:'M'},
     ]
   },
   {
@@ -2254,6 +2193,38 @@ const CIV_OPTIONS=[
 const PLANET_SUFFIXES=['b','c','d','e','f'];
 const PROC_PREFIXES=['Gliese','HD','HIP','LHS','GJ','TOI','KOI','WDS','HZ'];
 
+// Large pool of real named stars used for procedural star generation
+// When a sector runs out of its curated realStars list, it draws from this pool
+const REAL_STAR_NAMES_POOL = [
+  // Famous named stars
+  'Aldebaran','Arcturus','Capella','Rigel','Procyon','Achernar','Betelgeuse','Hadar',
+  'Acrux','Altair','Aldebaran','Antares','Spica','Pollux','Fomalhaut','Deneb',
+  'Mimosa','Regulus','Adhara','Castor','Shaula','Gacrux','Bellatrix','Elnath',
+  'Miaplacidus','Alnilam','Regor','Alioth','Kaus Australis','Mirfak','Dubhe',
+  'Wezen','Sargas','Kappa Velorum','Avior','Alkaid','Menkalinan','Atria','Alhena',
+  'Peacock','Alsephina','Mirzam','Alphard','Polaris','Hamal','Diphda','Nunki',
+  'Mira','Saiph','Alpheratz','Tiaki','Ankaa','Gienah','Sabik','Phecda',
+  'Aludra','Markeb','Navi','Markab','Aljanah','Acrab','Lesath','Alnitak',
+  'Mintaka','Alnair','Alderamin','Algol','Rasalhague','Kochab','Zubenelgenubi',
+  'Thuban','Phact','Alchiba','Dschubba','Caph','Ruchbah','Segin','Izar',
+  'Merope','Alcyone','Pleione','Atlas','Electra','Maia','Taygeta','Celaeno',
+  'Sterope','Asterope','Eta Tauri','36 Ophiuchi','70 Ophiuchi','61 Virginis',
+  'HD 10700','HD 20794','HD 85390','HD 40307','HD 192310','HD 215497',
+  'Gliese 436','Gliese 581','Gliese 667','Gliese 876','Gliese 1214',
+  '55 Cancri','47 Ursae Majoris','Mu Arae','Upsilon Andromedae','Tau Bootis',
+  '51 Pegasi','16 Cygni','Rho Coronae Borealis','14 Herculis','Kappa Coronae',
+  'Iota Draconis','Gamma Cephei','Beta Pictoris','Fomalhaut b host','Vega',
+  'Altair','Sirius A','Regulus A','Spica A','Achernar A','Mimosa','Acrux A',
+  'Sigma Octantis','BPM 31594','L 726-8','VB 10','Van Maanen\'s Star',
+  'Kapteyn\'s Star','Lacaille 8760','Lacaille 9352','Ross 248','Ross 154',
+  'EZ Aquarii','61 Cygni A','Struve 2398','Groombridge 34','DX Cancri',
+  'HH Andromedae','YZ Ceti','Luyten\'s Star','Teegarden\'s Star','SCR 1845',
+  'Ankaa','Fomalhaut','Scheat','Markab Alpha Pegasi','Homam','Matar','Sadalbari',
+  'Sadachbia','Sadalsuud','Sadalmelik','Nashira','Deneb Algedi','Albali',
+  'Ancha','Situla','Skat','Hydor','Baten Kaitos','Mira Ceti','Omicron Ceti',
+];
+let _starNameIdx = Math.floor(Math.random() * REAL_STAR_NAMES_POOL.length);
+
 /* ================================================================
    GAME STATE
 ================================================================ */
@@ -2355,9 +2326,28 @@ function generateSectorStars(sectorId){
     if(i<realList.length){
       name=realList[i].name; clsType=realList[i].cls;
     } else {
-      clsType=pool[Math.floor(Math.random()*pool.length)];
-      const pre=PROC_PREFIXES[Math.floor(Math.random()*PROC_PREFIXES.length)];
-      name=`${pre}-${100+Math.floor(Math.random()*9900)}`;
+      let attempts = 0;
+      do {
+        clsType = pool[Math.floor(Math.random()*pool.length)];
+        attempts++;
+      } while(attempts < 5 && stars.length >= 2 &&
+              stars[stars.length-1].cls.type === clsType &&
+              stars[stars.length-2].cls.type === clsType);
+      // Use real star names from the pool, cycling through
+      _starNameIdx = (_starNameIdx + 1) % REAL_STAR_NAMES_POOL.length;
+      name = REAL_STAR_NAMES_POOL[_starNameIdx];
+      // If this name is already used, try nearby names
+      let attempts2 = 0;
+      while(used.has(name) && attempts2 < 20){
+        _starNameIdx = (_starNameIdx + 1) % REAL_STAR_NAMES_POOL.length;
+        name = REAL_STAR_NAMES_POOL[_starNameIdx];
+        attempts2++;
+      }
+      // Final fallback to HD-style if exhausted
+      if(used.has(name)){
+        const pre=PROC_PREFIXES[Math.floor(Math.random()*PROC_PREFIXES.length)];
+        name=`${pre}-${100+Math.floor(Math.random()*9900)}`;
+      }
     }
     if(used.has(name)) name+=' '+(i%26+10).toString(36).toUpperCase();
     used.add(name);
@@ -2365,6 +2355,10 @@ function generateSectorStars(sectorId){
     const cls=STELLAR_CLASSES.find(c=>c.type===clsType)||STELLAR_CLASSES[4];
     const sizeMap={O:5,B:4,A:3.2,F:2.8,G:2.5,K:2.2,M:1.8};
     const size=(sizeMap[cls.type]||2.5)+Math.random()*1.2;
+
+    // Last star in each sector is telescope-required — hidden from the map
+    // until the player uses the telescope. Forces telescope use for completion.
+    const isTelescopeRequired = (i === total - 1);
 
     // Assign specMode based on sector tier
     // Tier 1 → 80% absorption, 20% emission (gentle introduction)
@@ -2402,7 +2396,10 @@ function generateSectorStars(sectorId){
       secondaryCls,
       discovered:false,
       pulseT:Math.random()*Math.PI*2,
-      sectorId
+      sectorId,
+      // Last star requires telescope — hidden from map until telescope finds it
+      telescopeRequired: isTelescopeRequired,
+      telescope: isTelescopeRequired, // treated as telescope star (not counted in regular scan)
     });
   }
 
@@ -2438,7 +2435,16 @@ function loadSector(sectorId){
 }
 
 function _doLoadSector(sectorId){
+  // Score gate — entering Heliopause with less than 7,000 pts triggers reassignment
+  if(sectorId === 'heliopause' && (state.score || 0) < 7000 && !state._scoreGatePassed){
+    state._scoreGatePassed = false; // can retry
+    showScoreGate();
+    return;
+  }
+  if(sectorId === 'heliopause') state._scoreGatePassed = true;
+
   state.currentSectorId=sectorId;
+  state._scopeHintShown = false; // reset telescope hint for new sector
   state.selected=null;
   document.getElementById('scan-btn').disabled=true;
   document.getElementById('info-bar').innerHTML='Click a star to target it — then SCAN<br><span style="font-size:9px;color:#253550">Drag to pan the galaxy map</span>';
@@ -2999,7 +3005,7 @@ function confirmAct1(){
   let pts = correct ? (basePoints + state.streak*20) : -15;
   if(correct&&!star.discovered){pts+=50;state.found++;star.discovered=true;
     checkUnlocks(state.colonies);
-    if(state.found === 20) showUnlockToast('🔬 Element Analysis now required for all scans');
+    if(state.found === 10) showUnlockToast('🔬 Element Analysis now required for all scans');
     if(state.found === 60) showUnlockToast('🌟 Stellar Evolution puzzles now available after classification');
     // First discovery in this sector — play radar sweep
     const sectorDiscoveries = (state.sectorStars[state.currentSectorId]||[]).filter(s=>s.discovered).length;
@@ -3024,7 +3030,7 @@ function confirmAct1(){
   const hab=cls.habIdx;
   const f1=document.getElementById('hab-fill-1');
   f1.style.width=hab+'%';
-  f1.style.background=hab>70?'#38c060':hab>40?'#88c030':hab>20?'#d09020':'#c03020';
+  f1.style.background='rgba(60,100,180,0.6)'; // neutral — don't reveal answer
   const v1=document.getElementById('hab-verdict-1');
   if(hab>70){v1.textContent=t('hab_high');v1.style.color='#50d878';}
   else if(hab>40){v1.textContent=t('hab_mod');v1.style.color='#b8d030';}
@@ -3066,7 +3072,7 @@ function confirmAct1(){
 
     // Element ID is mandatory at 20+ total discoveries (any sector)
     // Below 20 it's only offered in Tier 4 sectors (optional)
-    const elementMandatory = state.found >= 20 && star.cls.keyElement;
+    const elementMandatory = state.found >= 10 && star.cls.keyElement;
     const elementOptional  = !elementMandatory && tier >= 4 && star.cls.keyElement;
     const needsElement     = elementMandatory || elementOptional;
 
@@ -3274,7 +3280,7 @@ function confirmAct3(){
   const hab=star.cls.habIdx;
   const f3=document.getElementById('hab-fill-3');
   f3.style.width=hab+'%';
-  f3.style.background=hab>70?'#38c060':hab>40?'#88c030':hab>20?'#d09020':'#c03020';
+  f3.style.background='rgba(60,100,180,0.6)'; // neutral
   const v3=document.getElementById('hab-verdict-3');
   if(hab>70){v3.textContent=t('hab3_confirmed');v3.style.color='#50d878';}
   else if(hab>40){v3.textContent=t('hab3_marginal');v3.style.color='#b8d030';}
@@ -3307,7 +3313,13 @@ function confirmAct3(){
 
     if(isHeliopause && state.researchUnlocked){
       const afterHelio = chain;
-      chain = ()=>openHeliopauseBonuses(star, afterHelio);
+      // Safety: only chain if all three panels exist in DOM
+      const panelsExist = document.getElementById('lithium-panel') &&
+                          document.getElementById('radvel-panel') &&
+                          document.getElementById('ism-panel');
+      if(panelsExist){
+        chain = ()=>openHeliopauseBonuses(star, afterHelio);
+      }
     }
 
     if(needsEvolution){
@@ -3353,6 +3365,10 @@ function openAct4(star){
       if(raw.bonusScan)    state._nextScanDoppler = true;
       updateHUD(); checkUnlocks(prev);
       state.chosenCivOption = {...opt, bonus: raw.bonus};
+      // Track military choices for the hidden pacifist reward
+      if(raw.isMilitary){
+        state._militaryChoices = (state._militaryChoices || 0) + 1;
+      }
       document.getElementById('civ-result').textContent=`${opt.icon}  ${raw.result}  (+${raw.bonus} pts, +${raw.credits||30} cr)`;
       grid.querySelectorAll('.civ-btn').forEach(b=>b.disabled=true);
       if(state.log[0]) state.log[0].colony=true;
@@ -3753,82 +3769,206 @@ function executeTelescope(){
   // Play reveal sound
   playTelescopeRevealSound();
 
-  // Dramatic acquisition sequence in the scope view
+  // ── PRISM ANIMATION — white light → prism → rainbow → spectrum ──
   const canvas=document.getElementById('scope-canvas');
   const ctx=canvas.getContext('2d');
   const W=520, H=200;
-  let phase=0;
 
-  if(scopeAnim)cancelAnimationFrame(scopeAnim);
+  if(scopeAnim) cancelAnimationFrame(scopeAnim);
 
-  // Acquisition flash sequence — 3 phases over ~2 seconds
-  const acqStart = performance.now();
-  function acqFrame(t){
-    const el = t - acqStart;
-    ctx.fillStyle='#010208'; ctx.fillRect(0,0,W,H);
+  const animStart = performance.now();
+  const PRISM_PHASE   = 800;   // white beam travels to prism
+  const RAINBOW_PHASE = 1600;  // rainbow fans out from prism
+  const SCAN_PHASE    = 2400;  // spectrum fades in on the observation box
+  const ACQUIRE_PHASE = 3200;  // target acquired display
+  const TOTAL_PHASE   = 4000;  // done
 
-    if(el < 600){
-      // Phase 1: rapid static flicker
-      for(let i=0;i<60;i++){
-        ctx.fillStyle=`rgba(200,180,100,${Math.random()*0.4})`;
-        ctx.fillRect(Math.random()*W,Math.random()*H,2,1);
-      }
-      ctx.fillStyle='rgba(200,130,40,0.08)';
-      ctx.fillRect(0,(el*0.5)%H,W,3);
-    } else if(el < 1200){
-      // Phase 2: target lock — crosshair zeroing in
-      const progress = (el-600)/600;
-      const cx=W*0.5, cy=H*0.5;
-      const size=80*(1-progress)+20;
-      ctx.strokeStyle=`rgba(200,130,40,${0.3+progress*0.5})`;
-      ctx.lineWidth=1;
-      ctx.beginPath(); ctx.moveTo(cx-size,cy); ctx.lineTo(cx+size,cy); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(cx,cy-size); ctx.lineTo(cx,cy+size); ctx.stroke();
-      ctx.beginPath(); ctx.arc(cx,cy,size*0.8,0,Math.PI*2); ctx.stroke();
-      ctx.fillStyle=`rgba(${cls.color.slice(1,3)?parseInt(cls.color.slice(1,3),16):255},200,100,${progress*0.6})`;
-      ctx.beginPath(); ctx.arc(cx,cy,size*0.1+3,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='rgba(200,130,40,0.7)';
-      ctx.font='9px monospace'; ctx.textAlign='center';
-      ctx.fillText('ACQUIRING TARGET...', cx, cy-size-8);
-    } else {
-      // Phase 3: target acquired — show star name
-      const cx=W*0.5, cy=H*0.5;
-      ctx.strokeStyle='rgba(200,220,100,0.8)';
-      ctx.lineWidth=1.5;
-      ctx.beginPath(); ctx.moveTo(cx-25,cy); ctx.lineTo(cx-8,cy); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(cx+8,cy);  ctx.lineTo(cx+25,cy); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(cx,cy-25); ctx.lineTo(cx,cy-8); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(cx,cy+8);  ctx.lineTo(cx,cy+25); ctx.stroke();
+  // Prism geometry — centred left of canvas
+  const PX = W*0.38, PY = H*0.5;  // prism tip (right vertex)
+  const BEAM_START_X = 20;         // white beam enters from left
+
+  // Rainbow colours & angles fanning right from prism tip
+  const RAINBOW = [
+    {c:'rgba(140,0,220,0.85)',  a:-22},
+    {c:'rgba(80,0,255,0.85)',   a:-16},
+    {c:'rgba(0,100,255,0.85)',  a:-10},
+    {c:'rgba(0,200,100,0.85)', a:-4},
+    {c:'rgba(200,220,0,0.85)', a:4},
+    {c:'rgba(255,160,0,0.85)', a:10},
+    {c:'rgba(255,0,0,0.85)',    a:18},
+  ];
+
+  function drawPrism(ctx, alpha){
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    // Prism triangle
+    ctx.beginPath();
+    ctx.moveTo(W*0.18, H*0.18);  // top-left
+    ctx.lineTo(W*0.18, H*0.82);  // bottom-left
+    ctx.lineTo(PX, PY);          // right tip
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(180,220,255,0.8)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    // Glass fill
+    ctx.globalAlpha = alpha * 0.12;
+    ctx.fillStyle = 'rgba(160,210,255,1)';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function acqFrame(now){
+    const el = now - animStart;
+    ctx.fillStyle = '#010208';
+    ctx.fillRect(0,0,W,H);
+
+    if(el < PRISM_PHASE){
+      // Phase 1: white beam travels from left to prism
+      const prog = el / PRISM_PHASE;
+      const beamEndX = BEAM_START_X + (PX - BEAM_START_X) * prog;
+      const gradient = ctx.createLinearGradient(BEAM_START_X, H*0.5, beamEndX, H*0.5);
+      gradient.addColorStop(0, 'rgba(255,255,255,0)');
+      gradient.addColorStop(0.3, 'rgba(255,255,255,0.9)');
+      gradient.addColorStop(1, 'rgba(255,255,255,0.95)');
+      ctx.beginPath();
+      ctx.moveTo(BEAM_START_X, H*0.5 - 4);
+      ctx.lineTo(beamEndX,     H*0.5 - 4);
+      ctx.lineTo(beamEndX,     H*0.5 + 4);
+      ctx.lineTo(BEAM_START_X, H*0.5 + 4);
+      ctx.fillStyle = gradient; ctx.fill();
+      // Glow on beam
+      const glowG = ctx.createLinearGradient(BEAM_START_X, H*0.5, beamEndX, H*0.5);
+      glowG.addColorStop(0,'rgba(255,255,255,0)');
+      glowG.addColorStop(1,'rgba(255,255,255,0.3)');
+      ctx.beginPath();
+      ctx.moveTo(BEAM_START_X, H*0.5 - 10);
+      ctx.lineTo(beamEndX,     H*0.5 - 10);
+      ctx.lineTo(beamEndX,     H*0.5 + 10);
+      ctx.lineTo(BEAM_START_X, H*0.5 + 10);
+      ctx.fillStyle = glowG; ctx.fill();
+      // Label
+      ctx.fillStyle = 'rgba(180,200,255,0.5)';
+      ctx.font = '8px Share Tech Mono'; ctx.textAlign = 'left';
+      ctx.fillText('WHITE LIGHT', BEAM_START_X + 4, H*0.5 - 14);
+      drawPrism(ctx, 0.3 + prog * 0.7);
+
+    } else if(el < RAINBOW_PHASE){
+      // Phase 2: rainbow fans out from prism tip to right
+      const prog = (el - PRISM_PHASE) / (RAINBOW_PHASE - PRISM_PHASE);
+      // Keep white beam
+      const inGrad = ctx.createLinearGradient(BEAM_START_X, H*0.5, PX, H*0.5);
+      inGrad.addColorStop(0,'rgba(255,255,255,0.6)');
+      inGrad.addColorStop(1,'rgba(255,255,255,0.9)');
+      ctx.beginPath();
+      ctx.moveTo(BEAM_START_X, H*0.5-3); ctx.lineTo(PX, H*0.5-3);
+      ctx.lineTo(PX, H*0.5+3); ctx.lineTo(BEAM_START_X, H*0.5+3);
+      ctx.fillStyle = inGrad; ctx.fill();
+      // Rainbow beams growing from prism tip
+      const beamLen = (W - PX - 20) * prog;
+      RAINBOW.forEach((rb,i) => {
+        const ang = (rb.a * Math.PI) / 180;
+        const ex = PX + Math.cos(ang) * beamLen;
+        const ey = PY + Math.sin(ang) * beamLen;
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(PX, PY);
+        ctx.lineTo(ex, ey);
+        ctx.strokeStyle = rb.c.replace('0.85', String(0.5 + prog*0.45));
+        ctx.lineWidth = 2.5;
+        ctx.shadowColor = rb.c;
+        ctx.shadowBlur = 6;
+        ctx.stroke();
+        ctx.restore();
+      });
+      drawPrism(ctx, 1.0);
+      // Label
+      ctx.fillStyle = 'rgba(180,200,255,0.6)';
+      ctx.font = '8px Share Tech Mono'; ctx.textAlign = 'center';
+      ctx.fillText('DISPERSION — spectral separation', W*0.65, 14);
+
+    } else if(el < SCAN_PHASE){
+      // Phase 3: spectrum fades into the observation box on the right
+      const prog = (el - RAINBOW_PHASE) / (SCAN_PHASE - RAINBOW_PHASE);
+      // Faded prism + rainbow
+      drawPrism(ctx, 0.6);
+      RAINBOW.forEach((rb,i) => {
+        const ang = (rb.a * Math.PI) / 180;
+        const beamLen = (W - PX - 20);
+        const ex = PX + Math.cos(ang) * beamLen;
+        const ey = PY + Math.sin(ang) * beamLen;
+        ctx.save();
+        ctx.beginPath(); ctx.moveTo(PX,PY); ctx.lineTo(ex,ey);
+        ctx.strokeStyle = rb.c.replace('0.85','0.35');
+        ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore();
+      });
+      // Observation box fading in
+      const boxX = W * 0.74, boxY = H * 0.25, boxW = W * 0.22, boxH = H * 0.5;
+      ctx.save();
+      ctx.globalAlpha = prog;
+      // Box frame
+      ctx.strokeStyle = 'rgba(100,160,255,0.7)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(boxX, boxY, boxW, boxH);
+      ctx.fillStyle = '#030408';
+      ctx.fillRect(boxX+1, boxY+1, boxW-2, boxH-2);
+      // Spectrum bars inside the box
+      const specGrad = ctx.createLinearGradient(boxX, 0, boxX+boxW, 0);
+      specGrad.addColorStop(0,    'rgba(140,0,220,0.9)');
+      specGrad.addColorStop(0.15, 'rgba(80,0,255,0.9)');
+      specGrad.addColorStop(0.30, 'rgba(0,100,255,0.9)');
+      specGrad.addColorStop(0.45, 'rgba(0,200,100,0.9)');
+      specGrad.addColorStop(0.60, 'rgba(200,220,0,0.9)');
+      specGrad.addColorStop(0.78, 'rgba(255,160,0,0.9)');
+      specGrad.addColorStop(1,    'rgba(255,0,0,0.9)');
+      ctx.fillStyle = specGrad;
+      ctx.fillRect(boxX+2, boxY+boxH*0.2, (boxW-4)*prog, boxH*0.6);
+      // Box label
+      ctx.fillStyle = 'rgba(100,180,100,0.8)';
+      ctx.font = '7px Share Tech Mono'; ctx.textAlign = 'center';
+      ctx.fillText('SPECTRA OBSERVATION', boxX+boxW/2, boxY-4);
+      ctx.restore();
+
+    } else if(el < ACQUIRE_PHASE){
+      // Phase 4: target acquired — star info
+      const prog = (el - SCAN_PHASE) / (ACQUIRE_PHASE - SCAN_PHASE);
+      const cx = W*0.5, cy = H*0.5;
+      const size = 20*(1-prog*0.4);
+      ctx.strokeStyle = `rgba(200,220,100,${0.5+prog*0.5})`;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(cx-size,cy); ctx.lineTo(cx-8,cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx+8,cy);  ctx.lineTo(cx+size,cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx,cy-size); ctx.lineTo(cx,cy-8); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx,cy+8);  ctx.lineTo(cx,cy+size); ctx.stroke();
       ctx.beginPath(); ctx.arc(cx,cy,8,0,Math.PI*2);
-      ctx.fillStyle=star.cls.color; ctx.fill();
+      ctx.fillStyle = cls.color; ctx.fill();
       ctx.beginPath(); ctx.arc(cx,cy,3,0,Math.PI*2);
       ctx.fillStyle='#ffffff'; ctx.fill();
-      ctx.fillStyle='rgba(180,220,80,0.9)';
+      ctx.fillStyle=`rgba(180,220,80,${prog})`;
       ctx.font='bold 11px monospace'; ctx.textAlign='center';
       ctx.fillText('DEEP FIELD TARGET ACQUIRED', cx, 24);
-      ctx.fillStyle='rgba(220,200,100,0.85)';
+      ctx.fillStyle=`rgba(220,200,100,${prog})`;
       ctx.font='10px monospace';
       ctx.fillText(name, cx, cy-18);
-      ctx.fillStyle=star.cls.color+'cc';
+      ctx.fillStyle=cls.color+'cc';
       ctx.font='9px monospace';
       ctx.fillText(`Type ${cls.type} · ${cls.tempLabel}`, cx, cy+22);
-      if(el > 1800){
-        // Done — close and reveal
-        cancelAnimationFrame(scopeAnim);
-        closeAllPanels();
-        setTimeout(()=>{
-          showFlash('🔭 DEEP FIELD TARGET ACQUIRED', '#f0c040');
-          state.selected=state.sectorStars[state.currentSectorId].length-1;
-          document.getElementById('scan-btn').disabled=false;
-          document.getElementById('info-bar').textContent=
-            `Deep field object: ${name} — click SCAN to analyse`;
-        },200);
-        return;
-      }
+
+    } else {
+      // Done
+      cancelAnimationFrame(scopeAnim);
+      closeAllPanels();
+      setTimeout(()=>{
+        showFlash('🔭 DEEP FIELD TARGET ACQUIRED', '#f0c040');
+        state.selected=state.sectorStars[state.currentSectorId].length-1;
+        document.getElementById('scan-btn').disabled=false;
+        document.getElementById('info-bar').textContent=
+          `Deep field object: ${name} — click SCAN to analyse`;
+      },200);
+      return;
     }
-    scopeAnim=requestAnimationFrame(acqFrame);
+    scopeAnim = requestAnimationFrame(acqFrame);
   }
-  scopeAnim=requestAnimationFrame(acqFrame);
+  scopeAnim = requestAnimationFrame(acqFrame);
 }
 
 /* ================================================================
@@ -4597,7 +4737,7 @@ function openElementID(star, onDone, mandatory){
     const btnRow = document.getElementById('element-panel').querySelector('[style*="display:flex"]');
     if(btnRow) btnRow.before(note);
   }
-  const displayTierNote = state.found >= 60 ? 'partial' : state.found >= 20 ? 'stellar' : 'pure';
+  const displayTierNote = state.found >= 60 ? 'partial' : state.found >= 10 ? 'stellar' : 'pure';
   const tierPts = displayTierNote === 'partial' ? 500 : displayTierNote === 'stellar' ? 250 : 125;
   note.textContent = mandatory
     ? `⚠ Required — Element analysis mandatory. Wrong: −10 pts. Correct: +${tierPts} pts.`
@@ -4607,7 +4747,7 @@ function openElementID(star, onDone, mandatory){
   const cls = star.cls;
 
   // Determine display tier FIRST — used by pool selection and rendering below
-  const displayTier = state.found >= 60 ? 'partial' : state.found >= 20 ? 'stellar' : 'pure';
+  const displayTier = state.found >= 60 ? 'partial' : state.found >= 10 ? 'stellar' : 'pure';
 
   // Update question text immediately
   const qEl = document.getElementById('element-question');
@@ -4623,7 +4763,7 @@ function openElementID(star, onDone, mandatory){
   if(tierHeaderEl){
     tierHeaderEl.textContent =
       displayTier === 'pure'    ? 'Bonus — Element Identification (Tier A)' :
-      displayTier === 'stellar' ? 'Element Identification (Tier B — 20+ stars)' :
+      displayTier === 'stellar' ? 'Element Identification (Tier B — 10+ stars)' :
                                   'Element Identification (Tier C — 60+ stars)';
   }
 
@@ -4746,30 +4886,62 @@ function openElementID(star, onDone, mandatory){
     document.getElementById('element-marker').style.left    = (lineX - 1.5) + 'px';
   }
 
-  // Build 4 choice buttons from the active element's options (shuffled)
-  const options = [...activeOptions];
-  for(let i=options.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [options[i],options[j]]=[options[j],options[i]];
-  }
-
+  // Build choice UI based on tier and correct count
+  // Phase 1 (0–4 correct):  Tier B with mini strips shown
+  // Phase 2 (5–14 correct): Tier B name-only choices  
+  // Phase 3 (15+ correct):  Free-type — no choices at all, must type the element
   const choicesEl = document.getElementById('element-choices');
   choicesEl.innerHTML = '';
 
-  if(displayTier === 'stellar'){
-    // Tier B progression:
-    // 0–4 correct: show mini emission strips beside name (pattern matching)
-    // 5+ correct:  name only — no strips — pure recall from memory/glossary
-    const tierBCorrect = state.session.correct.elementID || 0;
-    const showStrips   = tierBCorrect < 5;
+  const tierBCorrect = state.session.correct.elementID || 0;
+  const freeTypeMode = displayTier === 'stellar' && tierBCorrect >= 15;
+
+  if(freeTypeMode){
+    // ── FREE-TYPE MODE ──────────────────────────────────────
+    // No multiple choice — student types element name, symbol, or atomic number
+    choicesEl.style.gridTemplateColumns = '1fr';
+
+    const qEl = document.getElementById('element-question');
+    if(qEl) qEl.textContent = 'Type the element name, symbol, or atomic number:';
+
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'display:flex;gap:10px;align-items:center;padding:8px 0';
+
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.id   = 'element-free-input';
+    inp.placeholder = 'e.g. Helium  or  He  or  2';
+    inp.autocomplete = 'off';
+    inp.spellcheck   = false;
+    inp.style.cssText = 'flex:1;background:rgba(8,18,50,0.9);border:1px solid rgba(60,100,200,0.4);border-radius:5px;color:#90b0e0;font-family:inherit;font-size:14px;padding:10px 14px;outline:none;letter-spacing:0.5px';
+
+    inp.addEventListener('input', () => {
+      document.getElementById('element-confirm').disabled = inp.value.trim().length < 1;
+    });
+    inp.addEventListener('keydown', e => {
+      if(e.key === 'Enter' && inp.value.trim().length > 0) confirmElementID();
+    });
+
+    wrapper.appendChild(inp);
+    choicesEl.appendChild(wrapper);
+
+    // Store that we're in free-type mode
+    state._elementFreeType = true;
+
+    // Focus the input after a tick
+    setTimeout(() => inp.focus(), 50);
+
+  } else if(displayTier === 'stellar'){
+    // ── TIER B: NAME CHOICES (with or without strips) ───────
+    state._elementFreeType = false;
+    const showStrips = tierBCorrect < 5;
     choicesEl.style.gridTemplateColumns = '1fr 1fr';
 
-    // Update question text to reflect difficulty level
     const qEl = document.getElementById('element-question');
     if(qEl){
       qEl.textContent = showStrips
         ? 'Which of these emission spectra matches the pattern above?'
-        : 'Which element produces this emission spectrum? (no reference strips)';
+        : `Which element produces this emission spectrum? (no strips — ${15 - tierBCorrect} correct answers until free-type mode)`;
     }
 
     options.forEach(opt => {
@@ -4871,16 +5043,20 @@ function openElementID(star, onDone, mandatory){
   document.getElementById('element-confirm').textContent     = 'Identify Element';
   document.getElementById('element-confirm').onclick         = confirmElementID;
   document.getElementById('element-confirm').style.display   = '';
-  // Show spectra reference button for first 10 correct answers — in-game reference
-  const elemCorrect = state.session.correct['elementID'] || 0;
+  // Always show Spectra Reference button — forces pattern memorization, not removal
   const refBtn = document.getElementById('element-spectra-ref-btn');
   if(refBtn){
-    refBtn.style.display = elemCorrect < 10 ? 'inline-block' : 'none';
+    refBtn.style.display = 'inline-block';
     refBtn.onclick = ()=>{
       const gPanel = document.getElementById('glossary-panel');
       gPanel.style.display='block';
       switchGlossTab('spectra');
     };
+  }
+  // Block table button — orbital periodic table overlay
+  const blockBtn = document.getElementById('element-block-table-btn');
+  if(blockBtn){
+    blockBtn.onclick = toggleOrbitalTable;
   }
   // Remove any leftover config panel from previous run
   const oldCfg = document.getElementById('econfig-panel');
@@ -5096,7 +5272,7 @@ function buildPeriodicTable(container){
   let hCell = null;
   const detail = document.createElement('div');
   detail.id = 'pt-detail';
-  detail.style.cssText = 'display:none;margin-bottom:10px;padding:12px 16px;background:rgba(5,12,35,0.85);border:1px solid rgba(80,120,220,0.4);border-radius:6px;font-size:11px;color:#8090c0;line-height:1.9';
+  detail.style.cssText = 'display:none;margin-bottom:10px;padding:10px 14px;background:rgba(5,12,35,0.85);border:1px solid rgba(80,120,220,0.4);border-radius:6px;font-size:11px;color:#8090c0;line-height:1.8;max-height:38vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(60,100,160,0.3) transparent';
   container.appendChild(detail);
 
   // ── MAIN TABLE ───────────────────────────────────────────────
@@ -5428,11 +5604,18 @@ function openElectronConfig(elementName, onDone){
   panel.id = 'econfig-panel';
   panel.style.cssText = 'background:rgba(10,5,40,0.8);border:1px solid rgba(100,60,200,0.35);border-radius:6px;padding:12px 14px;margin-top:10px';
 
-  // Header
+  // Header with orbital table toggle button
   const hdr = document.createElement('div');
-  hdr.style.cssText = 'font-size:9px;color:#604090;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px';
-  hdr.textContent = 'Bonus — Electron Configuration · +75 pts';
+  hdr.style.cssText = 'font-size:9px;color:#604090;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between';
+  hdr.innerHTML = `<span>Bonus — Electron Configuration · +75 pts</span>
+    <button id="orbital-table-btn" style="background:rgba(20,10,60,0.85);border:1px solid rgba(80,50,180,0.5);border-radius:4px;color:#8060d0;font-family:inherit;font-size:9px;padding:4px 10px;cursor:pointer;letter-spacing:1px;text-transform:uppercase">⊞ Block Table</button>`;
   panel.appendChild(hdr);
+
+  // Wire orbital table toggle
+  setTimeout(() => {
+    const orbBtn = document.getElementById('orbital-table-btn');
+    if(orbBtn) orbBtn.addEventListener('click', toggleOrbitalTable);
+  }, 0);
 
   // Tier descriptions
   const tierDesc = {
@@ -5516,25 +5699,63 @@ function openElectronConfig(elementName, onDone){
 }
 
 function confirmElementID(){
-  if(!state.elementChoice || state.elementDone) return;
-  state.elementDone = true;
+  if(state.elementDone) return;
 
   const star       = state.currentStar;
   const activeEl   = state._activeElement   || star.cls.keyElement;
   const activeNm   = state._activeKeyNm     || star.cls.keyLineNm;
   const activeLines= state._activePureLines || (star.cls.pureLines || [star.cls.keyLineNm]);
-  const correct    = state.elementChoice === activeEl;
 
-  // Reveal
-  document.querySelectorAll('#element-choices .element-choice').forEach(b=>{
-    if(b.dataset.val === activeEl) b.classList.add('correct-reveal');
-    if(b.dataset.val === state.elementChoice && !correct) b.classList.add('wrong-reveal');
-  });
+  // Determine the student's answer — either from free-type input or choice buttons
+  let studentAnswer = state.elementChoice || null;
+  let correct = false;
+
+  if(state._elementFreeType){
+    const inp = document.getElementById('element-free-input');
+    const raw = (inp ? inp.value.trim() : '').toLowerCase();
+    if(!raw){ return; } // nothing typed
+
+    // Match against element name, symbol (in parens), or atomic number
+    // ELEMENT_POOL_ALL uses format 'Hydrogen (H)' — handle name and symbol separately
+    const rawLower = raw.toLowerCase();
+    const elData = ELEMENT_POOL_ALL.find(e => {
+      const full = e.element.toLowerCase();               // 'hydrogen (h)'
+      // Extract symbol from parentheses e.g. 'H' from 'Hydrogen (H)'
+      const symMatch = e.element.match(/\(([^)]+)\)/);
+      const sym = symMatch ? symMatch[1].toLowerCase() : '';
+      // Extract name without symbol
+      const nameOnly = e.element.replace(/\s*\([^)]+\)/, '').trim().toLowerCase();
+      return full === rawLower || sym === rawLower || nameOnly === rawLower ||
+             (e.atomicN && String(e.atomicN) === raw);
+    });
+    studentAnswer = elData ? elData.element : raw;
+    correct = elData ? elData.element === activeEl : false;
+
+    // Colour the input to show right/wrong
+    if(inp){
+      inp.style.borderColor = correct ? 'rgba(40,180,70,0.8)' : 'rgba(200,50,50,0.8)';
+      inp.style.color       = correct ? '#50d878' : '#e07070';
+      inp.disabled = true;
+    }
+  } else {
+    if(!state.elementChoice) return;
+    correct = state.elementChoice === activeEl;
+
+    // Reveal buttons
+    document.querySelectorAll('#element-choices .element-choice').forEach(b=>{
+      if(b.dataset.val === activeEl) b.classList.add('correct-reveal');
+      if(b.dataset.val === state.elementChoice && !correct) b.classList.add('wrong-reveal');
+    });
+  }
+
+  state.elementDone = true;
 
   let bonusPts = 0;
   if(correct){
-    const displayTier = state.found >= 60 ? 'partial' : state.found >= 20 ? 'stellar' : 'pure';
+    const displayTier = state.found >= 60 ? 'partial' : state.found >= 10 ? 'stellar' : 'pure';
     bonusPts = displayTier === 'partial' ? 500 : displayTier === 'stellar' ? 250 : 125;
+    // Free-type correct gets a bonus for difficulty
+    if(state._elementFreeType) bonusPts = Math.round(bonusPts * 1.5);
     state.score   += bonusPts;
     state.credits += Math.round(bonusPts / 6);
     updateHUD();
@@ -5553,24 +5774,26 @@ function confirmElementID(){
 
   state.elementResult = { correct, element: activeEl, bonusPts };
 
-  const resultTier = state.found >= 60 ? 'partial' : state.found >= 20 ? 'stellar' : 'pure';
+  const resultTier = state.found >= 60 ? 'partial' : state.found >= 10 ? 'stellar' : 'pure';
   const resultEl   = document.getElementById('element-result');
 
   if(correct){
     resultEl.style.cssText = 'display:block;font-size:11px;line-height:1.7;padding:10px 12px;border-radius:5px;margin-bottom:12px;background:rgba(5,30,15,0.7);border:1px solid rgba(40,160,70,0.3);color:#50d878';
     if(resultTier === 'pure'){
       resultEl.innerHTML = `✓ Correct — this is the pure emission spectrum of <strong>${activeEl}</strong>. `
-        + `The signature lines at ${activeLines.join('nm, ')}nm identify this element uniquely.`;
+        + `Signature lines at ${activeLines.join('nm, ')}nm.`
+        + (state._elementFreeType ? ' <span style="color:#60d080">+50% free-type bonus!</span>' : '');
     } else {
-      resultEl.innerHTML = `✓ Correct — the highlighted line at ${activeNm}nm is produced by <strong>${activeEl}</strong>.`;
+      resultEl.innerHTML = `✓ Correct — the highlighted line at ${activeNm}nm is <strong>${activeEl}</strong>.`
+        + (state._elementFreeType ? ' <span style="color:#60d080">+50% free-type bonus!</span>' : '');
     }
   } else {
     resultEl.style.cssText = 'display:block;font-size:11px;line-height:1.7;padding:10px 12px;border-radius:5px;margin-bottom:12px;background:rgba(30,5,5,0.7);border:1px solid rgba(160,40,40,0.3);color:#e07070';
+    const wrongGuess = state._elementFreeType ? `You entered: "${studentAnswer}". ` : '';
     if(resultTier === 'pure'){
-      resultEl.innerHTML = `✗ Incorrect. This is the emission spectrum of <strong>${activeEl}</strong> — `
-        + `identified by its lines at ${activeLines.join('nm, ')}nm.`;
+      resultEl.innerHTML = `✗ ${wrongGuess}This is <strong>${activeEl}</strong> — lines at ${activeLines.join('nm, ')}nm.`;
     } else {
-      resultEl.innerHTML = `✗ Incorrect. The line at ${activeNm}nm is produced by <strong>${activeEl}</strong>.`;
+      resultEl.innerHTML = `✗ ${wrongGuess}The line at ${activeNm}nm is produced by <strong>${activeEl}</strong>.`;
     }
   }
 
@@ -6581,9 +6804,20 @@ function selectTrack(trackName){
 function autoSelectTrack(){
   const sector = SECTORS.find(s=>s.id===state.currentSectorId)||SECTORS[0];
   const tier   = sector.tier || 1;
-  const shouldBeBattle = tier >= 3;
-  if(shouldBeBattle && state.currentTrack !== 'battle') selectTrack('battle');
-  if(!shouldBeBattle && state.currentTrack !== 'cosmos') selectTrack('cosmos');
+  // Tier 4/5 use cosmos track with sector-specific progressions — not battle
+  // Only Tier 3 (Deep Field, Inner Rim) uses battle for intensity
+  const shouldBeBattle = tier === 3;
+  if(shouldBeBattle && state.currentTrack !== 'battle'){
+    selectTrack('battle');
+  } else if(!shouldBeBattle && state.currentTrack !== 'cosmos'){
+    selectTrack('cosmos');
+  } else if(!shouldBeBattle && state.currentTrack === 'cosmos'){
+    // Already on cosmos — retune to new sector's chord root and progression
+    clearTimeout(chordTimer);
+    stopPad();
+    chordIndex = 0;
+    setTimeout(()=>{ if(musicActive){ playChord(0); setTimeout(playMelodyNote,1500); }}, 300);
+  }
 }
 
 /* ================================================================
@@ -6638,18 +6872,18 @@ window.addEventListener('resize',()=>{ resize(); });
 const LEVEL_INTROS = {
   en: {
     beginner: `
-      <h3 style="font-family:Georgia,'Times New Roman',serif;font-size:20px;color:#90c0ff;font-weight:normal;line-height:1.5;margin-bottom:16px">
+      <h3 style="font-family:Georgia,'Times New Roman',serif;font-size:clamp(14px,1.6vh,18px);color:#90c0ff;font-weight:normal;line-height:1.5;margin-bottom:12px">
         Somewhere out there, a star is waiting to be understood.<br>
         <span style="font-size:15px;color:#5070a0">You're the one who's going to figure out what it is.</span>
       </h3>
-      <p style="font-family:Georgia,'Times New Roman',serif;font-size:15px;color:#6080a0;line-height:1.9;font-style:italic;margin-bottom:14px">
+      <p style="font-family:Georgia,'Times New Roman',serif;font-size:clamp(12px,1.2vh,14px);color:#6080a0;line-height:1.8;font-style:italic;margin-bottom:10px">
         You've just been appointed Chief Astronomer of the Galactic Survey Corps. Your mission: travel the galaxy, point your instruments at the stars, and decode their light — the only message they ever send us.
       </p>
       <p>Here's the remarkable thing: <span class="highlight">every element in the universe absorbs specific colours of light</span>. When starlight passes through a star's outer layers, those colours are removed — leaving dark gaps in the rainbow. Those gaps are a fingerprint. We call them <span class="highlight">absorption lines</span>, and reading them is how astronomers have classified hundreds of thousands of stars without ever leaving Earth.</p>
       <p>That's what you'll do in every scan. In Act I, you'll match the star's spectrum to one of four candidates — no labels, just patterns. It sounds harder than it is. After a few scans you'll start seeing the signatures without even thinking about it.</p>
       <div class="tip-box amber"><span class="fact">Scientific note:</span> Some star names in this game are real. The element identification puzzles draw from 86 elements with known visible emission spectra (380–700nm), sourced from the NIST Atomic Spectra Database. Wavelengths are approximate to within a few nanometres. Element assignments to specific stars are for gameplay variety and do not represent actual stellar composition.</div>
       <div class="tip-box green">You don't need any prior knowledge to play. The guide tabs above cover everything — spectra, star classification, planet habitability, and the game controls. Read them in order, or jump to whatever you need mid-game.</div>
-      <p style="font-family:Georgia,'Times New Roman',serif;font-size:14px;color:#506080;font-style:italic;margin-top:4px">When you're ready — close this guide and click any glowing star to begin.</p>`,
+      <p style="font-family:Georgia,'Times New Roman',serif;font-size:clamp(11px,1.1vh,13px);color:#506080;font-style:italic;margin-top:4px">When you're ready — close this guide and click any glowing star to begin.</p>`,
 
     intermediate: `
       <h3 style="font-family:Georgia,'Times New Roman',serif;font-size:18px;color:#90c0ff;font-weight:normal;line-height:1.5;margin-bottom:14px">Welcome, scientist.</h3>
@@ -6680,17 +6914,17 @@ const LEVEL_INTROS = {
 
   es: {
     beginner: `
-      <h3 style="font-family:Georgia,'Times New Roman',serif;font-size:20px;color:#90c0ff;font-weight:normal;line-height:1.5;margin-bottom:16px">
+      <h3 style="font-family:Georgia,'Times New Roman',serif;font-size:clamp(14px,1.6vh,18px);color:#90c0ff;font-weight:normal;line-height:1.5;margin-bottom:12px">
         En algún lugar ahí afuera, una estrella espera ser comprendida.<br>
         <span style="font-size:15px;color:#5070a0">Tú eres quien va a descubrirlo.</span>
       </h3>
-      <p style="font-family:Georgia,'Times New Roman',serif;font-size:15px;color:#6080a0;line-height:1.9;font-style:italic;margin-bottom:14px">
+      <p style="font-family:Georgia,'Times New Roman',serif;font-size:clamp(12px,1.2vh,14px);color:#6080a0;line-height:1.8;font-style:italic;margin-bottom:10px">
         Acabas de ser nombrado Astrónomo Jefe del Cuerpo de Exploración Galáctica. Tu misión: recorrer la galaxia, apuntar tus instrumentos hacia las estrellas y descifrar su luz — el único mensaje que nos envían.
       </p>
       <p>Lo extraordinario es que: <span class="highlight">cada elemento del universo absorbe colores específicos de luz</span>. Cuando la luz estelar pasa por las capas exteriores de una estrella, esos colores desaparecen — dejando huecos oscuros en el arcoíris. Esos huecos son una huella digital. Los llamamos <span class="highlight">líneas de absorción</span>, y leerlas es como los astrónomos han clasificado cientos de miles de estrellas sin salir de la Tierra.</p>
       <p>Eso es lo que harás en cada escaneo. En el Acto I, harás coincidir el espectro de la estrella con uno de cuatro candidatos — sin etiquetas, solo patrones. Suena más difícil de lo que es. Después de algunos escaneos, empezarás a ver las firmas sin ni siquiera pensarlo.</p>
       <div class="tip-box green">No necesitas conocimientos previos para jugar. Las pestañas de la guía cubren todo — espectros, clasificación estelar, habitabilidad planetaria y los controles del juego. Léelas en orden, o ve directamente a lo que necesites durante el juego.</div>
-      <p style="font-family:Georgia,'Times New Roman',serif;font-size:14px;color:#506080;font-style:italic;margin-top:4px">Cuando estés listo — cierra esta guía y haz clic en cualquier estrella brillante para comenzar.</p>`,
+      <p style="font-family:Georgia,'Times New Roman',serif;font-size:clamp(11px,1.1vh,13px);color:#506080;font-style:italic;margin-top:4px">Cuando estés listo — cierra esta guía y haz clic en cualquier estrella brillante para comenzar.</p>`,
 
     intermediate: `
       <h3>Bienvenido, científico.</h3>
@@ -7061,9 +7295,11 @@ function activateGuideTab(tabId, level){
 
 // Welcome screen — pick level
 let playerLevel = 'beginner';
+window._playerLevel = playerLevel; // expose for score gate
 document.querySelectorAll('.level-card').forEach(card => {
   card.addEventListener('click', () => {
     playerLevel = card.dataset.level;
+    window._playerLevel = playerLevel;
     document.getElementById('welcome-screen').style.display = 'none';
     document.getElementById('help-btn').style.display = 'flex';
     _guideOpenedAt = Date.now();
@@ -7786,7 +8022,7 @@ const T = {
       {icon:'🏗️', title:'Industrial Colony',   desc:'High output extraction and manufacturing. Rapid growth, environmental cost.',   bonus:200, result:'Orbital smelters active. Industrial expansion underway.'},
       {icon:'🌿', title:'Ecological Preserve',  desc:'Minimal footprint. Scientific study of native biosphere.',                      bonus:150, result:'Cataloguing new life forms. Significant biological discoveries expected.'},
       {icon:'🔬', title:'Research Outpost',      desc:'Technology development hub. Enables future terraforming.',                      bonus:175, result:'Spectroscopy lab established. Sector scan accuracy improved.'},
-      {icon:'⚔️', title:'Military Fortress',    desc:'Strategic system control. Aggressive expansion potential.',                     bonus:225, result:'Fortress world secures three adjacent sectors.'}
+      {icon:'⚔️', title:'Military Fortress', isMilitary:true,  desc:'Strategic system control. Aggressive expansion potential.',                     bonus:225, result:'Fortress world secures three adjacent sectors.'}
     ],
 
     // -- Debrief -----------------------------------------------
@@ -8827,18 +9063,21 @@ function initNebula(){
 
     // ── GALAXY ──────────────────────────────────────────────
     if(!galaxy._stars){
-      const GW  = Math.min(W,H)*0.17;
+      const GW  = Math.min(W,H)*0.24; // was 0.17 — 40% bigger
       const gCX = galaxy.x*W, gCY = galaxy.y*H;
       const arr = [];
       for(let i=0;i<500;i++){
         const roll=Math.random();
         let sx,sy,bright,col;
         if(roll<0.18){
+          // Core — warm blue-white with hints of dark purple
           const r2=Math.pow(Math.random(),1.6)*GW*0.20;
           const a2=Math.random()*Math.PI*2;
           sx=Math.cos(a2)*r2; sy=Math.sin(a2)*r2*0.36;
-          bright=0.4+Math.random()*0.5; col=Math.random()<0.6?'#ffe8b0':'#ffd060';
+          bright=0.4+Math.random()*0.5;
+          col=Math.random()<0.5?'#c0d8ff':'#e0ecff';
         } else if(roll<0.65){
+          // Arm stars — vivid cyan and sky-blue
           const arm=Math.random()<0.5?0:Math.PI;
           const tt2=0.2+Math.random()*1.5;
           const aa=tt2*0.82+arm;
@@ -8847,18 +9086,19 @@ function initNebula(){
           sx=Math.cos(aa)*rr2+Math.cos(aa+Math.PI/2)*sc;
           sy=(Math.sin(aa)*rr2+Math.sin(aa+Math.PI/2)*sc)*0.36;
           bright=0.12+Math.random()*0.50;
-          col=Math.random()<0.5?'#b0d0ff':'#90c0ff';
+          col=Math.random()<0.5?'#40d0ff':'#80e0ff';
         } else {
+          // Halo — dark purple mist
           const r2=GW*(0.08+Math.random()*0.80);
           const a2=Math.random()*Math.PI*2;
           sx=Math.cos(a2)*r2; sy=Math.sin(a2)*r2*0.36;
-          bright=0.05+Math.random()*0.18; col='#d0d8f0';
+          bright=0.04+Math.random()*0.14;
+          col=Math.random()<0.5?'#8060c0':'#6040a0';
         }
         arr.push({sx,sy,bright,col,r:0.35+Math.random()*1.0,tw:Math.random()*Math.PI*2});
       }
 
       // Pre-compute arm blob positions for the milky wash layer
-      // Two spiral arms, sampled densely along the logarithmic spiral
       const armBlobs = [];
       for(let arm=0;arm<2;arm++){
         const armOff = arm*Math.PI;
@@ -8869,7 +9109,6 @@ function initNebula(){
           armBlobs.push({
             sx: Math.cos(aa)*rr3,
             sy: Math.sin(aa)*rr3*0.36,
-            // Width of milky blob — wider in middle of arm
             w:  GW*(0.06 + 0.04*Math.sin(Math.PI*tt3/1.65)),
           });
         }
@@ -8881,41 +9120,48 @@ function initNebula(){
     const cosA=Math.cos(galaxy.ang), sinA=Math.sin(galaxy.ang);
     const gCX=galaxy._gCX, gCY=galaxy._gCY, GW=galaxy._GW;
 
-    // ── OUTER HALO ───────────────────────────────────────────
+    // ── OUTER HALO — extended reach, blue-purple ─────────────
+    // Two layers: far purple mist, nearer cyan glow
+    const gh2=ctx.createRadialGradient(gCX,gCY,0,gCX,gCY,GW*2.0);
+    gh2.addColorStop(0,  'rgba(40,80,180,0.08)');
+    gh2.addColorStop(0.4,'rgba(60,40,140,0.05)');
+    gh2.addColorStop(0.7,'rgba(30,20,80,0.03)');
+    gh2.addColorStop(1,  'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.ellipse(gCX,gCY,GW*2.0,GW*0.75,galaxy.ang,0,Math.PI*2);
+    ctx.fillStyle=gh2; ctx.fill();
+
     const gh=ctx.createRadialGradient(gCX,gCY,0,gCX,gCY,GW*1.3);
-    gh.addColorStop(0,'rgba(200,180,140,0.10)');
-    gh.addColorStop(0.5,'rgba(160,150,200,0.05)');
-    gh.addColorStop(1,'rgba(0,0,0,0)');
+    gh.addColorStop(0,  'rgba(80,160,255,0.12)');
+    gh.addColorStop(0.4,'rgba(40,100,220,0.07)');
+    gh.addColorStop(0.7,'rgba(60,20,120,0.04)');
+    gh.addColorStop(1,  'rgba(0,0,0,0)');
     ctx.beginPath(); ctx.ellipse(gCX,gCY,GW*1.3,GW*0.48,galaxy.ang,0,Math.PI*2);
     ctx.fillStyle=gh; ctx.fill();
 
-    // ── MILKY ARM WASH — soft blobs along spiral arms ────────
-    // This is the "milky way" effect — overlapping low-opacity
-    // radial gradients that create a smooth luminous haze
+    // ── MILKY ARM WASH — cyan-blue haze ─────────────────────
     galaxy._armBlobs.forEach(function(b){
       const rx = cosA*b.sx - sinA*b.sy + gCX;
       const ry = sinA*b.sx + cosA*b.sy + gCY;
-      // Wide outer glow (cool blue-white — young arm stars)
+      // Outer glow — bright cyan
       const bg1=ctx.createRadialGradient(rx,ry,0,rx,ry,b.w*2.2);
-      bg1.addColorStop(0,  'rgba(180,210,255,0.055)');
-      bg1.addColorStop(0.4,'rgba(160,195,245,0.030)');
+      bg1.addColorStop(0,  'rgba(80,210,255,0.065)');
+      bg1.addColorStop(0.4,'rgba(40,160,240,0.035)');
       bg1.addColorStop(1,  'rgba(0,0,0,0)');
       ctx.beginPath(); ctx.arc(rx,ry,b.w*2.2,0,Math.PI*2);
       ctx.fillStyle=bg1; ctx.fill();
-      // Tighter inner glow (warmer — denser stellar population)
+      // Inner glow — sky blue core
       const bg2=ctx.createRadialGradient(rx,ry,0,rx,ry,b.w*0.9);
-      bg2.addColorStop(0,  'rgba(220,215,190,0.055)');
+      bg2.addColorStop(0,  'rgba(160,230,255,0.07)');
       bg2.addColorStop(1,  'rgba(0,0,0,0)');
       ctx.beginPath(); ctx.arc(rx,ry,b.w*0.9,0,Math.PI*2);
       ctx.fillStyle=bg2; ctx.fill();
     });
 
-    // ── DISC WASH — diffuse glow across the whole disc ───────
-    // Gives the flattened disc its overall milky cohesion
+    // ── DISC WASH — blue-indigo diffuse glow ────────────────
     const dw=ctx.createRadialGradient(gCX,gCY,0,gCX,gCY,GW*0.85);
-    dw.addColorStop(0,  'rgba(230,220,180,0.10)');
-    dw.addColorStop(0.3,'rgba(200,195,210,0.06)');
-    dw.addColorStop(0.7,'rgba(170,175,220,0.03)');
+    dw.addColorStop(0,  'rgba(100,180,255,0.10)');
+    dw.addColorStop(0.3,'rgba(60,120,220,0.06)');
+    dw.addColorStop(0.7,'rgba(40,40,140,0.03)');
     dw.addColorStop(1,  'rgba(0,0,0,0)');
     ctx.save();
     ctx.scale(1, 0.38);
@@ -8935,10 +9181,10 @@ function initNebula(){
       ctx.beginPath(); ctx.arc(rx,ry,s.r,0,Math.PI*2); ctx.fill();
     });
 
-    // ── BLAZING CORE ─────────────────────────────────────────
+    // ── BLAZING CORE — blue-white ─────────────────────────────
     const gc=ctx.createRadialGradient(gCX,gCY,0,gCX,gCY,GW*0.10);
-    gc.addColorStop(0,'rgba(255,252,215,0.95)');
-    gc.addColorStop(0.4,'rgba(255,235,160,0.50)');
+    gc.addColorStop(0,'rgba(220,240,255,0.95)');
+    gc.addColorStop(0.4,'rgba(140,200,255,0.55)');
     gc.addColorStop(1,'rgba(0,0,0,0)');
     ctx.beginPath(); ctx.arc(gCX,gCY,GW*0.10,0,Math.PI*2);
     ctx.fillStyle=gc; ctx.fill();
@@ -8979,35 +9225,47 @@ function initNebula(){
       ctx.beginPath(); ctx.arc(sx,sy,s.r,0,Math.PI*2); ctx.fill();
     });
 
-    // ── TDE NEBULA CLOUDS ───────────────────────────────────
+    // ── TDE NEBULA CLOUDS — purple / pink / cyan palette ─────
     var tdeB1 = 0.5+0.5*Math.sin(frameT*0.018);
     var tdeB2 = 0.5+0.5*Math.sin(frameT*0.025+1.4);
     var tdeSize = Math.min(W,H)*0.09;
+
+    // Primary cloud — deep magenta-purple
     var tc1=ctx.createRadialGradient(tdeX-tdeSize*0.08,tdeY+tdeSize*0.05,0,tdeX-tdeSize*0.08,tdeY+tdeSize*0.05,tdeSize*(1.0+tdeB1*0.15));
-    tc1.addColorStop(0,'rgba(255,160,40,'+(0.18+tdeB1*0.08).toFixed(2)+')');
-    tc1.addColorStop(0.35,'rgba(220,80,20,'+(0.10+tdeB1*0.04).toFixed(2)+')');
-    tc1.addColorStop(0.70,'rgba(140,20,80,'+(0.05+tdeB1*0.02).toFixed(2)+')');
+    tc1.addColorStop(0,'rgba(200,40,180,'+(0.22+tdeB1*0.10).toFixed(2)+')');
+    tc1.addColorStop(0.30,'rgba(140,20,200,'+(0.12+tdeB1*0.06).toFixed(2)+')');
+    tc1.addColorStop(0.65,'rgba(80,0,160,'+(0.06+tdeB1*0.03).toFixed(2)+')');
     tc1.addColorStop(1,'rgba(0,0,0,0)');
     ctx.beginPath(); ctx.arc(tdeX-tdeSize*0.08,tdeY+tdeSize*0.05,tdeSize*(1.0+tdeB1*0.15),0,Math.PI*2);
     ctx.fillStyle=tc1; ctx.fill();
+
+    // Secondary cloud — hot pink / rose
     var tc2=ctx.createRadialGradient(tdeX+tdeSize*0.12,tdeY-tdeSize*0.08,0,tdeX+tdeSize*0.12,tdeY-tdeSize*0.08,tdeSize*(0.75+tdeB2*0.12));
-    tc2.addColorStop(0,'rgba(160,80,255,'+(0.14+tdeB2*0.07).toFixed(2)+')');
-    tc2.addColorStop(0.4,'rgba(80,40,200,'+(0.08+tdeB2*0.03).toFixed(2)+')');
+    tc2.addColorStop(0,'rgba(255,80,160,'+(0.16+tdeB2*0.08).toFixed(2)+')');
+    tc2.addColorStop(0.4,'rgba(200,20,120,'+(0.09+tdeB2*0.04).toFixed(2)+')');
     tc2.addColorStop(1,'rgba(0,0,0,0)');
     ctx.beginPath(); ctx.arc(tdeX+tdeSize*0.12,tdeY-tdeSize*0.08,tdeSize*(0.75+tdeB2*0.12),0,Math.PI*2);
     ctx.fillStyle=tc2; ctx.fill();
+
+    // Ejecta cloud — cyan accent, flung away from BH
     var ejectAng=Math.atan2(tdeY-SY,tdeX-SX);
     var ejectX=tdeX+Math.cos(ejectAng)*tdeSize*0.55, ejectY=tdeY+Math.sin(ejectAng)*tdeSize*0.55;
     var tc3=ctx.createRadialGradient(ejectX,ejectY,0,ejectX,ejectY,tdeSize*0.65);
-    tc3.addColorStop(0,'rgba(255,220,120,'+(0.12+tdeB1*0.06).toFixed(2)+')');
-    tc3.addColorStop(0.5,'rgba(200,100,40,'+(0.06+tdeB1*0.03).toFixed(2)+')');
+    tc3.addColorStop(0,'rgba(0,220,255,'+(0.15+tdeB1*0.08).toFixed(2)+')');
+    tc3.addColorStop(0.5,'rgba(0,120,200,'+(0.07+tdeB1*0.04).toFixed(2)+')');
     tc3.addColorStop(1,'rgba(0,0,0,0)');
     ctx.beginPath(); ctx.arc(ejectX,ejectY,tdeSize*0.65,0,Math.PI*2);
     ctx.fillStyle=tc3; ctx.fill();
 
-    // ── TDE STREAM — soft nebula brush (no hard lines) ──────────
-    // Multiple wide low-opacity radial blobs along the bezier curve
-    // create a hazy volumetric look like a real tidal stream or nebula
+    // Fourth cloud — soft lavender, slightly offset upward
+    var tc4=ctx.createRadialGradient(tdeX-tdeSize*0.05,tdeY-tdeSize*0.15,0,tdeX-tdeSize*0.05,tdeY-tdeSize*0.15,tdeSize*0.55);
+    tc4.addColorStop(0,'rgba(180,120,255,'+(0.13+tdeB2*0.06).toFixed(2)+')');
+    tc4.addColorStop(0.5,'rgba(120,60,200,'+(0.06+tdeB2*0.03).toFixed(2)+')');
+    tc4.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(tdeX-tdeSize*0.05,tdeY-tdeSize*0.15,tdeSize*0.55,0,Math.PI*2);
+    ctx.fillStyle=tc4; ctx.fill();
+
+    // ── TDE STREAM — soft nebula brush, purple/pink/cyan palette
     var BLOBS = 120;
     for(var i=0;i<BLOBS;i++){
       var tt1 = i/BLOBS;
@@ -9015,22 +9273,30 @@ function initNebula(){
       var byC = bez(tt1,gy,cp1y,cp2y,SY);
       var heat = Math.pow(tt1,1.2);
       var pulse = 0.82+0.18*Math.sin(frameT*0.03+tt1*10);
-      // Stream width — wider in middle, narrower at ends
       var streamW = Math.min(W,H)*(0.015 + heat*0.028 + 0.012*Math.sin(Math.PI*tt1));
-      // Colour: white-warm near galaxy, blue-white hot near BH
-      var rr2 = Math.floor(255*(1-heat*0.35));
-      var gg2 = Math.floor(190+heat*65);
-      // Two blob layers per point: outer haze + inner brighter core
-      var outerAlpha = (0.025+heat*0.055)*pulse;
-      var innerAlpha = (0.040+heat*0.090)*pulse;
+      // Purple near galaxy → hot pink mid → cyan near BH
+      var rBlob, gBlob, bBlob;
+      if(heat < 0.5){
+        // purple to pink
+        rBlob = Math.floor(160 + heat*190);  // 160→255
+        gBlob = Math.floor(20 + heat*40);    // 20→40
+        bBlob = Math.floor(220 - heat*60);   // 220→190
+      } else {
+        // pink to cyan
+        rBlob = Math.floor(255 - (heat-0.5)*2*200); // 255→55
+        gBlob = Math.floor(40 + (heat-0.5)*2*180);  // 40→220
+        bBlob = Math.floor(190 + (heat-0.5)*2*65);  // 190→255
+      }
+      var outerAlpha = (0.025+heat*0.060)*pulse;
+      var innerAlpha = (0.045+heat*0.095)*pulse;
       var outer = ctx.createRadialGradient(bxC,byC,0,bxC,byC,streamW*1.8);
-      outer.addColorStop(0,'rgba('+rr2+','+gg2+',255,'+outerAlpha.toFixed(3)+')');
-      outer.addColorStop(0.5,'rgba('+rr2+','+gg2+',255,'+(outerAlpha*0.4).toFixed(3)+')');
+      outer.addColorStop(0,'rgba('+rBlob+','+gBlob+','+bBlob+','+outerAlpha.toFixed(3)+')');
+      outer.addColorStop(0.5,'rgba('+rBlob+','+gBlob+','+bBlob+','+(outerAlpha*0.4).toFixed(3)+')');
       outer.addColorStop(1,'rgba(0,0,0,0)');
       ctx.beginPath(); ctx.arc(bxC,byC,streamW*1.8,0,Math.PI*2);
       ctx.fillStyle=outer; ctx.fill();
       var inner = ctx.createRadialGradient(bxC,byC,0,bxC,byC,streamW*0.7);
-      inner.addColorStop(0,'rgba('+rr2+','+gg2+',255,'+innerAlpha.toFixed(3)+')');
+      inner.addColorStop(0,'rgba('+rBlob+','+gBlob+','+bBlob+','+innerAlpha.toFixed(3)+')');
       inner.addColorStop(1,'rgba(0,0,0,0)');
       ctx.beginPath(); ctx.arc(bxC,byC,streamW*0.7,0,Math.PI*2);
       ctx.fillStyle=inner; ctx.fill();
@@ -9053,57 +9319,89 @@ function initNebula(){
       ctx.beginPath(); ctx.arc(px2,py2,rad,0,Math.PI*2); ctx.fill();
     });
 
-    // ── TDE FISHHOOK — material wrapping around the BH ───────
-    // The stream reaches the photon sphere, bends hard around the BH
-    // clockwise (right→down→left), forming the "6" shape seen in
-    // real TDE simulations. Two-pass nebula blobs same as the stream.
+    // ── TDE FISHHOOK — material sweeping around BH in animated "6" ─
+    // The tidal stream hits the BH influence zone, material bends hard,
+    // half falls in, half wraps into a bound clockwise orbit — a "6" shape.
+    // This is drawn BEFORE the BH shadow so the hook peeks out from behind it.
     {
-      // Hook starts where stream meets the BH influence zone
-      var hookR  = BH_R * 3.8;   // orbit radius of the bound material
-      var hookStartAng = -0.35;   // where hook meets incoming stream (upper right)
-      var hookSweep    = Math.PI * 1.35; // sweeps ~243° clockwise to form "6"
-      var HOOK_STEPS   = 55;
+      // Hook orbits the BLACK HOLE (SX/SY), not the TDE point
+      // Radius: large enough to be clearly visible around the event horizon
+      var hookR = BH_R * 4.8;
 
-      // Ripple animation along the hook
-      var hookPhase = frameT * 0.025;
+      // The stream arrives from upper-left (tdeX,tdeY toward SX,SY).
+      // hookStartAng = direction from BH to TDE point — that's where stream meets hook
+      var hookStartAng = Math.atan2(tdeY - SY, tdeX - SX) + 0.1;
 
-      for(var hi=0; hi<HOOK_STEPS; hi++){
-        var ht  = hi / (HOOK_STEPS-1);  // 0=start 1=end
-        var ang = hookStartAng + ht * hookSweep; // clockwise sweep
+      // Sweep 250° clockwise to form the "6" — wrap around top, right, bottom of BH
+      var hookMaxSweep = Math.PI * 1.40;
 
-        // Radius tapers inward slightly then back out — bound orbit isn't circular
-        var rOffset = 1.0 - 0.22*Math.sin(Math.PI*ht);
-        var hx = SX + Math.cos(ang) * hookR * rOffset;
-        var hy = SY + Math.sin(ang) * hookR * rOffset * 0.55;
+      // Animated grow: hook sweeps in over ~8 seconds, holds 3s, resets
+      var hookCycle = frameT % (8*60 + 3*60);
+      var hookProg  = hookCycle < 8*60
+        ? Math.min(1, hookCycle / (8*60))
+        : 1;
+      var hookSweep = hookMaxSweep * hookProg;
 
-        // Hook gets hotter (bluer) toward leading edge where it rejoins
-        var hookHeat = Math.pow(ht, 0.8);
-        var pulse2   = 0.8 + 0.2*Math.sin(hookPhase + ht*8);
+      if(hookSweep > 0.05){
+        var HOOK_STEPS = 90; // more steps = smoother arc
+        var hookPhase  = frameT * 0.025;
 
-        // Fade in from stream end, fade out at hook tail
-        var fadeIn  = Math.min(1, ht * 8);
-        var fadeOut = Math.min(1, (1-ht)*3);
-        var hookAlpha = 0.038 * fadeIn * fadeOut * pulse2;
+        for(var hi=0; hi<HOOK_STEPS; hi++){
+          var ht = hi / (HOOK_STEPS - 1);
+          if(ht > hookProg) break; // only draw up to animated progress
 
-        // Stream width — narrower as material compresses into orbit
-        var hookW = Math.min(W,H) * (0.020 - hookHeat*0.008);
+          // Angle sweeps CLOCKWISE from hookStartAng
+          var ang = hookStartAng + ht * hookSweep;
 
-        var hrr = Math.floor(255*(1-hookHeat*0.3));
-        var hgg = Math.floor(190 + hookHeat*65);
+          // Slight inward spiral — material compresses as it orbits
+          var rMod = 1.0 - ht * 0.18;
+          var hx = SX + Math.cos(ang) * hookR * rMod;
+          var hy = SY + Math.sin(ang) * hookR * rMod * 0.70; // perspective squash
 
-        // Wide outer haze
-        var hb1 = ctx.createRadialGradient(hx,hy,0,hx,hy,hookW*2.0);
-        hb1.addColorStop(0,  'rgba('+hrr+','+hgg+',255,'+(hookAlpha*1.0).toFixed(3)+')');
-        hb1.addColorStop(0.5,'rgba('+hrr+','+hgg+',255,'+(hookAlpha*0.4).toFixed(3)+')');
-        hb1.addColorStop(1,  'rgba(0,0,0,0)');
-        ctx.beginPath(); ctx.arc(hx,hy,hookW*2.0,0,Math.PI*2);
-        ctx.fillStyle=hb1; ctx.fill();
-        // Inner bright core
-        var hb2 = ctx.createRadialGradient(hx,hy,0,hx,hy,hookW*0.8);
-        hb2.addColorStop(0,  'rgba('+hrr+','+hgg+',255,'+(hookAlpha*2.2).toFixed(3)+')');
-        hb2.addColorStop(1,  'rgba(0,0,0,0)');
-        ctx.beginPath(); ctx.arc(hx,hy,hookW*0.8,0,Math.PI*2);
-        ctx.fillStyle=hb2; ctx.fill();
+          // Fade in at start, fade out at tail
+          var fadeIn  = Math.min(1, ht * 6);
+          var fadeOut = Math.min(1, (1 - ht) * 5);
+          var pulse3  = 0.75 + 0.25*Math.sin(hookPhase + ht*9);
+          // Much higher alpha than before — this needs to be visible
+          var hookAlpha = 0.16 * fadeIn * fadeOut * pulse3 * (0.4 + hookProg*0.6);
+
+          // Colour: hot pink at entry → deep purple mid → cyan near tail
+          var hRed, hGrn, hBlu;
+          if(ht < 0.4){
+            var f = ht/0.4;
+            hRed = Math.floor(255 - f*70);   // 255→185
+            hGrn = Math.floor(60 + f*20);    // 60→80
+            hBlu = Math.floor(160 + f*60);   // 160→220
+          } else if(ht < 0.75){
+            var f = (ht-0.4)/0.35;
+            hRed = Math.floor(185 - f*140);  // 185→45
+            hGrn = Math.floor(80 + f*100);   // 80→180
+            hBlu = 220;
+          } else {
+            var f = (ht-0.75)/0.25;
+            hRed = Math.floor(45 - f*30);    // 45→15
+            hGrn = Math.floor(180 + f*75);   // 180→255
+            hBlu = 255;
+          }
+
+          // Two-pass: wide outer haze + bright inner core
+          // Larger blobs = thicker, more visible arc
+          var blobOuter = Math.min(W,H)*0.042;
+          var blobInner = Math.min(W,H)*0.018;
+
+          var hb1 = ctx.createRadialGradient(hx,hy,0,hx,hy,blobOuter);
+          hb1.addColorStop(0,   'rgba('+hRed+','+hGrn+','+hBlu+','+(hookAlpha*0.9).toFixed(3)+')');
+          hb1.addColorStop(0.45,'rgba('+hRed+','+hGrn+','+hBlu+','+(hookAlpha*0.35).toFixed(3)+')');
+          hb1.addColorStop(1,   'rgba(0,0,0,0)');
+          ctx.beginPath(); ctx.arc(hx,hy,blobOuter,0,Math.PI*2);
+          ctx.fillStyle=hb1; ctx.fill();
+
+          var hb2 = ctx.createRadialGradient(hx,hy,0,hx,hy,blobInner);
+          hb2.addColorStop(0,'rgba('+hRed+','+hGrn+','+hBlu+','+(hookAlpha*2.8).toFixed(3)+')');
+          hb2.addColorStop(1,'rgba(0,0,0,0)');
+          ctx.beginPath(); ctx.arc(hx,hy,blobInner,0,Math.PI*2);
+          ctx.fillStyle=hb2; ctx.fill();
+        }
       }
     }
 
@@ -9269,6 +9567,67 @@ function initNebula(){
       ctx.beginPath(); ctx.ellipse(tdeX,tdeY,shipR,shipR*0.45,0,0,Math.PI*2);
       ctx.strokeStyle='rgba(200,180,100,0.10)'; ctx.lineWidth=0.7;
       ctx.setLineDash([2,6]); ctx.stroke(); ctx.setLineDash([]);
+
+      // ── SCANNING BEAM — periodic pulse toward TDE ───────────
+      // White-hot beam fires from ship nose every ~3 seconds.
+      // White/yellow so it contrasts against the purple/cyan cloud palette.
+      var scanCycle = (frameT * 0.5) % 180;
+      var scanFire  = scanCycle < 70;        // active for ~1.2s per 3s cycle
+      var scanProg  = Math.min(1, scanCycle / 70);
+
+      if(scanFire){
+        var beamAlpha = Math.pow(1 - scanProg, 0.6) * 0.85; // bright, fades out
+        var toTdeAng = Math.atan2(tdeY - shipY, tdeX - shipX);
+        var beamDist = Math.hypot(tdeX - shipX, tdeY - shipY) * scanProg;
+        var beamEndX = shipX + Math.cos(toTdeAng) * beamDist;
+        var beamEndY = shipY + Math.sin(toTdeAng) * beamDist;
+
+        // Wide outer glow — soft yellow-white halo
+        ctx.beginPath();
+        ctx.moveTo(shipX, shipY);
+        ctx.lineTo(beamEndX, beamEndY);
+        ctx.strokeStyle = 'rgba(255,240,160,'+(beamAlpha*0.18).toFixed(2)+')';
+        ctx.lineWidth = 10; ctx.stroke();
+
+        // Mid glow — white-cyan
+        ctx.strokeStyle = 'rgba(200,240,255,'+(beamAlpha*0.40).toFixed(2)+')';
+        ctx.lineWidth = 4; ctx.stroke();
+
+        // Core beam — bright white
+        var beamGrad = ctx.createLinearGradient(shipX, shipY, beamEndX, beamEndY);
+        beamGrad.addColorStop(0,   'rgba(255,255,255,0)');
+        beamGrad.addColorStop(0.08,'rgba(255,255,220,'+(beamAlpha*0.95).toFixed(2)+')');
+        beamGrad.addColorStop(0.85,'rgba(220,255,255,'+(beamAlpha*0.80).toFixed(2)+')');
+        beamGrad.addColorStop(1,   'rgba(180,220,255,'+(beamAlpha*0.20).toFixed(2)+')');
+        ctx.strokeStyle = beamGrad;
+        ctx.lineWidth = 1.8; ctx.stroke();
+
+        // Expanding rings at TDE when beam arrives
+        if(scanProg > 0.55){
+          var ringProg = (scanProg - 0.55) / 0.45;
+          for(var ri=0; ri<3; ri++){
+            var rDelay = ri * 0.28;
+            var rp = Math.max(0, ringProg - rDelay);
+            if(rp <= 0) continue;
+            var rRadius = tdeSize * (0.3 + ri*0.15) * rp;
+            var rAlpha  = (1 - rp) * 0.55;
+            ctx.beginPath();
+            ctx.arc(tdeX, tdeY, rRadius, 0, Math.PI*2);
+            ctx.strokeStyle = 'rgba(255,245,200,'+rAlpha.toFixed(2)+')';
+            ctx.lineWidth = 1.5; ctx.stroke();
+          }
+        }
+
+        // Flash at beam origin (ship nose) when firing starts
+        if(scanProg < 0.12){
+          var flashA = (1 - scanProg/0.12) * 0.7;
+          var fg = ctx.createRadialGradient(shipX, shipY, 0, shipX, shipY, S*6);
+          fg.addColorStop(0,'rgba(255,255,255,'+flashA+')');
+          fg.addColorStop(1,'rgba(0,0,0,0)');
+          ctx.beginPath(); ctx.arc(shipX, shipY, S*6, 0, Math.PI*2);
+          ctx.fillStyle = fg; ctx.fill();
+        }
+      }
       ctx.save(); ctx.translate(shipX,shipY); ctx.rotate(hdg);
       // Engine glow
       var pulse=0.5+0.5*Math.sin(frameT*0.14);
@@ -9489,6 +9848,292 @@ document.getElementById('progress-btn').addEventListener('click', ()=>{
 /* ================================================================
    PRINT SESSION CARD
 ================================================================ */
+/* ================================================================
+   ORBITAL BLOCK PERIODIC TABLE OVERLAY
+   Shows during electron config puzzle. Block-coloured:
+   s-block = pale pink, p-block = neon orange, d-block = sky blue,
+   f-block = yellow-green. Only noble gas names shown. Arrow labels
+   show which subshell fills each row.
+================================================================ */
+function buildOrbitalTable(){
+  const existing = document.getElementById('orbital-table-overlay');
+  if(existing) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'orbital-table-overlay';
+  overlay.style.cssText = `
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+    z-index:60;background:rgba(4,8,24,0.97);
+    border:1px solid rgba(80,60,160,0.5);border-radius:10px;
+    padding:14px 16px;max-width:98vw;overflow-x:auto;
+    box-shadow:0 0 40px rgba(0,0,0,0.8);
+    font-family:'Share Tech Mono','Courier New',monospace;
+  `;
+
+  // Block colours
+  const BLK = {
+    s: 'rgba(220,120,140,0.30)',  // pale pink
+    p: 'rgba(255,130,30,0.28)',   // neon orange
+    d: 'rgba(80,170,230,0.28)',   // sky blue
+    f: 'rgba(160,220,50,0.28)',   // yellow-green
+    empty: 'transparent',
+  };
+  const BLK_BORDER = {
+    s: 'rgba(220,100,130,0.5)',
+    p: 'rgba(255,120,20,0.5)',
+    d: 'rgba(60,160,220,0.5)',
+    f: 'rgba(140,210,40,0.5)',
+    empty: 'transparent',
+  };
+  const BLK_LABEL = {s:'#f0a0b0',p:'#ffb060',d:'#60c0f0',f:'#b0e040'};
+
+  // 18-column layout. Each cell: [block, subshell-label-if-first, text]
+  // Noble gases only get their name. All others get their block colour.
+  // Format: [col, row, block, topLabel, cellText]
+  // We'll build a 7×18 grid + lanthanide/actinide rows below
+  const CELL_SIZE = 28;
+  const GAP = 2;
+
+  // Define the grid positions
+  // period 1-7, group 1-18
+  // Noble gases: He(2), Ne(10), Ar(18), Kr(36), Xe(54), Rn(86)
+  const NOBLE_Z = new Set([2,10,18,36,54,86]);
+
+  // Build element Z → [period, group, block]
+  // s-block: groups 1-2 (+ He in group 18)
+  // p-block: groups 13-18
+  // d-block: groups 3-12
+  // f-block: lanthanides (period 6, after La) + actinides (period 7, after Ac)
+  const elements = [
+    // period 1
+    {Z:1,p:1,g:1,b:'s'},{Z:2,p:1,g:18,b:'s'},
+    // period 2
+    {Z:3,p:2,g:1,b:'s'},{Z:4,p:2,g:2,b:'s'},
+    {Z:5,p:2,g:13,b:'p'},{Z:6,p:2,g:14,b:'p'},{Z:7,p:2,g:15,b:'p'},
+    {Z:8,p:2,g:16,b:'p'},{Z:9,p:2,g:17,b:'p'},{Z:10,p:2,g:18,b:'p'},
+    // period 3
+    {Z:11,p:3,g:1,b:'s'},{Z:12,p:3,g:2,b:'s'},
+    {Z:13,p:3,g:13,b:'p'},{Z:14,p:3,g:14,b:'p'},{Z:15,p:3,g:15,b:'p'},
+    {Z:16,p:3,g:16,b:'p'},{Z:17,p:3,g:17,b:'p'},{Z:18,p:3,g:18,b:'p'},
+    // period 4
+    {Z:19,p:4,g:1,b:'s'},{Z:20,p:4,g:2,b:'s'},
+    {Z:21,p:4,g:3,b:'d'},{Z:22,p:4,g:4,b:'d'},{Z:23,p:4,g:5,b:'d'},
+    {Z:24,p:4,g:6,b:'d'},{Z:25,p:4,g:7,b:'d'},{Z:26,p:4,g:8,b:'d'},
+    {Z:27,p:4,g:9,b:'d'},{Z:28,p:4,g:10,b:'d'},{Z:29,p:4,g:11,b:'d'},{Z:30,p:4,g:12,b:'d'},
+    {Z:31,p:4,g:13,b:'p'},{Z:32,p:4,g:14,b:'p'},{Z:33,p:4,g:15,b:'p'},
+    {Z:34,p:4,g:16,b:'p'},{Z:35,p:4,g:17,b:'p'},{Z:36,p:4,g:18,b:'p'},
+    // period 5
+    {Z:37,p:5,g:1,b:'s'},{Z:38,p:5,g:2,b:'s'},
+    {Z:39,p:5,g:3,b:'d'},{Z:40,p:5,g:4,b:'d'},{Z:41,p:5,g:5,b:'d'},
+    {Z:42,p:5,g:6,b:'d'},{Z:43,p:5,g:7,b:'d'},{Z:44,p:5,g:8,b:'d'},
+    {Z:45,p:5,g:9,b:'d'},{Z:46,p:5,g:10,b:'d'},{Z:47,p:5,g:11,b:'d'},{Z:48,p:5,g:12,b:'d'},
+    {Z:49,p:5,g:13,b:'p'},{Z:50,p:5,g:14,b:'p'},{Z:51,p:5,g:15,b:'p'},
+    {Z:52,p:5,g:16,b:'p'},{Z:53,p:5,g:17,b:'p'},{Z:54,p:5,g:18,b:'p'},
+    // period 6
+    {Z:55,p:6,g:1,b:'s'},{Z:56,p:6,g:2,b:'s'},
+    {Z:71,p:6,g:3,b:'d'},{Z:72,p:6,g:4,b:'d'},{Z:73,p:6,g:5,b:'d'},
+    {Z:74,p:6,g:6,b:'d'},{Z:75,p:6,g:7,b:'d'},{Z:76,p:6,g:8,b:'d'},
+    {Z:77,p:6,g:9,b:'d'},{Z:78,p:6,g:10,b:'d'},{Z:79,p:6,g:11,b:'d'},{Z:80,p:6,g:12,b:'d'},
+    {Z:81,p:6,g:13,b:'p'},{Z:82,p:6,g:14,b:'p'},{Z:83,p:6,g:15,b:'p'},
+    {Z:84,p:6,g:16,b:'p'},{Z:85,p:6,g:17,b:'p'},{Z:86,p:6,g:18,b:'p'},
+    // period 7
+    {Z:87,p:7,g:1,b:'s'},{Z:88,p:7,g:2,b:'s'},
+    {Z:103,p:7,g:3,b:'d'},{Z:104,p:7,g:4,b:'d'},{Z:105,p:7,g:5,b:'d'},
+    {Z:106,p:7,g:6,b:'d'},{Z:107,p:7,g:7,b:'d'},{Z:108,p:7,g:8,b:'d'},
+    {Z:109,p:7,g:9,b:'d'},{Z:110,p:7,g:10,b:'d'},{Z:111,p:7,g:11,b:'d'},{Z:112,p:7,g:12,b:'d'},
+    {Z:113,p:7,g:13,b:'p'},{Z:114,p:7,g:14,b:'p'},{Z:115,p:7,g:15,b:'p'},
+    {Z:116,p:7,g:16,b:'p'},{Z:117,p:7,g:17,b:'p'},{Z:118,p:7,g:18,b:'p'},
+    // f-block lanthanides (period 6, cols 3-16 in separate row)
+    ...[57,58,59,60,61,62,63,64,65,66,67,68,69,70].map((Z,i)=>({Z,p:8,g:i+4,b:'f'})),
+    // f-block actinides (period 7, cols 3-16 in separate row)
+    ...[89,90,91,92,93,94,95,96,97,98,99,100,101,102].map((Z,i)=>({Z,p:9,g:i+4,b:'f'})),
+  ];
+
+  const NOBLE_SYMBOLS = {2:'He',10:'Ne',18:'Ar',36:'Kr',54:'Xe',86:'Rn'};
+
+  // Subshell row labels (left side)
+  const ROW_LABELS = {
+    1:'1s', 2:'2s/2p', 3:'3s/3p', 4:'4s/3d/4p', 5:'5s/4d/5p',
+    6:'6s/5d/6p', 7:'7s/6d/7p', 8:'4f', 9:'5f'
+  };
+
+  // Build HTML grid
+  const CS = CELL_SIZE, G = GAP;
+  const gridW = 18*(CS+G)+80; // 80 for row label
+  const gridH = 9*(CS+G)+60;  // 60 for headers + legend
+
+  const svgEl = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svgEl.setAttribute('width', gridW);
+  svgEl.setAttribute('height', gridH);
+  svgEl.style.cssText = 'display:block;overflow:visible';
+
+  const offsetX = 72; // row label width
+  const offsetY = 28; // column header height
+
+  // Column headers (group numbers)
+  for(let g=1;g<=18;g++){
+    const x = offsetX + (g-1)*(CS+G) + CS/2;
+    const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x', x);
+    txt.setAttribute('y', 16);
+    txt.setAttribute('text-anchor','middle');
+    txt.setAttribute('font-size','8');
+    txt.setAttribute('fill','rgba(80,100,150,0.7)');
+    txt.setAttribute('font-family','Share Tech Mono,Courier New');
+    txt.textContent = g;
+    svgEl.appendChild(txt);
+  }
+
+  // Row labels and cells
+  elements.forEach(el => {
+    if(el.p > 9) return;
+    const row = el.p <= 7 ? el.p : el.p; // 8=lanthanides, 9=actinides
+    const rowY = offsetY + (row-1)*(CS+G) + (row >= 8 ? (CS+G) : 0); // gap before f-block
+    const x    = offsetX + (el.g-1)*(CS+G);
+    const y    = rowY;
+
+    const isNoble = NOBLE_Z.has(el.Z);
+    const col   = BLK[el.b] || 'transparent';
+    const bord  = BLK_BORDER[el.b] || 'transparent';
+
+    const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x',x); rect.setAttribute('y',y);
+    rect.setAttribute('width',CS); rect.setAttribute('height',CS);
+    rect.setAttribute('fill', col);
+    rect.setAttribute('stroke', bord);
+    rect.setAttribute('stroke-width','1');
+    rect.setAttribute('rx','2');
+    svgEl.appendChild(rect);
+
+    if(isNoble){
+      const sym = NOBLE_SYMBOLS[el.Z] || '';
+      const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x', x + CS/2);
+      txt.setAttribute('y', y + CS/2 + 4);
+      txt.setAttribute('text-anchor','middle');
+      txt.setAttribute('font-size','9');
+      txt.setAttribute('fill','rgba(220,240,255,0.95)');
+      txt.setAttribute('font-weight','bold');
+      txt.setAttribute('font-family','Share Tech Mono,Courier New');
+      txt.textContent = sym;
+      svgEl.appendChild(txt);
+    }
+  });
+
+  // Row labels (left side)
+  for(let r=1;r<=9;r++){
+    const rowY = offsetY + (r-1)*(CS+G) + (r >= 8 ? (CS+G) : 0);
+    const lbl  = ROW_LABELS[r] || '';
+    const txt  = document.createElementNS('http://www.w3.org/2000/svg','text');
+    txt.setAttribute('x', offsetX - 4);
+    txt.setAttribute('y', rowY + CS/2 + 4);
+    txt.setAttribute('text-anchor','end');
+    txt.setAttribute('font-size','8');
+    txt.setAttribute('fill','rgba(100,130,180,0.8)');
+    txt.setAttribute('font-family','Share Tech Mono,Courier New');
+    txt.textContent = lbl;
+    svgEl.appendChild(txt);
+  }
+
+  // f-block subshell arrow labels
+  const fRows = [{row:8,lbl:'← 4f →'},{row:9,lbl:'← 5f →'}];
+  fRows.forEach(({row,lbl}) => {
+    const rowY = offsetY + (row-1)*(CS+G) + (CS+G);
+    const x1   = offsetX + 3*(CS+G);
+    const x2   = offsetX + 17*(CS+G);
+    const ymid = rowY + CS/2;
+    const lt   = document.createElementNS('http://www.w3.org/2000/svg','text');
+    lt.setAttribute('x', (x1+x2)/2);
+    lt.setAttribute('y', ymid - CS/2 - 2);
+    lt.setAttribute('text-anchor','middle');
+    lt.setAttribute('font-size','8');
+    lt.setAttribute('fill',BLK_LABEL.f);
+    lt.setAttribute('font-family','Share Tech Mono,Courier New');
+    lt.textContent = lbl;
+    svgEl.appendChild(lt);
+  });
+
+  // Block arrow labels for d and p rows (above period 4 d-block)
+  const blockArrows = [
+    {x1:3,x2:12,y:offsetY+(4-1)*(CS+G),lbl:'← 3d/4d/5d/6d →',col:BLK_LABEL.d},
+    {x1:13,x2:18,y:offsetY+(2-1)*(CS+G),lbl:'← 2p→6p →',col:BLK_LABEL.p},
+    {x1:1,x2:2,y:offsetY+(2-1)*(CS+G),lbl:'1s/2s…',col:BLK_LABEL.s},
+  ];
+  blockArrows.forEach(({x1,x2,y,lbl,col}) => {
+    const cx = offsetX + ((x1-1)+(x2-1))/2*(CS+G) + CS/2;
+    const t  = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', cx);
+    t.setAttribute('y', y - 3);
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-size','7.5');
+    t.setAttribute('fill',col);
+    t.setAttribute('font-family','Share Tech Mono,Courier New');
+    t.textContent = lbl;
+    svgEl.appendChild(t);
+  });
+
+  // Legend
+  const legendY = gridH - 20;
+  const legendItems = [
+    {b:'s',lbl:'s-block'},{b:'p',lbl:'p-block'},
+    {b:'d',lbl:'d-block'},{b:'f',lbl:'f-block'},
+  ];
+  legendItems.forEach(({b,lbl},i) => {
+    const lx = 12 + i*90;
+    const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x',lx); rect.setAttribute('y',legendY);
+    rect.setAttribute('width',12); rect.setAttribute('height',12);
+    rect.setAttribute('fill',BLK[b]); rect.setAttribute('stroke',BLK_BORDER[b]);
+    rect.setAttribute('stroke-width','1'); rect.setAttribute('rx','2');
+    svgEl.appendChild(rect);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',lx+16); t.setAttribute('y',legendY+9);
+    t.setAttribute('font-size','9'); t.setAttribute('fill','rgba(180,200,230,0.8)');
+    t.setAttribute('font-family','Share Tech Mono,Courier New');
+    t.textContent = lbl;
+    svgEl.appendChild(t);
+  });
+
+  // Title + close button
+  const header = document.createElement('div');
+  header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:10px';
+  header.innerHTML = `
+    <div style="font-size:10px;color:#8060c0;letter-spacing:2px;text-transform:uppercase">Orbital Block Table — noble gas names only</div>
+    <button onclick="this.closest('#orbital-table-overlay').remove()" style="background:rgba(30,10,10,0.8);border:1px solid rgba(100,40,40,0.4);color:#804040;font-family:inherit;font-size:10px;padding:4px 10px;border-radius:4px;cursor:pointer">✕ Close</button>`;
+  overlay.appendChild(header);
+  overlay.appendChild(svgEl);
+  document.body.appendChild(overlay);
+}
+
+function toggleOrbitalTable(){
+  const existing = document.getElementById('orbital-table-overlay');
+  if(existing){ existing.remove(); return; }
+  buildOrbitalTable();
+}
+
+/* ================================================================
+   SCORE GATE — Heliopause entry check
+================================================================ */
+function showScoreGate(){
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(2,4,14,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:\'Share Tech Mono\',monospace;text-align:center;padding:30px';
+  const level = window._playerLevel || 'beginner';
+  const nextLevel = level === 'beginner' ? 'intermediate' : 'advanced';
+  overlay.innerHTML = `
+    <div style="font-size:10px;color:#805020;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px">Mission Reassignment</div>
+    <div style="font-size:clamp(14px,1.6vh,18px);color:#90c0ff;font-weight:normal;line-height:1.5;margin-bottom:12px">Not quite ready for the Heliopause</div>
+    <div style="font-size:14px;color:#504030;max-width:480px;line-height:1.9;margin-bottom:20px;font-family:system-ui,sans-serif">
+      The Heliopause demands expertise earned over hundreds of correct identifications. With <strong style="color:#e09040">${(state.score||0).toLocaleString()} points</strong>, your survey record doesn't yet qualify. Real deep-field astronomers earn their assignments.<br><br>Head back to the Tier 4 sectors — more scans, more points, and you'll be ready.
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+      <button id="sg-continue" style="background:rgba(30,20,5,0.9);border:1px solid rgba(150,100,20,0.5);color:#c09030;font-family:inherit;font-size:12px;padding:10px 24px;border-radius:5px;cursor:pointer">← Keep Scanning</button>
+      <button id="sg-replay" style="background:rgba(5,25,5,0.8);border:1px solid rgba(40,150,60,0.4);color:#40c060;font-family:inherit;font-size:12px;padding:10px 24px;border-radius:5px;cursor:pointer">↺ Replay as ${nextLevel.charAt(0).toUpperCase()+nextLevel.slice(1)}</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('sg-continue').addEventListener('click',()=>{ overlay.remove(); });
+  document.getElementById('sg-replay').addEventListener('click',()=>{ overlay.remove(); location.reload(); });
+}
+
 function buildPrintCard(){
   const card = document.getElementById('print-card');
   const cats = [
@@ -10656,14 +11301,28 @@ function openHRDiagram(star, onDone){
 ================================================================ */
 function checkSectorComplete(){
   const stars = state.sectorStars[state.currentSectorId] || [];
-  // Only count naturally generated stars — telescope stars are bonus, not required
-  const required = stars.filter(s => !s.telescope);
-  if(required.length === 0) return;
-  const allFound = required.every(s => s.discovered);
-  if(!allFound) return;
+
+  // Separate required (non-telescope) from the telescope-required star
+  const regularStars   = stars.filter(s => !s.telescope);
+  const teleRequired   = stars.filter(s => s.telescopeRequired);
+  const allRegularDone = regularStars.length > 0 && regularStars.every(s => s.discovered);
+  const allDone        = allRegularDone && teleRequired.every(s => s.discovered);
+
+  if(regularStars.length === 0) return;
+
+  // When regular stars are all done but telescope star isn't, show a hint
+  if(allRegularDone && !allDone && !state._scopeHintShown){
+    state._scopeHintShown = true;
+    setTimeout(()=>{
+      showUnlockToast('🔭 One more signal detected — use the Deep Field Telescope to find it!');
+    }, 1200);
+  }
+
+  if(!allDone) return;
   if(state._sectorCompleted && state._sectorCompleted[state.currentSectorId]) return;
   if(!state._sectorCompleted) state._sectorCompleted = {};
   state._sectorCompleted[state.currentSectorId] = true;
+  state._scopeHintShown = false; // reset for next sector
 
   const sector = SECTORS.find(s => s.id === state.currentSectorId) || SECTORS[0];
   const tier   = sector.tier || 1;
@@ -10940,43 +11599,130 @@ function playConstellationDraw(sectorId){
   cvs.width  = window.innerWidth;
   cvs.height = window.innerHeight;
   cvs.style.display = 'block';
+  cvs.style.zIndex  = '55'; // above everything
   const W = cvs.width, H = cvs.height;
   const ctx = cvs.getContext('2d');
   const dest = SECTOR_CONSTELLATIONS[sectorId];
   if(!dest){ cvs.style.display='none'; return; }
 
+  const sector = SECTORS.find(s=>s.id===sectorId)||SECTORS[0];
+
   const start = performance.now();
-  const TOTAL = 2800; // ms — slower, more ceremonial
+  const DRAW_DUR  = 3500; // ms — draw constellation lines
+  const HOLD_DUR  = 1500; // hold fully drawn
+  const FADE_DUR  = 800;  // fade out
+  const TOTAL     = DRAW_DUR + HOLD_DUR + FADE_DUR;
   let last = 0;
 
-  function frame(t){
-    if(t - last < 16){ requestAnimationFrame(frame); return; }
-    last = t;
-    const prog = Math.min(1, (t - start) / TOTAL);
+  function frame(now){
+    if(now - last < 16){ requestAnimationFrame(frame); return; }
+    last = now;
+    const el   = now - start;
+    const done = el >= TOTAL;
 
-    // Semi-transparent overlay so map is still visible underneath
     ctx.clearRect(0,0,W,H);
-    ctx.fillStyle = 'rgba(2,4,16,0.55)';
+
+    // Fade in dark overlay
+    const overlayAlpha = el < 400 ? el/400*0.72 :
+                         el < DRAW_DUR+HOLD_DUR ? 0.72 :
+                         0.72*(1-(el-DRAW_DUR-HOLD_DUR)/FADE_DUR);
+    ctx.fillStyle = `rgba(2,4,16,${overlayAlpha})`;
     ctx.fillRect(0,0,W,H);
 
-    drawConstellationOverlay(ctx, W, H, dest, 1, prog);
-
-    if(prog >= 1){
-      // Fade out
-      let fadeOut = 0;
-      const fadeStart = performance.now();
-      function fade(t2){
-        fadeOut = Math.min(1,(t2-fadeStart)/600);
-        ctx.clearRect(0,0,W,H);
-        ctx.fillStyle=`rgba(2,4,16,${0.55*(1-fadeOut)})`;
-        ctx.fillRect(0,0,W,H);
-        drawConstellationOverlay(ctx,W,H,dest,1-fadeOut,1);
-        if(fadeOut<1) requestAnimationFrame(fade);
-        else{ ctx.clearRect(0,0,W,H); cvs.style.display='none'; }
-      }
-      requestAnimationFrame(fade);
+    if(done){
+      cvs.style.display='none';
+      cvs.style.zIndex = '50';
       return;
     }
+
+    const drawProg = Math.min(1, el / DRAW_DUR);
+    const alpha    = el < DRAW_DUR+HOLD_DUR ? 1
+                   : 1 - (el-DRAW_DUR-HOLD_DUR)/FADE_DUR;
+
+    // Draw constellation lines progressively
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    const stars = dest.stars;
+    const lines = dest.lines;
+    const linesTo = Math.floor(drawProg * lines.length);
+
+    // Draw completed lines with glow
+    lines.slice(0, linesTo).forEach(([a,b]) => {
+      const s1=stars[a], s2=stars[b];
+      // Glow pass
+      ctx.beginPath();
+      ctx.moveTo(s1[0]*W, s1[1]*H);
+      ctx.lineTo(s2[0]*W, s2[1]*H);
+      ctx.strokeStyle='rgba(120,180,255,0.15)';
+      ctx.lineWidth=8; ctx.stroke();
+      // Line
+      ctx.beginPath();
+      ctx.moveTo(s1[0]*W, s1[1]*H);
+      ctx.lineTo(s2[0]*W, s2[1]*H);
+      ctx.strokeStyle='rgba(160,210,255,0.75)';
+      ctx.lineWidth=1.2;
+      ctx.setLineDash([5,5]); ctx.stroke(); ctx.setLineDash([]);
+    });
+
+    // Partially draw current line
+    if(linesTo < lines.length){
+      const lp = (drawProg * lines.length) - linesTo;
+      const [a,b] = lines[linesTo];
+      const s1=stars[a], s2=stars[b];
+      ctx.beginPath();
+      ctx.moveTo(s1[0]*W, s1[1]*H);
+      ctx.lineTo(s1[0]*W+(s2[0]-s1[0])*W*lp, s1[1]*H+(s2[1]-s1[1])*H*lp);
+      ctx.strokeStyle='rgba(160,210,255,0.5)';
+      ctx.lineWidth=1.2; ctx.stroke();
+    }
+
+    // Star dots with pulse
+    const pulse = 1 + 0.3*Math.sin(el*0.006);
+    stars.forEach(([sx,sy]) => {
+      const g = ctx.createRadialGradient(sx*W,sy*H,0,sx*W,sy*H,5*pulse);
+      g.addColorStop(0,'rgba(220,240,255,1)');
+      g.addColorStop(0.5,'rgba(160,200,255,0.4)');
+      g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(sx*W,sy*H,5*pulse,0,Math.PI*2);
+      ctx.fillStyle=g; ctx.fill();
+      ctx.beginPath(); ctx.arc(sx*W,sy*H,2,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.fill();
+    });
+
+    // Sector complete banner — fades in after lines start drawing
+    if(drawProg > 0.15){
+      const bannerAlpha = Math.min(1,(drawProg-0.15)/0.25) * alpha;
+      ctx.globalAlpha = bannerAlpha;
+      // Banner bg
+      const bW=Math.min(500,W*0.6), bH=90, bX=(W-bW)/2, bY=H*0.08;
+      ctx.fillStyle='rgba(2,6,20,0.85)';
+      ctx.beginPath();
+      ctx.roundRect ? ctx.roundRect(bX,bY,bW,bH,8) : ctx.rect(bX,bY,bW,bH);
+      ctx.fill();
+      ctx.strokeStyle='rgba(100,160,255,0.5)';
+      ctx.lineWidth=1; ctx.stroke();
+      // Text
+      ctx.fillStyle='rgba(120,180,255,0.7)';
+      ctx.font='10px Share Tech Mono'; ctx.textAlign='center';
+      ctx.fillText('SECTOR MAPPED', W*0.5, bY+18);
+      ctx.fillStyle='rgba(220,240,255,0.95)';
+      ctx.font='bold 22px Share Tech Mono';
+      ctx.fillText(sector.name.toUpperCase(), W*0.5, bY+48);
+      ctx.fillStyle='rgba(100,160,255,0.8)';
+      ctx.font='11px Share Tech Mono';
+      ctx.fillText(`${dest.name} — constellation charted`, W*0.5, bY+70);
+    }
+
+    // Constellation name at full draw
+    if(drawProg > 0.85){
+      const na = Math.min(1,(drawProg-0.85)/0.15)*alpha;
+      ctx.globalAlpha = na*0.6;
+      ctx.font='12px Share Tech Mono'; ctx.textAlign='center';
+      ctx.fillStyle='rgba(140,190,255,0.8)';
+      ctx.fillText(dest.name, W*0.5, H*0.88);
+    }
+
+    ctx.restore();
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
@@ -11962,7 +12708,7 @@ function initTitleMusic(){
     const master = ac.createGain();
     master.gain.value = 0;
     master.connect(ac.destination);
-    master.gain.linearRampToValueAtTime(0.28, ac.currentTime+3);
+    master.gain.linearRampToValueAtTime(0.28, ac.currentTime + 0.8); // quick fade in
 
     function note(freq, startT, decay){
       const o = ac.createOscillator();
@@ -11991,11 +12737,11 @@ function initTitleMusic(){
     }
 
     const P1 = [
-      [523.25, 4.0,  1.8],[659.25, 5.5,  1.8],[783.99, 6.8,  2.2],[1046.5, 8.2,  3.0],
-      [659.25, 13.5, 1.4],[783.99, 14.6, 1.4],[880.00, 15.6, 1.6],[783.99, 16.8, 2.4],
+      [523.25, 0.5,  1.8],[659.25, 2.0,  1.8],[783.99, 3.3,  2.2],[1046.5, 4.7,  3.0],
+      [659.25, 9.5, 1.4],[783.99, 10.6, 1.4],[880.00, 11.6, 1.6],[783.99, 12.8, 2.4],
     ];
     P1.forEach(([f,t,d]) => note(f, t, d));
-    bass(130.81, 4.0); bass(196.00, 13.5);
+    bass(130.81, 0.5); bass(196.00, 9.5);
 
     const off2 = 21.0;
     [[523.25,0.0,1.6],[587.33,1.3,1.4],[659.25,2.4,1.6],[783.99,3.6,1.8],[880.00,5.0,2.8],
@@ -12221,10 +12967,26 @@ function showEndgameCard(overlay){
         Object.values(state.session.attempts).reduce((a,b)=>a+b,0) * 100) + '%'
     : '—';
 
+  // Secret pacifist reward — never chose Military Fortress
+  const isPacifist = !state._militaryChoices && state.colonies > 0;
+  const pacifistHTML = isPacifist ? `
+    <div style="margin:14px 0;padding:10px 14px;background:rgba(5,30,5,0.7);border:1px solid rgba(40,180,80,0.4);border-radius:6px;text-align:left">
+      <div style="font-size:9px;color:#40a050;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">🕊 Hidden Achievement Unlocked</div>
+      <div style="font-size:13px;color:#60d080;font-family:Georgia,serif;margin-bottom:3px">Peacekeepers of the Cosmos</div>
+      <div style="font-size:11px;color:#306040;font-family:system-ui,sans-serif">You built an empire without a single fortress. Every colony chose knowledge, life, or connection over force. The galaxy remembers. <span style="color:#40a060">+2,500 pts · +500 credits</span></div>
+    </div>` : '';
+
+  if(isPacifist){
+    state.score   += 2500;
+    state.credits += 500;
+    updateHUD();
+  }
+
   card.innerHTML=`
     <div style="font-size:11px;letter-spacing:3px;color:#806020;text-transform:uppercase;margin-bottom:10px">Mission Complete</div>
     <div style="font-size:28px;letter-spacing:6px;color:#f0e060;margin-bottom:4px;text-shadow:0 0 20px rgba(240,220,80,0.4)">GALAXY CHARTED</div>
     <div style="font-size:11px;color:#404828;letter-spacing:2px;margin-bottom:24px">All 10 sectors surveyed · The cosmos is yours</div>
+    ${pacifistHTML}
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
       ${[['Stars',h],['Colonies',c],['Score',sc.toLocaleString()],['Accuracy',acc]].map(([l,v])=>`
         <div style="background:rgba(5,15,40,0.6);border:1px solid rgba(40,60,130,0.3);border-radius:6px;padding:10px 4px">
