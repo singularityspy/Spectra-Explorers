@@ -422,7 +422,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 #track-label{font-size:9px;color:#304060;letter-spacing:1px}
 
 /* -- HUD BOOK BUTTON -------------------------------------------- */
-#glossary-btn{background:rgba(10,25,60,0.85);border:1px solid rgba(60,100,180,0.4);border-radius:4px;color:#5070a0;font-family:inherit;font-size:11px;padding:6px 10px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;letter-spacing:1px}
+#glossary-btn{background:rgba(10,25,60,0.85);border:1px solid rgba(60,100,180,0.4);border-radius:4px;color:#5070a0;font-family:inherit;font-size:11px;padding:6px 10px;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px}
 #glossary-btn:hover{border-color:#80a0e0;color:#a0c0f0;background:rgba(20,50,110,0.9)}
 #log-panel{position:absolute;right:12px;top:62px;width:225px;max-height:340px;overflow-y:auto;padding:11px 13px;font-size:10px;display:none;scrollbar-width:thin;scrollbar-color:rgba(60,100,160,0.4) transparent}
 #log-panel h3{font-size:10px;letter-spacing:2px;color:#3a5580;margin-bottom:9px;text-transform:uppercase}
@@ -473,7 +473,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
   #print-card,#print-card *{visibility:visible}
   #print-card{position:fixed;top:0;left:0;width:100%;padding:24px;background:white;color:#111;font-family:Georgia,serif}
 }
-#print-card{display:none}
+#print-card{position:fixed;top:0;left:0;width:100%;visibility:hidden;pointer-events:none;background:white;z-index:-1}
 
 /* -- CLASS MODE TOOLTIP ----------------------------------------- */
 #class-mode-banner{background:rgba(5,30,10,0.95);border:1px solid rgba(40,180,80,0.4);border-radius:6px;padding:10px 16px;margin-bottom:16px;font-size:10px;color:#50c070;letter-spacing:1px;display:none;max-width:600px;text-align:center}
@@ -506,8 +506,70 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 .guide-section h3{font-size:15px;color:#80a8e0;margin:18px 0 10px;font-weight:600;letter-spacing:0}
 .guide-section p{font-size:15px;color:#5070a0;line-height:1.9;margin-bottom:12px}
 .guide-section ul li,.guide-section ol li{font-size:15px;color:#5070a0;line-height:1.9;margin-bottom:4px}
-.guide-section details summary{font-size:13px}
-.guide-section details > div{font-size:14px;line-height:1.85}
+.guide-section details summary{font-size:13px;list-style:none}
+.guide-section details summary::-webkit-details-marker{display:none}
+.guide-section details summary{
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;padding:10px 14px;margin:6px 0 0;
+  border-radius:6px;
+  background:rgba(15,35,80,0.7);
+  border:1px solid rgba(60,100,200,0.3);
+  color:#7090d0;
+  font-weight:600;
+  letter-spacing:0.5px;
+  user-select:none;
+  transition:background 0.2s, border-color 0.2s;
+}
+.guide-section details summary:hover{
+  background:rgba(25,55,120,0.8);
+  border-color:rgba(100,150,255,0.5);
+  color:#a0c0f0;
+}
+.guide-section details[open] summary{
+  background:rgba(20,50,110,0.85);
+  border-color:rgba(80,140,255,0.6);
+  color:#b0d0ff;
+  border-bottom-left-radius:0;
+  border-bottom-right-radius:0;
+  margin-bottom:0;
+}
+/* Rotating chevron */
+.guide-section details summary::before{
+  content:'▶';
+  font-size:9px;
+  color:#5070b0;
+  transition:transform 0.2s;
+  flex-shrink:0;
+}
+.guide-section details[open] summary::before{
+  transform:rotate(90deg);
+  color:#80b0ff;
+}
+/* Content area — visually connected to the open summary */
+.guide-section details > div,.guide-section details > p{
+  font-size:14px;line-height:1.85;
+  border:1px solid rgba(60,100,200,0.3);
+  border-top:none;
+  border-radius:0 0 6px 6px;
+  padding:14px 16px;
+  background:rgba(8,20,55,0.5);
+  margin-bottom:6px;
+}
+/* Config pane details (noble gas notation) — same treatment */
+#gloss-pane-config details summary{
+  display:flex;align-items:center;gap:8px;
+  cursor:pointer;padding:8px 12px;margin:0 0 8px;
+  border-radius:5px;
+  background:rgba(15,35,80,0.7);
+  border:1px solid rgba(60,100,200,0.3);
+  color:#7090d0;font-size:12px;font-weight:600;
+  user-select:none;list-style:none;
+  transition:background 0.2s;
+}
+#gloss-pane-config details summary::-webkit-details-marker{display:none}
+#gloss-pane-config details[open] summary{background:rgba(20,50,110,0.85);border-color:rgba(80,140,255,0.5);color:#b0d0ff}
+#gloss-pane-config details summary::before{content:'▶';font-size:9px;color:#5070b0;transition:transform 0.2s;flex-shrink:0}
+#gloss-pane-config details[open] summary::before{transform:rotate(90deg);color:#80b0ff}
 .guide-section .highlight{color:#90c0ff}
 .guide-section .good{color:#50d080}
 .guide-section .warn{color:#d09030}
@@ -628,8 +690,9 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
         <span id="zoom-val" style="font-size:9px;color:#304060;min-width:30px;text-align:center">100%</span>
         <button id="zoom-in-btn"  title="Zoom in"  style="font-size:14px;padding:4px 7px;background:rgba(10,25,60,0.8);border:1px solid rgba(60,100,180,0.3);color:#4060a0;font-family:inherit;border-radius:3px;cursor:pointer;line-height:1">+</button>
       </div>
-      <button id="glossary-btn" title="Glossary">📖</button>
+      <button id="glossary-btn" title="Glossary &amp; Reference">🔭 Glossary</button>
       <button id="help-btn" title="How to play">?</button>
+      <button id="progress-btn" title="View progress report" style="font-size:10px;padding:4px 8px">📊 Report</button>
     </div>
   </div>
   <!-- Sprint timer bar — shown only during Survey Sprint -->
@@ -951,6 +1014,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
       <div id="element-result" style="display:none;font-size:11px;line-height:1.7;padding:10px 12px;border-radius:5px;margin-bottom:12px"></div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <button id="element-hint-btn">💡 Hint</button>
+        <button id="element-spectra-ref-btn" style="background:rgba(5,25,60,0.8);border:1px solid rgba(40,100,200,0.4);color:#5080c0;font-family:inherit;font-size:10px;padding:6px 14px;border-radius:4px;cursor:pointer;display:none">🔬 Spectra Reference</button>
         <button class="pbtn pbtn-close" id="element-skip">Skip Bonus</button>
         <button class="pbtn pbtn-action" id="element-confirm" disabled>Identify Element</button>
       </div>
@@ -1021,21 +1085,78 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
     <!-- Configuration reference tab -->
     <div id="gloss-pane-config" style="display:none;padding:12px 22px 4px">
-      <div style="font-size:10px;color:#304060;line-height:1.7;margin-bottom:8px">
-        Ground-state electron configurations for all elements in the game pool. Valence electrons — shown in <span style="color:#c090ff">purple</span> — are the ones that produce the emission lines you identify in puzzles. Grouped by block (s, p, d, f).
+      <div style="font-size:13px;color:#4a6080;line-height:1.8;margin-bottom:10px;font-family:system-ui,sans-serif">
+        Ground-state electron configurations for all elements in the game pool. Valence electrons — shown in <span style="color:#c090ff">purple</span> — produce the emission lines you identify in puzzles.
       </div>
+      <details style="margin-bottom:10px">
+        <summary>How to write an electron configuration — and the Noble Gas shorthand</summary>
+        <div>
+
+          <p style="margin-bottom:12px">An electron configuration tells you how electrons are arranged in an atom's shells. The game asks you to write them using Noble Gas notation — here's how both work.</p>
+
+          <!-- STEP 1 — Full config -->
+          <div style="background:rgba(5,20,60,0.6);border-left:3px solid rgba(60,120,220,0.5);border-radius:0 5px 5px 0;padding:10px 14px;margin-bottom:12px">
+            <div style="font-size:11px;color:#5070a0;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Step 1 — Fill the subshells in Aufbau order</div>
+            <p style="font-size:12px;color:#4a6080;margin-bottom:8px">Electrons fill orbitals from lowest energy to highest, following this fixed sequence:</p>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:#90b0d0;line-height:2.2;letter-spacing:0.5px">
+              1s → 2s → 2p → 3s → 3p → 4s → 3d → 4p → 5s → 4d → 5p → 6s → 4f → 5d → 6p …
+            </div>
+            <p style="font-size:11px;color:#304050;margin-top:8px">Each subshell holds a maximum: <span style="color:#7090c0">s=2 · p=6 · d=10 · f=14</span></p>
+          </div>
+
+          <!-- STEP 2 — Example -->
+          <div style="background:rgba(5,20,60,0.6);border-left:3px solid rgba(60,120,220,0.5);border-radius:0 5px 5px 0;padding:10px 14px;margin-bottom:12px">
+            <div style="font-size:11px;color:#5070a0;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Step 2 — Example: Iron (Fe, #26)</div>
+            <p style="font-size:12px;color:#4a6080;margin-bottom:6px">Fill 26 electrons in order:</p>
+            <div style="font-size:13px;color:#c090ff;font-family:'Share Tech Mono',monospace;line-height:2.0">
+              1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d⁶
+            </div>
+            <p style="font-size:11px;color:#304050;margin-top:6px">Check: 2+2+6+2+6+2+6 = 26 ✓</p>
+          </div>
+
+          <!-- STEP 3 — Noble gas shorthand -->
+          <div style="background:rgba(5,30,10,0.6);border-left:3px solid rgba(40,160,80,0.5);border-radius:0 5px 5px 0;padding:10px 14px;margin-bottom:12px">
+            <div style="font-size:11px;color:#408050;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">Step 3 — Shorten it with Noble Gas notation</div>
+            <p style="font-size:12px;color:#4a6080;margin-bottom:8px">Find the noble gas whose electron count is <em>just below</em> your element's. Replace those electrons with its symbol in [brackets].</p>
+            <p style="font-size:12px;color:#4a6080;margin-bottom:6px">Iron has 26 electrons. The nearest noble gas below 26 is <span style="color:#40d0a0">Argon [Ar] = 18 electrons</span>.</p>
+            <div style="font-size:13px;color:#c090ff;font-family:'Share Tech Mono',monospace;line-height:2.0">
+              1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d⁶<br>
+              <span style="color:#40d0a0">[Ar]</span> 4s² 3d⁶
+            </div>
+            <p style="font-size:11px;color:#304050;margin-top:6px">Everything after [Ar] is the <span style="color:#c090ff">valence shell</span> — the electrons that create spectral lines.</p>
+          </div>
+
+          <!-- Noble gas core reference -->
+          <div style="font-size:11px;color:#5070a0;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">The six noble gas cores</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px">
+            <div style="background:rgba(10,40,10,0.5);border:1px solid rgba(40,160,80,0.3);border-radius:4px;padding:6px 10px;font-size:12px"><span style="color:#40d0a0;font-weight:bold">[He]</span> = 1s² <span style="color:#304050;font-size:10px">(2e)</span></div>
+            <div style="background:rgba(10,40,10,0.5);border:1px solid rgba(40,160,80,0.3);border-radius:4px;padding:6px 10px;font-size:12px"><span style="color:#40d0a0;font-weight:bold">[Ne]</span> = …2p⁶ <span style="color:#304050;font-size:10px">(10e)</span></div>
+            <div style="background:rgba(10,40,10,0.5);border:1px solid rgba(40,160,80,0.3);border-radius:4px;padding:6px 10px;font-size:12px"><span style="color:#40d0a0;font-weight:bold">[Ar]</span> = …3p⁶ <span style="color:#304050;font-size:10px">(18e)</span></div>
+            <div style="background:rgba(10,40,10,0.5);border:1px solid rgba(40,160,80,0.3);border-radius:4px;padding:6px 10px;font-size:12px"><span style="color:#40d0a0;font-weight:bold">[Kr]</span> = …4p⁶ <span style="color:#304050;font-size:10px">(36e)</span></div>
+            <div style="background:rgba(10,40,10,0.5);border:1px solid rgba(40,160,80,0.3);border-radius:4px;padding:6px 10px;font-size:12px"><span style="color:#40d0a0;font-weight:bold">[Xe]</span> = …5p⁶ <span style="color:#304050;font-size:10px">(54e)</span></div>
+            <div style="background:rgba(10,40,10,0.5);border:1px solid rgba(40,160,80,0.3);border-radius:4px;padding:6px 10px;font-size:12px"><span style="color:#40d0a0;font-weight:bold">[Rn]</span> = …6p⁶ <span style="color:#304050;font-size:10px">(86e)</span></div>
+          </div>
+
+          <div style="background:rgba(30,20,5,0.5);border-left:3px solid rgba(200,150,30,0.5);border-radius:0 5px 5px 0;padding:10px 14px;font-size:12px;color:#705030">
+            💡 <strong style="color:#907040">Tip:</strong> Click any gold-bordered element on the Periodic Table tab to see its full Aufbau walkthrough step by step — watching it built is the fastest way to learn the pattern.
+          </div>
+
+        </div>
+      </details>
       <input id="config-search" type="text" placeholder="Search element or configuration..." autocomplete="off"
         style="background:rgba(8,18,50,0.9);border:1px solid rgba(60,100,200,0.3);border-radius:5px;color:#90b0e0;font-family:inherit;font-size:12px;padding:8px 12px;width:100%;outline:none;margin-bottom:10px">
     </div>
     <div id="gloss-config-body" style="display:none;padding:0 22px 16px;max-height:62vh;overflow-y:auto"></div>
 
-    <!-- Periodic table tab -->
-    <div id="gloss-pane-periodic" style="display:none;padding:12px 22px 8px">
-      <div style="font-size:10px;color:#304060;line-height:1.7;margin-bottom:6px">
-        All 118 elements. <span style="color:#f0c040">Gold-bordered</span> elements are in the game's emission pool — each one has a worked configuration example inside. New to configurations? Start with <span id="pt-h-hint" style="color:#f0c040;cursor:default;text-decoration:underline dotted rgba(200,160,30,0.5)" title="Hover to highlight Hydrogen on the table">H</span> (Hydrogen, #1) — it has just one electron and the simplest possible example.
+    <!-- Periodic table tab — purely visual, no explanatory text -->
+    <div id="gloss-pane-periodic" style="display:none;padding:8px 16px 4px">
+      <div style="font-size:10px;color:#304060;margin-bottom:4px">
+        <span style="color:#f0c040">Gold-bordered</span> = in game pool · Click any element for a worked example ·
+        Start with <span id="pt-h-hint" style="color:#f0c040;cursor:default;text-decoration:underline dotted rgba(200,160,30,0.5)" title="Click to highlight Hydrogen">H</span> if you're new →
+        <span style="color:#305060">For notation help, see the ⚛️ Configurations tab</span>
       </div>
     </div>
-    <div id="gloss-periodic-body" style="display:none;padding:0 14px 16px;max-height:68vh;overflow-y:auto"></div>
+    <div id="gloss-periodic-body" style="display:none;padding:0 10px 16px;max-height:72vh;overflow-y:auto"></div>
       <button class="pbtn pbtn-close" id="glossary-close">Close</button>
     </div>
   </div>
@@ -1085,7 +1206,10 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
       <div style="font-size:10px;color:#503010;line-height:1.7;margin-bottom:12px">
         Lithium (Li) at <span style="color:#f0c060">670.8nm</span> is destroyed inside stars as they age. Compare the lithium line depth to the nearby iron line at 670.3nm. A strong lithium line means a young star; a weak or absent line means an old one.
       </div>
-      <canvas id="li-canvas" width="560" height="80" style="display:block;width:100%;height:80px;border-radius:5px;margin-bottom:10px;background:#030408;border:1px solid rgba(100,80,20,0.3)"></canvas>
+      <canvas id="li-canvas" width="560" height="80" style="display:block;width:100%;height:80px;border-radius:5px;margin-bottom:6px;background:#030408;border:1px solid rgba(100,80,20,0.3)"></canvas>
+      <div style="font-size:9px;color:#604020;margin-bottom:10px;padding:6px 10px;background:rgba(20,10,2,0.6);border-radius:4px">
+        💡 <strong>How to read this:</strong> Find the two dips near the right side of the spectrum — <span style="color:#f0c060">yellow marker = Li</span>, <span style="color:#80c080">green marker = Fe</span>. Is Li deeper (stronger) or shallower (weaker) than Fe?
+      </div>
       <div id="li-data" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"></div>
       <div style="font-size:9px;color:#806040;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">Estimate this star's age based on lithium line strength:</div>
       <div id="li-choices" style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px"></div>
@@ -1107,9 +1231,12 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
     </div>
     <div style="padding:14px 22px">
       <div style="font-size:10px;color:#204030;line-height:1.7;margin-bottom:10px">
-        An orbiting planet makes its host star wobble. This wobble Doppler-shifts the star's spectral lines periodically. The graph below shows how this star's radial velocity has changed over time. Read the period and amplitude to detect the planet.
+        An orbiting planet makes its host star wobble. This wobble Doppler-shifts the star's spectral lines periodically. The graph below shows how this star's radial velocity has changed over time. Read the pattern to detect the planet.
       </div>
-      <canvas id="rv-canvas" width="560" height="120" style="display:block;width:100%;height:120px;border-radius:5px;margin-bottom:10px;background:#030408;border:1px solid rgba(30,120,60,0.3)"></canvas>
+      <canvas id="rv-canvas" width="560" height="120" style="display:block;width:100%;height:120px;border-radius:5px;margin-bottom:6px;background:#030408;border:1px solid rgba(30,120,60,0.3)"></canvas>
+      <div style="font-size:9px;color:#204030;margin-bottom:10px;padding:6px 10px;background:rgba(2,12,6,0.6);border-radius:4px">
+        💡 <strong>How to read this:</strong> The wave moving up = star moving toward us (blueshift). Moving down = moving away (redshift). A repeating smooth wave = a planet is orbiting. A tall wave = massive planet. A fast wave = close-in orbit.
+      </div>
       <div id="rv-data" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px"></div>
       <div style="font-size:9px;color:#306040;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">What can you conclude from this radial velocity curve?</div>
       <div id="rv-choices" style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px"></div>
@@ -1131,10 +1258,13 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
     </div>
     <div style="padding:14px 22px">
       <div style="font-size:10px;color:#2a3860;line-height:1.7;margin-bottom:10px">
-        This star's light passed through interstellar gas clouds before reaching us. The cloud added its own <span style="color:#8090e0">narrow absorption lines</span> on top of the star's broader stellar lines. Interstellar lines are sharper and <span style="color:#8090e0">do not Doppler shift</span> with the star. Can you identify which lines belong to the interstellar medium?
+        This star's light passed through interstellar gas clouds before reaching us. The cloud added its own <span style="color:#8090e0">narrow absorption lines</span> on top of the star's broader stellar lines. Interstellar lines are sharper and <span style="color:#8090e0">do not Doppler shift</span> with the star.
       </div>
       <div style="font-size:9px;color:#304080;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Spectrum — stellar lines (broad) + interstellar lines (narrow):</div>
       <canvas id="ism-canvas" width="560" height="70" style="display:block;width:100%;height:70px;border-radius:5px;margin-bottom:4px;background:#030408;border:1px solid rgba(60,80,160,0.3)"></canvas>
+      <div style="font-size:9px;color:#2a3860;margin-bottom:8px;padding:6px 10px;background:rgba(4,6,20,0.7);border-radius:4px">
+        💡 <strong>How to tell them apart:</strong> <span style="color:#8090e0">Interstellar lines = sharp narrow spikes</span>. Stellar lines = broad fuzzy dips. The most common interstellar lines appear at <span style="color:#8090e0">Ca II K ~393nm</span> (blue-violet) and <span style="color:#8090e0">Na I D ~589nm</span> (yellow).
+      </div>
       <div style="display:flex;justify-content:space-between;font-size:7px;color:#1e2a50;margin-bottom:10px;padding:0 2px"><span>380nm</span><span>450nm</span><span>520nm</span><span>590nm</span><span>660nm</span><span>700nm</span></div>
       <div style="font-size:9px;color:#304080;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px">Which of these wavelengths are interstellar absorption lines (not stellar)?</div>
       <div id="ism-choices" style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px"></div>
@@ -1498,7 +1628,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
         <!-- Collapsible science detail -->
         <details style="margin-top:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Why these thresholds? (science detail)</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Why these thresholds? (science detail)</summary>
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p><span class="highlight">Pressure (0.3–3.0 atm)</span> — Earth is 1.0 atm. Too thin and water evaporates or freezes. Too thick and you get a crushing greenhouse. Mars is 0.006 atm — far too low.</p>
             <p style="margin-top:6px"><span class="highlight">Temperature (−20 to +70°C)</span> — liquid water range with a margin for extremophiles. Wider than 0–100°C because some microbes survive at −20°C in brine, and up to +120°C in hydrothermal vents at pressure.</p>
@@ -1528,7 +1658,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
         <!-- Doppler detail -->
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ How Doppler shift works</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">How Doppler shift works</summary>
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p>When a star moves toward Earth its light waves compress — all its spectral lines shift slightly left (toward shorter/bluer wavelengths). Moving away stretches the waves — lines shift right (longer/redder). The puzzle shows two strips: the observed spectrum and a reference. Find the same distinctive line in both and check which direction it moved.</p>
             <div class="tip-box" style="margin-top:8px">Easiest line to track: hydrogen H-alpha at 656nm (the rightmost prominent line). If it appears slightly left of its reference position, the star is approaching. Slightly right — receding.</div>
@@ -1537,7 +1667,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
         <!-- Kepler detail -->
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ How the Kepler puzzle works</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">How the Kepler puzzle works</summary>
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p>The formula is <span class="highlight">a = ∛(T² × M)</span> where T is the planet's orbital period in years, M is the stellar mass, and a is the distance from the star in AU. The in-game calculator walks you through all three steps — just enter your answer in the input field.</p>
             <div class="tip-box green" style="margin-top:8px">Worked example: T=1yr, M=1 → 1² × 1 = 1 → ∛1 = <span class="good">1.0 AU</span> — Earth's orbit. Inside the Sun's habitable zone (0.95–1.37 AU). ✓</div>
@@ -1547,7 +1677,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
         <!-- Element ID detail -->
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ How element identification works</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">How element identification works</summary>
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p>Each element emits light at specific wavelengths — its spectral fingerprint. The puzzle shows an emission pattern and asks which element produced it. Early on, the four answer choices each show their own emission strip so you can compare visually. After 5 correct answers the strips disappear — you'll need to recall the patterns from memory or use the 📖 Glossary's Element Spectra tab.</p>
           </div>
@@ -1555,7 +1685,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
         <!-- Stellar Evolution detail -->
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ How stellar evolution works</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">How stellar evolution works</summary>
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p>A star's mass determines its entire life and death. The puzzle gives you the star's mass in solar masses (M☉) and asks what it will eventually become:</p>
             <ul style="margin:6px 0 0 16px;line-height:2">
@@ -1569,13 +1699,13 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
         <!-- Electron Configuration detail -->
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Electron configuration (appears after correct Element ID)</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Electron configuration (appears after correct Element ID)</summary>
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p>After correctly identifying an element, a follow-up question asks you to identify its ground-state electron configuration. This closes the loop between the spectrum you matched visually and the atomic physics that produced it.</p>
             <p>The valence electrons — the outermost shell — are what produce the emission lines you see. When a photon from the star excites one of those electrons to a higher energy level, the specific wavelength emitted as it falls back is exactly the line you matched.</p>
             <p>Three difficulty tiers: choose the correct config from four options (0–4 correct) → only valence shell shown (5–9 correct) → all steps blank (10+ correct). The <span class="highlight">⚛️ Configurations</span> tab in the 📖 Glossary is a full reference for all 86 elements.</p>
             <details style="margin-top:10px">
-              <summary style="cursor:pointer;font-size:10px;color:#6090c0;padding:6px 0;letter-spacing:1px">▸ How to work out any configuration yourself</summary>
+              <summary style="cursor:pointer;font-size:10px;color:#6090c0;padding:6px 0;letter-spacing:1px">How to work out any configuration yourself</summary>
               <div style="margin-top:8px;font-size:11px;color:#4a6080;line-height:1.9">
                 <p>Two steps: (1) count the electrons — equal to the atomic number. (2) Fill subshells in order: <span class="highlight">1s → 2s → 2p → 3s → 3p → 4s → 3d → 4p → 5s → 4d → 5p → 6s → 4f → 5d → 6p</span>. Stop when you've placed all electrons. Capacities: s=2, p=6, d=10, f=14.</p>
                 <p style="margin-top:6px"><strong style="color:#8090c0">Example 1 — Hydrogen (H), atomic number 1:</strong><br>1 electron → fills 1s partially → <span class="highlight">1s¹</span></p>
@@ -1589,7 +1719,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
         <!-- Survey Sprint detail -->
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Survey Sprint — timed challenge mode</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Survey Sprint — timed challenge mode</summary>
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p>Survey Sprint is an optional timed mode accessible from the <span class="highlight">⬡ Sector Jump</span> screen. Classify 10 stars correctly within 10 minutes. An orange timer bar appears in the HUD showing time remaining.</p>
             <p>A speed bonus of up to +1,000 points is awarded on completion — the faster you finish, the more points. The sprint counts correct emission matches only; other puzzle types continue normally. Hit <span class="highlight">Quit</span> on the timer bar to end early without penalty.</p>
@@ -1598,7 +1728,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
         <!-- Mystery Objects detail -->
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Mystery objects — anomalous classifications</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Mystery objects — anomalous classifications</summary>
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p>Every 8–14 stars, you may encounter an object that doesn't fit any OBAFGKM class. These appear with a coloured badge and distinctive prefix:</p>
             <ul style="margin:6px 0 0 16px;line-height:2">
@@ -1612,7 +1742,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
         <!-- Special Events detail -->
         <details>
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Special events — variable stars, flares, binaries</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Special events — variable stars, flares, binaries</summary>
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p>Every 6–9 correct scans, a special event star appears. You'll hear a three-note chime and see a coloured badge below the star name with a science explanation. Three event types:</p>
             <ul style="margin:6px 0 0 16px;line-height:2">
@@ -1648,7 +1778,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
         <!-- Collapsible reference sections -->
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Bonus puzzles (appear after correct emission match)</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Bonus puzzles (appear after correct emission match)</summary>
           <ul style="font-size:11px;color:#5070a0;line-height:2;margin:10px 0 4px 20px">
             <li><span class="highlight">Doppler</span> (Tier 2+) — compare line positions to find if the star is approaching or receding. +75 pts.</li>
             <li><span class="highlight">Element ID</span> (optional → mandatory at 20 stars) — identify an element from its emission spectrum. +125 to +500 pts.</li>
@@ -1658,7 +1788,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
         </details>
 
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Sector difficulty & spectrum types</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Sector difficulty & spectrum types</summary>
           <ul style="font-size:11px;color:#5070a0;line-height:2;margin:10px 0 4px 20px">
             <li><span class="highlight">Tier 1</span> — absorption and emission spectra. Home Nebula, Habitable Belt.</li>
             <li><span class="highlight">Tier 2</span> — more emission spectra + Doppler puzzles. White Ring, Red Dwarf Field.</li>
@@ -1668,7 +1798,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
         </details>
 
         <details style="margin-bottom:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Scoring reference</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Scoring reference</summary>
           <table class="score-table" style="margin-top:10px">
             <tr><td>Emission match</td><td>+100 + streak (+20/streak)</td></tr>
             <tr><td>First discovery</td><td>+50</td></tr>
@@ -1685,7 +1815,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
         </details>
 
         <details>
-          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Progression unlocks</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Progression unlocks</summary>
           <ul style="font-size:11px;color:#5070a0;line-height:2;margin:10px 0 4px 20px">
             <li><span class="good">Colony 1</span> — Sector Jump unlocked</li>
             <li><span class="good">Colony 3</span> — Telescope Deep Scan (50 cr/scan)</li>
@@ -1710,7 +1840,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
         <!-- HR DIAGRAM -->
         <details open style="margin-top:14px">
-          <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">▸ HR Diagram Placement (replaces classification buttons)</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">HR Diagram Placement (replaces classification buttons)</summary>
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p>Instead of clicking O B A F G K M, you place the star on an interactive Hertzsprung-Russell diagram with five clickable regions: Supergiant, Giant, Main Sequence, Subgiant, and White Dwarf.</p>
             <p>The key insight this puzzle teaches: <span class="highlight">temperature alone doesn't classify a star</span>. A G-type temperature (5,750K) could belong to a main sequence dwarf, a subgiant, a giant, or even a white dwarf. Luminosity and radius together with temperature determine where on the diagram a star belongs — and therefore its luminosity class (Ia, II, III, IV, V).</p>
@@ -1720,7 +1850,7 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 
         <!-- SPECTROSCOPIC BINARY MASS -->
         <details style="margin-top:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">▸ Spectroscopic Binary Mass (new mandatory puzzle for composite spectra)</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">Spectroscopic Binary Mass (new mandatory puzzle for composite spectra)</summary>
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p>When a composite binary spectrum is detected, both stars' absorption lines are visible shifting back and forth in opposite directions as they orbit. The velocity amplitude of each star is inversely proportional to its mass:</p>
             <div class="tip-box" style="text-align:center;font-size:13px"><span class="highlight">M₁ / M₂ = V₂ / V₁</span></div>
@@ -1729,9 +1859,43 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
           </div>
         </details>
 
+        <!-- HELIOPAUSE ADVANCED PUZZLES -->
+        <details style="margin-top:8px">
+          <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">Heliopause Bonus Puzzles (three new analyses — all optional)</summary>
+          <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
+            <p>Stars in the Heliopause sector come with three extra analysis techniques after classification. Each is optional (+150 pts each) but together they give you a complete stellar portrait.</p>
+
+            <p style="margin-top:10px"><strong style="color:#c090ff">1 — Lithium Depletion Age</strong></p>
+            <p>Lithium (Li) is destroyed inside stars as they get older — the hotter the core, the faster it burns away. The spectrum shows two nearby lines: <span style="color:#f0c060">Li at 670.8nm</span> and <span style="color:#a0d0a0">Fe at 670.3nm</span>. Compare their depths:</p>
+            <ul style="margin:4px 0 4px 14px;line-height:2.0">
+              <li><strong>Li much stronger than Fe</strong> → young star (under ~1 billion years)</li>
+              <li><strong>Li and Fe roughly equal</strong> → middle-aged (~1–5 billion years)</li>
+              <li><strong>Li much weaker than Fe (or absent)</strong> → old star (over 5 billion years)</li>
+            </ul>
+            <div class="tip-box amber">The ratio changes slowly with age — you're making an estimate, not an exact measurement. Look at which line has a deeper dip in the spectrum.</div>
+
+            <p style="margin-top:10px"><strong style="color:#c090ff">2 — Radial Velocity Planet Detection</strong></p>
+            <p>A planet orbiting a star makes the star wobble slightly toward and away from us. This wobble appears as a rhythmic Doppler shift — the spectral lines shift blue then red then blue again as the star moves. The canvas shows a velocity curve over time.</p>
+            <ul style="margin:4px 0 4px 14px;line-height:2.0">
+              <li>A smooth wave means <strong>one planet orbiting cleanly</strong></li>
+              <li>A large amplitude (tall wave) means a <strong>massive planet</strong></li>
+              <li>A short period (fast waves) means the planet is <strong>close in, hot</strong></li>
+            </ul>
+            <div class="tip-box amber">The question asks you to identify what the curve tells you — not to calculate anything. Read the pattern, trust your eyes.</div>
+
+            <p style="margin-top:10px"><strong style="color:#c090ff">3 — Interstellar Medium Absorption</strong></p>
+            <p>Light from distant Heliopause stars passes through clouds of gas floating in interstellar space. That gas adds its own absorption lines on top of the star's lines. How to tell them apart:</p>
+            <ul style="margin:4px 0 4px 14px;line-height:2.0">
+              <li><strong>Stellar lines</strong> — broad, fuzzy edges, caused by the hot turbulent stellar atmosphere</li>
+              <li><strong>Interstellar lines</strong> — narrow, sharp, thin — like a knife cut in the spectrum</li>
+            </ul>
+            <p>The puzzle highlights candidate lines and asks which are interstellar. Look for the sharp narrow ones. The two most common interstellar tracers are <span style="color:#8090e0">Ca II K at 393nm</span> and <span style="color:#8090e0">Na I D at 589nm</span>.</p>
+          </div>
+        </details>
+
         <!-- RESEARCH LOG -->
         <details style="margin-top:8px">
-          <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">▸ Research Log (replaces Mission Report)</summary>
+          <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">Research Log (replaces Mission Report)</summary>
           <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
             <p>In Research Mode, the session summary becomes a formatted Research Log showing all derived quantities alongside measured parameters. For each star analysed it records:</p>
             <ul style="margin:6px 0 0 16px;line-height:2.2">
@@ -1905,15 +2069,13 @@ const SECTORS=[
     starCount:32,
     bgTint:'rgba(20,30,70,0.3)',
     realStars:[
-      {name:'Sun',cls:'G'},{name:'Alpha Centauri A',cls:'G'},{name:'Tau Ceti',cls:'G'},{name:'51 Pegasi',cls:'G'},
-      {name:'Kepler-22',cls:'G'},{name:'Epsilon Eridani',cls:'K'},{name:'Alpha Centauri B',cls:'K'},
-      {name:'61 Cygni A',cls:'K'},{name:'Sigma Draconis',cls:'K'},
-      {name:'Proxima Centauri',cls:'M'},{name:"Barnard's Star",cls:'M'},{name:'Wolf 359',cls:'M'},
-      {name:'Ross 128',cls:'M'},{name:'TRAPPIST-1',cls:'M'},
-      {name:'Sirius',cls:'A'},{name:'Vega',cls:'A'},{name:'Altair',cls:'A'},{name:'Fomalhaut',cls:'A'},
-      {name:'Procyon',cls:'F'},{name:'Polaris',cls:'F'},
+      {name:'Sirius',cls:'A'},{name:'Vega',cls:'A'},{name:'Altair',cls:'A'},
       {name:'Regulus',cls:'B'},{name:'Achernar',cls:'B'},{name:'Spica',cls:'B'},
       {name:'Theta Orionis A',cls:'O'},{name:'Zeta Puppis',cls:'O'},
+      {name:'Procyon',cls:'F'},{name:'Polaris',cls:'F'},
+      {name:'Sun',cls:'G'},{name:'Tau Ceti',cls:'G'},{name:'51 Pegasi',cls:'G'},
+      {name:'Epsilon Eridani',cls:'K'},{name:'Alpha Centauri B',cls:'K'},
+      {name:'Proxima Centauri',cls:'M'},{name:'TRAPPIST-1',cls:'M'},
     ]
   },
   {
@@ -2578,12 +2740,12 @@ function checkUnlocks(prevColonies){
     addResearchGuideTab();
   }
 
-  // ── ENDGAME — all 10 sectors discovered + Heliopause visited ──
+  // ── ENDGAME — all 10 sectors fully completed ──────────────
+  // Requires all required (non-telescope) stars discovered in every sector
   const allSectorIds = ['home','inner','habitable','redfield','whitering','deepfield',
                         'graveyard','voidmargin','forbiddenzone','heliopause'];
-  const gameComplete = allSectorIds.every(id =>
-    state.sectorStars[id] && state.sectorStars[id].some(s => s.discovered)
-  );
+  const gameComplete = state._sectorCompleted &&
+    allSectorIds.every(id => state._sectorCompleted[id]);
   if(gameComplete && !state._endgameFired){
     state._endgameFired = true;
     setTimeout(playEndgameCelebration, 1500);
@@ -2722,6 +2884,48 @@ function openAct1(star){
 function buildChoiceGrid(star){
   const grid=document.getElementById('choice-grid');
   grid.innerHTML='';
+
+  // ── DIRECT CLASSIFICATION MODE ─────────────────────────────
+  // After 3 sectors complete, 30% of non-composite stars use Direct ID:
+  // no candidates shown — just the spectrum and the 7 class buttons.
+  // After 5 sectors complete, pushes to 60%.
+  const completedSectors = state._sectorCompleted ? Object.values(state._sectorCompleted).filter(Boolean).length : 0;
+  const directChance = completedSectors >= 5 ? 0.60 : completedSectors >= 3 ? 0.30 : 0;
+  const useDirectMode = directChance > 0 && Math.random() < directChance
+    && (star.specMode || 'absorption') !== 'composite'; // composite always needs matching
+
+  star._directClassMode = useDirectMode;
+
+  if(useDirectMode){
+    // Direct classification — show 7 class buttons, no candidate strips
+    state.playerChoice = null;
+    state.choiceClasses = STELLAR_CLASSES;
+    state.correctIndex  = STELLAR_CLASSES.findIndex(c=>c.type===star.cls.type);
+
+    const choiceLabel = document.getElementById('choice-label');
+    choiceLabel.innerHTML = t('choice_label_direct') || '🔭 <strong>Direct Classification</strong> — read the spectrum and identify the stellar class. No candidates.';
+
+    // Seven class buttons
+    STELLAR_CLASSES.forEach((cls, idx)=>{
+      const btn = document.createElement('button');
+      btn.style.cssText = `background:rgba(10,15,40,0.8);border:1px solid ${cls.color}44;border-radius:5px;color:${cls.color};font-family:inherit;font-size:13px;font-weight:bold;padding:10px 6px;cursor:pointer;text-align:center;transition:all 0.15s`;
+      btn.innerHTML = `<div style="font-size:15px">${cls.type}</div><div style="font-size:8px;opacity:0.6;margin-top:2px">${cls.tempLabel.split('–')[0].trim()}</div>`;
+      btn.addEventListener('click',()=>{
+        if(state.act1answered)return;
+        grid.querySelectorAll('button').forEach(b=>{ b.style.background='rgba(10,15,40,0.8)'; b.style.boxShadow='none'; });
+        btn.style.background = cls.color+'22';
+        btn.style.boxShadow  = `0 0 8px ${cls.color}66`;
+        state.playerChoice = idx;
+        document.getElementById('act1-confirm').disabled = false;
+      });
+      grid.appendChild(btn);
+    });
+    grid.style.gridTemplateColumns = 'repeat(7,1fr)';
+    return;
+  }
+
+  // ── STANDARD MATCHING MODE ────────────────────────────────
+  grid.style.gridTemplateColumns = '1fr 1fr';
   const others=STELLAR_CLASSES.filter(c=>c.type!==star.cls.type);
   for(let i=others.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[others[i],others[j]]=[others[j],others[i]];}
   const pool=[star.cls,...others.slice(0,3)];
@@ -2730,7 +2934,6 @@ function buildChoiceGrid(star){
   state.correctIndex=pool.findIndex(c=>c.type===star.cls.type);
   state.playerChoice=null;
 
-  // Choice label changes based on mode
   const specMode = star.specMode || 'absorption';
   const choiceLabel = document.getElementById('choice-label');
   if(specMode === 'emission'){
@@ -2756,7 +2959,6 @@ function buildChoiceGrid(star){
       document.getElementById('act1-confirm').disabled=false;
     });
     grid.appendChild(card);
-    // Choices always shown in absorption mode so player maps the pattern
     drawSpectrum(cvs, pool[idx], 38, 'absorption');
   });
 }
@@ -2768,12 +2970,29 @@ function confirmAct1(){
   const specMode = star.specMode || 'absorption';
   const correct=state.playerChoice===state.correctIndex;
 
-  document.querySelectorAll('.choice-card').forEach((card,idx)=>{
-    const rl=card.querySelector('.choice-reveal-label');
-    rl.textContent=state.choiceClasses[idx].tempLabel; rl.style.color='#5080a0';
-    if(idx===state.correctIndex){card.classList.add('correct-reveal');rl.style.color='#40c060';}
-    if(idx===state.playerChoice&&!correct){card.classList.add('wrong-reveal');rl.style.color='#c03030';}
-  });
+  if(star._directClassMode){
+    // Direct mode — highlight the chosen button and show correct
+    const btns = document.querySelectorAll('#choice-grid button');
+    btns.forEach((btn,idx)=>{
+      const cls = STELLAR_CLASSES[idx];
+      if(idx===state.correctIndex){
+        btn.style.background = '#40c06022';
+        btn.style.border = `1px solid #40c060`;
+        btn.style.boxShadow = '0 0 10px #40c06044';
+      }
+      if(idx===state.playerChoice && !correct){
+        btn.style.background = '#c0303022';
+        btn.style.border = `1px solid #c03030`;
+      }
+    });
+  } else {
+    document.querySelectorAll('.choice-card').forEach((card,idx)=>{
+      const rl=card.querySelector('.choice-reveal-label');
+      rl.textContent=state.choiceClasses[idx].tempLabel; rl.style.color='#5080a0';
+      if(idx===state.correctIndex){card.classList.add('correct-reveal');rl.style.color='#40c060';}
+      if(idx===state.playerChoice&&!correct){card.classList.add('wrong-reveal');rl.style.color='#c03030';}
+    });
+  }
 
   // Higher base points for harder spectrum modes
   const basePoints = specMode==='composite' ? 200 : specMode==='emission' ? 150 : 100;
@@ -2781,7 +3000,7 @@ function confirmAct1(){
   if(correct&&!star.discovered){pts+=50;state.found++;star.discovered=true;
     checkUnlocks(state.colonies);
     if(state.found === 20) showUnlockToast('🔬 Element Analysis now required for all scans');
-    if(state.found === 40) showUnlockToast('🌟 Stellar Evolution puzzles now available after classification');
+    if(state.found === 60) showUnlockToast('🌟 Stellar Evolution puzzles now available after classification');
     // First discovery in this sector — play radar sweep
     const sectorDiscoveries = (state.sectorStars[state.currentSectorId]||[]).filter(s=>s.discovered).length;
     if(sectorDiscoveries === 1) setTimeout(()=>playFirstDiscoverySweep(star), 600);
@@ -2812,8 +3031,12 @@ function confirmAct1(){
   else{v1.textContent=t('hab_low');v1.style.color='#d08820';}
 
   // For composite mode, also reveal the secondary class after answer
+  // Clear any previous companion note first to prevent accumulation
+  const prevNote = document.getElementById('act1-companion-note');
+  if(prevNote) prevNote.remove();
   if(specMode==='composite' && star.secondaryCls){
     const compNote = document.createElement('div');
+    compNote.id = 'act1-companion-note';
     compNote.style.cssText='font-size:10px;color:#9060b0;margin-top:6px;letter-spacing:0.5px';
     compNote.textContent = `Secondary companion: Type ${star.secondaryCls.type} (${star.secondaryCls.tempLabel})`;
     document.getElementById('act1-analysis').appendChild(compNote);
@@ -3070,19 +3293,29 @@ function confirmAct3(){
   btn.onclick=()=>{
     document.getElementById('classify-panel').style.display='none';
     const needsEvolution = state.found >= 40 && star.cls.keyElement;
+    const isHeliopause   = state.currentSectorId === 'heliopause';
+
+    // Build the terminal action — what happens after all puzzles
+    const terminal = goToCiv ? ()=>openAct4(star) : ()=>closeAllPanels();
+
+    // Chain: [evolution?] → [heliopause bonuses?] → [kepler?] → terminal
+    let chain = terminal;
+
     if(goToCiv){
-      if(needsEvolution){
-        openEvolution(star, ()=>openKepler(star, ()=>openAct4(star)));
-      } else {
-        openKepler(star, ()=>openAct4(star));
-      }
-    } else {
-      if(needsEvolution){
-        openEvolution(star, ()=>closeAllPanels());
-      } else {
-        closeAllPanels();
-      }
+      chain = ()=>openKepler(star, terminal);
     }
+
+    if(isHeliopause && state.researchUnlocked){
+      const afterHelio = chain;
+      chain = ()=>openHeliopauseBonuses(star, afterHelio);
+    }
+
+    if(needsEvolution){
+      const afterEvo = chain;
+      chain = ()=>openEvolution(star, afterEvo);
+    }
+
+    chain();
   };
 }
 
@@ -3420,12 +3653,18 @@ function animateScopeView(){
   const ctx=canvas.getContext('2d');
   if(scopeAnim)cancelAnimationFrame(scopeAnim);
 
-  const fieldStars=Array.from({length:140},()=>({
-    x:Math.random()*W, y:Math.random()*H,
-    r:0.3+Math.random()*1.8, a:0.15+Math.random()*0.85,
-    twinkle:Math.random()*Math.PI*2,
-    col:['#ffffff','#ffffff','#ffd2a1','#9bb0ff','#c0e8ff'][Math.floor(Math.random()*5)]
-  }));
+  const fieldStars=Array.from({length:140},()=>{
+    const col=['#ffffff','#ffffff','#ffd2a1','#9bb0ff','#c0e8ff'][Math.floor(Math.random()*5)];
+    return {
+      x:Math.random()*W, y:Math.random()*H,
+      r:0.3+Math.random()*1.8, a:0.15+Math.random()*0.85,
+      twinkle:Math.random()*Math.PI*2,
+      // Pre-compute RGB so no parseInt in the frame loop
+      rv:parseInt(col.slice(1,3),16),
+      gv:parseInt(col.slice(3,5),16),
+      bv:parseInt(col.slice(5,7),16),
+    };
+  });
 
   // Pre-compute eyepiece vignette — circular telescope view
   const radius = Math.min(W,H)*0.47;
@@ -3454,7 +3693,7 @@ function animateScopeView(){
   let lastScopeFrame=0;
   function frame(t){
     scopeAnim=requestAnimationFrame(frame);
-    if(t-lastScopeFrame<16) return;
+    if(t-lastScopeFrame<32) return; // 30fps cap — frees CPU for audio
     lastScopeFrame=t;
     ctx.fillStyle='#010208'; ctx.fillRect(0,0,W,H);
     // Gentle breathing zoom
@@ -3462,8 +3701,7 @@ function animateScopeView(){
     ctx.save(); ctx.translate(cx,cy); ctx.scale(zoom,zoom); ctx.translate(-cx,-cy);
     fieldStars.forEach(s=>{
       const alpha=s.a*(0.65+Math.sin(t*0.0015+s.twinkle)*0.35);
-      const r=parseInt(s.col.slice(1,3),16),g=parseInt(s.col.slice(3,5),16),b=parseInt(s.col.slice(5,7),16);
-      ctx.fillStyle=`rgba(${r},${g},${b},${alpha.toFixed(2)})`;
+      ctx.fillStyle=`rgba(${s.rv},${s.gv},${s.bv},${alpha.toFixed(2)})`;
       ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
     });
     ctx.restore();
@@ -3768,11 +4006,31 @@ function openDoppler(star, onDone){
   // Build choice buttons
   const choicesEl = document.getElementById('doppler-choices');
   choicesEl.innerHTML = '';
-  const options = [
-    { val:'approaching', label:'◀ Approaching', sub:'Lines shifted toward blue end' },
-    { val:'none',        label:'— No shift',    sub:'Lines at rest positions' },
-    { val:'receding',    label:'Receding ▶',    sub:'Lines shifted toward red end' },
-  ];
+  const dopplerCorrect = state.session.correct['doppler'] || 0;
+
+  // After 10 correct, vary the labels so left≠approaching always
+  // and randomize order — prevents pure left/right pattern gaming
+  let options;
+  if(dopplerCorrect >= 10){
+    // Randomize order and use more scientific labels
+    options = [
+      { val:'approaching', label:t('doppler_blueshift')||'Blueshift',      sub:t('doppler_blueshift_sub')||'Lines shifted to shorter wavelengths' },
+      { val:'none',        label:t('doppler_none')||'No Doppler shift',        sub:t('doppler_none_sub')||'Lines at rest-frame positions' },
+      { val:'receding',    label:t('doppler_redshift')||'Redshift',            sub:t('doppler_redshift_sub')||'Lines shifted to longer wavelengths' },
+    ];
+    // Shuffle
+    for(let i=options.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [options[i],options[j]]=[options[j],options[i]];
+    }
+  } else {
+    options = [
+      { val:'approaching', label:t('doppler_approaching')||'◀ Approaching', sub:t('doppler_approaching_sub')||'Lines shifted toward blue end' },
+      { val:'none',        label:t('doppler_none')||'— No shift',              sub:t('doppler_none_sub')||'Lines at rest positions' },
+      { val:'receding',    label:t('doppler_receding')||'Receding ▶', sub:t('doppler_receding_sub')||'Lines shifted toward red end' },
+    ];
+  }
+
   options.forEach(opt => {
     const btn = document.createElement('button');
     btn.className   = 'bonus-choice';
@@ -4007,55 +4265,44 @@ function openKepler(star, onDone){
   document.getElementById('kepler-student-a').value    = '';
   document.getElementById('kepler-student-a').disabled = false;
 
-  // Live calculator — updates as student types
-  const inputEl = document.getElementById('kepler-student-a');
+  // ── KEPLER CALCULATOR — no live answer feedback ────────────────
+  // Steps 1 and 2 are filled by the student on Tier 0 scaffolding.
+  // Nothing reveals the correct answer until Submit is clicked.
+  // This prevents brute-force guessing digit by digit.
+  const inputEl   = document.getElementById('kepler-student-a');
+  const T_given   = data.periodYears;
+  const M_given   = data.mass;
+  const correctA  = +(Math.pow(T_given*T_given*M_given, 1/3)).toFixed(3);
+
+  // Tier 0: show pre-filled step values so student can follow along
+  // Tier 1+: leave blanks — student must compute mentally or on paper
+  if(scaffoldTier === 0){
+    document.getElementById('kc-t2').textContent   = +(T_given*T_given).toFixed(4);
+    document.getElementById('kc-t2b').textContent  = +(T_given*T_given).toFixed(4);
+    document.getElementById('kc-t2m').textContent  = +(T_given*T_given*M_given).toFixed(4);
+    document.getElementById('kc-t2mb').textContent = +(T_given*T_given*M_given).toFixed(4);
+  } else {
+    // Show blanks — student works it out
+    document.getElementById('kc-t2').textContent   = '___';
+    document.getElementById('kc-t2b').textContent  = '___';
+    document.getElementById('kc-t2m').textContent  = '___';
+    document.getElementById('kc-t2mb').textContent = '___';
+  }
+
+  // Clear any previous verdict
+  const verdict = document.getElementById('kepler-calc-verdict');
+  verdict.textContent = '';
+  verdict.style.color = '';
+
+  // No oninput feedback — just enable submit when something is entered
   inputEl.oninput = () => {
-    const T   = data.periodYears;
-    const M   = data.mass;
-    const T2  = +(T * T).toFixed(4);
-    const T2M = +(T2 * M).toFixed(4);
-    const correctA = +(Math.pow(T2M, 1/3)).toFixed(3);
-
-    // In Tier 0, always update steps 1 and 2 as they type
-    // In Tier 1+, leave the blanks blank — student must fill mentally
-    if(scaffoldTier === 0){
-      document.getElementById('kc-t2').textContent  = T2;
-      document.getElementById('kc-t2b').textContent = T2;
-      document.getElementById('kc-t2m').textContent = T2M;
-      document.getElementById('kc-t2mb').textContent= T2M;
-    }
-
-    const studentA = parseFloat(inputEl.value);
-    const verdict  = document.getElementById('kepler-calc-verdict');
-
-    if(isNaN(studentA) || inputEl.value === ''){
-      verdict.textContent = '';
-      verdict.style.color = '';
-      return;
-    }
-
-    const error  = Math.abs(studentA - correctA) / correctA;
-    const pctOff = Math.round(error * 100);
-
-    if(error <= 0.10){
-      verdict.innerHTML = `✓ Your answer of <strong>${studentA} AU</strong> is correct! (Expected: ${correctA} AU)`;
-      verdict.style.color = '#50d878';
-      autoSelectKeplerChoice(data, studentA);
-    } else if(error <= 0.30){
-      verdict.innerHTML = `Almost — ${studentA} AU is ${pctOff}% off. Check your cube root. Expected: ${correctA} AU`;
-      verdict.style.color = '#f0c040';
-    } else {
-      verdict.innerHTML = `✗ ${studentA} AU is ${pctOff}% off. Double-check each step. Expected: ${correctA} AU`;
-      verdict.style.color = '#e06060';
-    }
-
-    state.session.keplerWorking = {
-      T, M, T2, T2M, correctA,
-      studentA, error: pctOff,
-      scaffoldTier,
-      steps: `T²=${T2} | T²×M=${T2M} | ∛${T2M}=${correctA} | Student: ${studentA} AU (±${pctOff}%)`
-    };
+    const val = parseFloat(inputEl.value);
+    document.getElementById('kepler-confirm').disabled = isNaN(val) || inputEl.value === '';
+    verdict.textContent = ''; // clear any previous result while re-editing
   };
+
+  // Store working for session report — recorded when student submits
+  state.session.keplerWorking = null;
 
   // Choice buttons
   const choicesEl = document.getElementById('kepler-choices');
@@ -4192,7 +4439,7 @@ function drawKeplerDiagram(star, data){
 
   // Frame loop — only draws the moving planet on top of the static background
   // 60fps cap: skip frame if less than 16ms since last draw
-  const FPS_CAP   = 1000 / 60;
+  const FPS_CAP   = 1000 / 30; // 30fps — frees CPU for audio scheduling
   let lastFrame   = 0;
   let startTime   = null;
   const angSpeed  = (Math.PI*2) / (data.periodYears * 4000);
@@ -4222,18 +4469,58 @@ function drawKeplerDiagram(star, data){
 }
 
 function confirmKepler(){
-  if(!state.keplerChoice || state.keplerDone) return;
+  if(!state.keplerDone === false && !state.keplerChoice) return;
+  if(state.keplerDone) return;
   state.keplerDone = true;
 
-  // Reveal the HZ band overlay now that the student has committed
+  const data = state.keplerData;
+
+  // ── EVALUATE STUDENT'S CALCULATOR ANSWER ──────────────────
+  const inputEl  = document.getElementById('kepler-student-a');
+  const studentA = parseFloat(inputEl?.value);
+  const T        = data.periodYears;
+  const M        = data.mass;
+  const T2       = +(T*T).toFixed(4);
+  const T2M      = +(T2*M).toFixed(4);
+  const correctA = +(Math.pow(T2M, 1/3)).toFixed(3);
+  const pctOff   = isNaN(studentA) ? null : Math.round(Math.abs(studentA-correctA)/correctA*100);
+
+  // Record working for session report
+  state.session.keplerWorking = {
+    T, M, T2, T2M, correctA,
+    studentA: isNaN(studentA) ? '—' : studentA,
+    error: pctOff,
+    steps: `T=${T}yr | T²=${T2} | T²×M=${T2M} | ∛(T²×M)=${correctA} AU | Student entered: ${isNaN(studentA)?'—':studentA} AU${pctOff!==null?' (±'+pctOff+'%)':''}`
+  };
+
+  // Show verdict in the calc panel
+  const verdict = document.getElementById('kepler-calc-verdict');
+  if(verdict && !isNaN(studentA)){
+    if(pctOff <= 10){
+      verdict.innerHTML = `✓ ${studentA} AU — within ${pctOff}% of expected ${correctA} AU`;
+      verdict.style.color = '#50d878';
+    } else if(pctOff <= 30){
+      verdict.innerHTML = `Close — ${studentA} AU is ${pctOff}% off. Expected: ${correctA} AU. Check your cube root.`;
+      verdict.style.color = '#f0c040';
+    } else {
+      verdict.innerHTML = `${studentA} AU is ${pctOff}% off the expected ${correctA} AU. Review each step above.`;
+      verdict.style.color = '#e07070';
+    }
+  }
+
+  // Auto-select zone based on student's entered value if they haven't clicked one
+  if(!state.keplerChoice && !isNaN(studentA)){
+    autoSelectKeplerChoice(data, studentA);
+  }
+  if(!state.keplerChoice) return; // still nothing selected — keep Submit active
+
+  // Reveal the HZ band overlay
   if(state._keplerRevealCanvas){
     state._keplerRevealCanvas.style.display = 'block';
   }
 
-  const data    = state.keplerData;
   const correct = state.keplerChoice === data.correctAnswer;
 
-  // Reveal buttons
   document.querySelectorAll('#kepler-choices .kepler-choice').forEach(b=>{
     if(b.dataset.val === data.correctAnswer) b.classList.add('correct-reveal');
     if(b.dataset.val === state.keplerChoice && !correct) b.classList.add('wrong-reveal');
@@ -4260,10 +4547,10 @@ function confirmKepler(){
   const resultEl = document.getElementById('kepler-result');
   if(correct){
     resultEl.style.cssText = 'display:block;font-size:11px;line-height:1.7;padding:10px 12px;border-radius:5px;margin-bottom:12px;background:rgba(5,30,15,0.7);border:1px solid rgba(40,160,70,0.3);color:#50d878';
-    resultEl.innerHTML = `✓ Correct — at ${data.semiMajorAU} AU, this planet is ${zoneLabels[data.correctAnswer]}. T²=a³ confirms: ${data.periodYears}² ≈ ${data.semiMajorAU}³`;
+    resultEl.innerHTML = `✓ Correct — at ${data.semiMajorAU} AU, this planet is ${zoneLabels[data.correctAnswer]}. T²=a³/M confirms: ${T}²/${M} = ${T2M} → ∛${T2M} = ${correctA} AU`;
   } else {
     resultEl.style.cssText = 'display:block;font-size:11px;line-height:1.7;padding:10px 12px;border-radius:5px;margin-bottom:12px;background:rgba(30,5,5,0.7);border:1px solid rgba(160,40,40,0.3);color:#e07070';
-    resultEl.innerHTML = `✗ At ${data.semiMajorAU} AU, the planet is actually ${zoneLabels[data.correctAnswer]}. Calculated using T²=a³: period ${data.periodYears} yr → ${data.semiMajorAU} AU.`;
+    resultEl.innerHTML = `✗ At ${data.semiMajorAU} AU, the planet is actually ${zoneLabels[data.correctAnswer]}. Full working: T²=${T2} × M=${M} → ${T2M} → ∛${T2M} = ${correctA} AU`;
   }
 
   const btn = document.getElementById('kepler-confirm');
@@ -4310,7 +4597,7 @@ function openElementID(star, onDone, mandatory){
     const btnRow = document.getElementById('element-panel').querySelector('[style*="display:flex"]');
     if(btnRow) btnRow.before(note);
   }
-  const displayTierNote = state.found >= 40 ? 'partial' : state.found >= 20 ? 'stellar' : 'pure';
+  const displayTierNote = state.found >= 60 ? 'partial' : state.found >= 20 ? 'stellar' : 'pure';
   const tierPts = displayTierNote === 'partial' ? 500 : displayTierNote === 'stellar' ? 250 : 125;
   note.textContent = mandatory
     ? `⚠ Required — Element analysis mandatory. Wrong: −10 pts. Correct: +${tierPts} pts.`
@@ -4320,7 +4607,7 @@ function openElementID(star, onDone, mandatory){
   const cls = star.cls;
 
   // Determine display tier FIRST — used by pool selection and rendering below
-  const displayTier = state.found >= 40 ? 'partial' : state.found >= 20 ? 'stellar' : 'pure';
+  const displayTier = state.found >= 60 ? 'partial' : state.found >= 20 ? 'stellar' : 'pure';
 
   // Update question text immediately
   const qEl = document.getElementById('element-question');
@@ -4337,7 +4624,7 @@ function openElementID(star, onDone, mandatory){
     tierHeaderEl.textContent =
       displayTier === 'pure'    ? 'Bonus — Element Identification (Tier A)' :
       displayTier === 'stellar' ? 'Element Identification (Tier B — 20+ stars)' :
-                                  'Element Identification (Tier C — 40+ stars)';
+                                  'Element Identification (Tier C — 60+ stars)';
   }
 
   // Pick a random element from the global periodic table pool each scan
@@ -4583,7 +4870,18 @@ function openElementID(star, onDone, mandatory){
   document.getElementById('element-confirm').disabled        = true;
   document.getElementById('element-confirm').textContent     = 'Identify Element';
   document.getElementById('element-confirm').onclick         = confirmElementID;
-  document.getElementById('element-confirm').style.display   = '';  // restore if hidden by config puzzle
+  document.getElementById('element-confirm').style.display   = '';
+  // Show spectra reference button for first 10 correct answers — in-game reference
+  const elemCorrect = state.session.correct['elementID'] || 0;
+  const refBtn = document.getElementById('element-spectra-ref-btn');
+  if(refBtn){
+    refBtn.style.display = elemCorrect < 10 ? 'inline-block' : 'none';
+    refBtn.onclick = ()=>{
+      const gPanel = document.getElementById('glossary-panel');
+      gPanel.style.display='block';
+      switchGlossTab('spectra');
+    };
+  }
   // Remove any leftover config panel from previous run
   const oldCfg = document.getElementById('econfig-panel');
   if(oldCfg) oldCfg.remove();
@@ -4967,6 +5265,7 @@ function buildPeriodicTable(container){
     const inPool = !!poolMatch;
 
     const cell=document.createElement('div');
+    cell.dataset.sym = sym; // used by guided tour and element search
     cell.style.cssText=`background:${BLOCK_BG[block]||BLOCK_BG.s};border:1.5px solid ${inPool?'rgba(200,160,30,0.85)':BLOCK_BORDER[block]||BLOCK_BORDER.s};border-radius:4px;padding:3px 2px 2px;text-align:center;cursor:pointer;transition:filter 0.12s,transform 0.1s;position:relative`;
 
     cell.innerHTML=`
@@ -5060,37 +5359,36 @@ function buildPeriodicTable(container){
       {sym:'La', label:'Lanthanum',   next:'You\'ve explored all four blocks. You\'re ready to solve any configuration! ✓'},
     ];
 
-    // Map symbol → cell DOM element
+    // Map symbol → cell DOM element using data-sym attribute
     const cellMap = {};
-    container.querySelectorAll('div[title]').forEach(cell => {
-      const sym = cell.querySelector('div:nth-child(2)');
-      if(sym) cellMap[sym.textContent.trim()] = cell;
+    container.querySelectorAll('[data-sym]').forEach(cell => {
+      cellMap[cell.dataset.sym] = cell;
     });
 
-    // Small non-blocking toast inside the periodic table container
     function showTourToast(msg, isLast){
       let toast = document.getElementById('pt-tour-toast');
       if(!toast){
         toast = document.createElement('div');
         toast.id = 'pt-tour-toast';
-        toast.style.cssText = 'margin:8px 0 0;padding:8px 14px;background:rgba(5,20,60,0.85);border:1px solid rgba(60,120,220,0.4);border-radius:5px;font-size:12px;color:#80b0e0;font-family:system-ui,sans-serif;line-height:1.6;transition:opacity 0.4s';
-        container.insertBefore(toast, container.firstChild.nextSibling); // after legend
+        toast.style.cssText = 'margin:8px 0 0;padding:10px 14px;background:rgba(5,20,60,0.90);border:1px solid rgba(60,120,220,0.5);border-radius:5px;font-size:12px;color:#80b0e0;font-family:system-ui,sans-serif;line-height:1.6;transition:opacity 0.4s';
+        container.insertBefore(toast, container.firstChild.nextSibling);
       }
-      toast.style.opacity='1';
+      toast.style.opacity = '1';
       toast.innerHTML = isLast
-        ? `<span style="color:#60d080">${msg}</span>`
-        : `${msg} <span style="color:#4060a0;font-size:10px">(hover to highlight)</span>`;
+        ? `<span style="color:#60d080">✓ ${msg}</span>`
+        : `${msg}`;
 
-      // Highlight the next cell
+      // Immediately pulse AND scroll to the next element
       if(!isLast){
-        const nextSym = msg.match(/\((\w+)\)/)?.[1];
+        const nextSym  = msg.match(/\((\w+)\)/)?.[1];
         const nextCell = nextSym && cellMap[nextSym];
         if(nextCell){
-          nextCell.addEventListener('mouseenter', ()=>{
+          setTimeout(()=>{
             nextCell.classList.remove('h-pulse');
             void nextCell.offsetWidth;
             nextCell.classList.add('h-pulse');
-          }, {once:true});
+            nextCell.scrollIntoView({behavior:'smooth', block:'nearest'});
+          }, 200);
         }
       }
     }
@@ -5235,7 +5533,7 @@ function confirmElementID(){
 
   let bonusPts = 0;
   if(correct){
-    const displayTier = state.found >= 40 ? 'partial' : state.found >= 20 ? 'stellar' : 'pure';
+    const displayTier = state.found >= 60 ? 'partial' : state.found >= 20 ? 'stellar' : 'pure';
     bonusPts = displayTier === 'partial' ? 500 : displayTier === 'stellar' ? 250 : 125;
     state.score   += bonusPts;
     state.credits += Math.round(bonusPts / 6);
@@ -5255,7 +5553,7 @@ function confirmElementID(){
 
   state.elementResult = { correct, element: activeEl, bonusPts };
 
-  const resultTier = state.found >= 40 ? 'partial' : state.found >= 20 ? 'stellar' : 'pure';
+  const resultTier = state.found >= 60 ? 'partial' : state.found >= 20 ? 'stellar' : 'pure';
   const resultEl   = document.getElementById('element-result');
 
   if(correct){
@@ -5366,7 +5664,10 @@ function openEvolution(star, onDone){
   document.getElementById('evolution-panel').style.display = 'block';
 
   const cls  = star.cls;
-  const mass = CLASS_MASS[cls.type] || 1;
+  const baseMass = CLASS_MASS[cls.type] || 1;
+  const massJitter = {O:15, B:8, A:0.8, F:0.4, G:0.3, K:0.2, M:0.1};
+  const jit = (massJitter[cls.type]||0.3);
+  const mass = Math.max(0.1, +(baseMass + (Math.random()-0.5)*jit*2).toFixed(1));
 
   // Note
   const note = document.getElementById('evo-mandatory-note');
@@ -5376,9 +5677,22 @@ function openEvolution(star, onDone){
   // Data cards
   const dataEl = document.getElementById('evo-data');
   dataEl.innerHTML = `
-    <div class="evo-data-card"><div class="ed-label">Stellar Mass</div><div class="ed-val">${mass.toFixed(1)}</div><div class="ed-unit">Solar masses</div></div>
+    <div class="evo-data-card"><div class="ed-label">Stellar Mass</div><div class="ed-val">${mass.toFixed(1)}</div><div class="ed-unit">Solar masses (M☉)</div></div>
     <div class="evo-data-card"><div class="ed-label">Spectral Class</div><div class="ed-val" style="color:${cls.color}">${cls.type}</div><div class="ed-unit">${cls.tempLabel}</div></div>
     <div class="evo-data-card"><div class="ed-label">Luminosity</div><div class="ed-val">${cls.lum >= 1 ? cls.lum.toFixed(1) : '<1'}</div><div class="ed-unit">L☉</div></div>`;
+
+  // Add method reference below data cards
+  const methodNote = document.getElementById('evo-method-note') || document.createElement('div');
+  methodNote.id = 'evo-method-note';
+  methodNote.style.cssText = 'font-size:11px;color:#5040a0;line-height:1.8;padding:8px 12px;background:rgba(20,5,50,0.5);border-radius:5px;margin-bottom:10px;font-family:system-ui,sans-serif';
+  methodNote.innerHTML = `<strong style="color:#8070b0">How to determine fate — use the stellar mass (M☉) above:</strong><br>
+    <span style="color:#c060ff">M &lt; 0.5</span> → <strong>Black Dwarf</strong> (never ignites hydrogen fusion) &nbsp;·&nbsp;
+    <span style="color:#c060ff">0.5 – 8</span> → <strong>White Dwarf</strong> (our Sun's fate) &nbsp;·&nbsp;
+    <span style="color:#c060ff">8 – 20</span> → <strong>Neutron Star</strong> (supernova remnant) &nbsp;·&nbsp;
+    <span style="color:#c060ff">&gt; 20</span> → <strong>Black Hole</strong>`;
+  if(!document.getElementById('evo-method-note')){
+    dataEl.insertAdjacentElement('afterend', methodNote);
+  }
 
   // Draw HR diagram
   drawHRDiagram(star);
@@ -6324,16 +6638,21 @@ window.addEventListener('resize',()=>{ resize(); });
 const LEVEL_INTROS = {
   en: {
     beginner: `
-      <h3>You've just been appointed Chief Astronomer of the Galactic Survey Corps.</h3>
-      <p>Your mission: travel the galaxy, scan stars you encounter, and work out what kind of star each one is — using nothing but the light it emits.</p>
-      <p>Don't worry if that sounds complex. This guide will walk you through everything from scratch. <span class="highlight">Start with the "Reading Spectra" tab</span> — it explains the most important concept in the game: how we can tell what a star is made of just by looking at its light.</p>
-      <p>Here's the big picture idea: <span class="highlight">every element in the universe absorbs specific colours of light</span>. When starlight passes through the star's outer layers, those colours are removed, leaving dark gaps in the rainbow. Those gaps are a fingerprint. We call them <span class="highlight">absorption lines</span>, and matching them to known patterns is exactly what you'll do in Act I of every scan.</p>
+      <h3 style="font-family:Georgia,'Times New Roman',serif;font-size:20px;color:#90c0ff;font-weight:normal;line-height:1.5;margin-bottom:16px">
+        Somewhere out there, a star is waiting to be understood.<br>
+        <span style="font-size:15px;color:#5070a0">You're the one who's going to figure out what it is.</span>
+      </h3>
+      <p style="font-family:Georgia,'Times New Roman',serif;font-size:15px;color:#6080a0;line-height:1.9;font-style:italic;margin-bottom:14px">
+        You've just been appointed Chief Astronomer of the Galactic Survey Corps. Your mission: travel the galaxy, point your instruments at the stars, and decode their light — the only message they ever send us.
+      </p>
+      <p>Here's the remarkable thing: <span class="highlight">every element in the universe absorbs specific colours of light</span>. When starlight passes through a star's outer layers, those colours are removed — leaving dark gaps in the rainbow. Those gaps are a fingerprint. We call them <span class="highlight">absorption lines</span>, and reading them is how astronomers have classified hundreds of thousands of stars without ever leaving Earth.</p>
+      <p>That's what you'll do in every scan. In Act I, you'll match the star's spectrum to one of four candidates — no labels, just patterns. It sounds harder than it is. After a few scans you'll start seeing the signatures without even thinking about it.</p>
       <div class="tip-box amber"><span class="fact">Scientific note:</span> Some star names in this game are real. The element identification puzzles draw from 86 elements with known visible emission spectra (380–700nm), sourced from the NIST Atomic Spectra Database. Wavelengths are approximate to within a few nanometres. Element assignments to specific stars are for gameplay variety and do not represent actual stellar composition.</div>
       <div class="tip-box green">You don't need any prior knowledge to play. The guide tabs above cover everything — spectra, star classification, planet habitability, and the game controls. Read them in order, or jump to whatever you need mid-game.</div>
-      <p>When you're ready, close this guide and click any glowing star on the map to begin your first scan.</p>`,
+      <p style="font-family:Georgia,'Times New Roman',serif;font-size:14px;color:#506080;font-style:italic;margin-top:4px">When you're ready — close this guide and click any glowing star to begin.</p>`,
 
     intermediate: `
-      <h3>Welcome, scientist.</h3>
+      <h3 style="font-family:Georgia,'Times New Roman',serif;font-size:18px;color:#90c0ff;font-weight:normal;line-height:1.5;margin-bottom:14px">Welcome, scientist.</h3>
       <p>You have enough background to know that stars emit light, and that different elements produce different spectral signatures. This guide builds on that to explain exactly what patterns to look for in each of the seven Harvard spectral classes.</p>
       <p>The game's first challenge — <span class="highlight">emission matching</span> — is about pattern recognition: the density, spacing, and position of absorption lines in the visible spectrum (380–700nm). No class labels are shown during the puzzle. You're working from the raw spectrum alone, exactly as real astronomers do.</p>
       <div class="tip-box amber"><span class="fact">Scientific note:</span> Some star names in this game are real. The elements shown in the Element Identification puzzles are drawn from the broader periodic table for educational variety and do not reflect the actual composition of those specific stars. Spectral physics and line positions are accurate; the star-element pairings are not.</div>
@@ -6346,7 +6665,7 @@ const LEVEL_INTROS = {
       <div class="tip-box">The Planet Survey tab covers the four habitability instruments and what threshold values indicate a viable world — useful preparation for Act II.</div>`,
 
     advanced: `
-      <h3>Astronomer on deck.</h3>
+      <h3 style="font-family:Georgia,'Times New Roman',serif;font-size:18px;color:#90c0ff;font-weight:normal;line-height:1.5;margin-bottom:14px">Astronomer on deck.</h3>
       <p>You know your OBAFGKM from your Hertzsprung-Russell. Skip the science — here's the game structure:</p>
       <div class="tip-box amber"><span class="fact">Scientific note:</span> Some star names are real; element assignments in the Element ID puzzles are drawn from the periodic table for gameplay variety and are not astronomically accurate for the named stars.</div>
       <ul style="font-size:11px;color:#5070a0;line-height:2;margin:0 0 12px 20px">
@@ -6361,12 +6680,17 @@ const LEVEL_INTROS = {
 
   es: {
     beginner: `
-      <h3>Acabas de ser nombrado Astrónomo Jefe del Cuerpo de Exploración Galáctica.</h3>
-      <p>Tu misión: viajar por la galaxia, escanear las estrellas que encuentres y determinar qué tipo de estrella es cada una — usando únicamente la luz que emiten.</p>
-      <p>No te preocupes si eso suena complejo. Esta guía te explicará todo desde cero. <span class="highlight">Comienza con la pestaña "Leer Espectros"</span> — explica el concepto más importante del juego: cómo podemos saber de qué está hecha una estrella solo mirando su luz.</p>
-      <p>La idea central es: <span class="highlight">cada elemento del universo absorbe colores específicos de luz</span>. Cuando la luz estelar pasa por las capas exteriores de la estrella, esos colores son eliminados, dejando huecos oscuros en el arcoíris. Esos huecos son una huella digital. Los llamamos <span class="highlight">líneas de absorción</span>, y hacer coincidir esas líneas con patrones conocidos es exactamente lo que harás en el Acto I de cada escaneo.</p>
+      <h3 style="font-family:Georgia,'Times New Roman',serif;font-size:20px;color:#90c0ff;font-weight:normal;line-height:1.5;margin-bottom:16px">
+        En algún lugar ahí afuera, una estrella espera ser comprendida.<br>
+        <span style="font-size:15px;color:#5070a0">Tú eres quien va a descubrirlo.</span>
+      </h3>
+      <p style="font-family:Georgia,'Times New Roman',serif;font-size:15px;color:#6080a0;line-height:1.9;font-style:italic;margin-bottom:14px">
+        Acabas de ser nombrado Astrónomo Jefe del Cuerpo de Exploración Galáctica. Tu misión: recorrer la galaxia, apuntar tus instrumentos hacia las estrellas y descifrar su luz — el único mensaje que nos envían.
+      </p>
+      <p>Lo extraordinario es que: <span class="highlight">cada elemento del universo absorbe colores específicos de luz</span>. Cuando la luz estelar pasa por las capas exteriores de una estrella, esos colores desaparecen — dejando huecos oscuros en el arcoíris. Esos huecos son una huella digital. Los llamamos <span class="highlight">líneas de absorción</span>, y leerlas es como los astrónomos han clasificado cientos de miles de estrellas sin salir de la Tierra.</p>
+      <p>Eso es lo que harás en cada escaneo. En el Acto I, harás coincidir el espectro de la estrella con uno de cuatro candidatos — sin etiquetas, solo patrones. Suena más difícil de lo que es. Después de algunos escaneos, empezarás a ver las firmas sin ni siquiera pensarlo.</p>
       <div class="tip-box green">No necesitas conocimientos previos para jugar. Las pestañas de la guía cubren todo — espectros, clasificación estelar, habitabilidad planetaria y los controles del juego. Léelas en orden, o ve directamente a lo que necesites durante el juego.</div>
-      <p>Cuando estés listo, cierra esta guía y haz clic en cualquier estrella brillante del mapa para comenzar tu primer escaneo.</p>`,
+      <p style="font-family:Georgia,'Times New Roman',serif;font-size:14px;color:#506080;font-style:italic;margin-top:4px">Cuando estés listo — cierra esta guía y haz clic en cualquier estrella brillante para comenzar.</p>`,
 
     intermediate: `
       <h3>Bienvenido, científico.</h3>
@@ -7365,6 +7689,18 @@ const T = {
     specmode_composite_badge:   '✦ Binary Star — identify the primary stellar class',
     choice_label_emission:   'Select the absorption spectrum whose line positions match the emission spectrum above:',
     choice_label_composite:  'Select the primary stellar class — the dominant contributor to the composite spectrum:',
+    choice_label_direct:     '🔭 Direct Classification — read the spectrum and identify the stellar class. No candidates. Use the Spectral Reference if needed.',
+    doppler_blueshift:       'Blueshift',
+    doppler_blueshift_sub:   'Lines shifted to shorter wavelengths',
+    doppler_redshift:        'Redshift',
+    doppler_redshift_sub:    'Lines shifted to longer wavelengths',
+    doppler_none:            'No Doppler shift',
+    doppler_none_sub:        'Lines at rest-frame positions',
+    doppler_approaching:     '◀ Approaching',
+    doppler_approaching_sub: 'Lines shifted toward blue end',
+    doppler_receding:        'Receding ▶',
+    doppler_receding_sub:    'Lines shifted toward red end',
+    progress_modal_title:    'PROGRESS REPORT',
 
     // -- Act I -------------------------------------------------
     act1_heading:    'Act I — Spectrographic Analysis',
@@ -7590,6 +7926,18 @@ const T = {
     specmode_composite_badge:   '✦ Estrella Binaria — identifica la clase estelar primaria',
     choice_label_emission:   'Selecciona el espectro de absorción cuyas posiciones de línea coincidan con el espectro de emisión de arriba:',
     choice_label_composite:  'Selecciona la clase estelar primaria — la contribución dominante al espectro compuesto:',
+    choice_label_direct:     '🔭 Clasificación Directa — lee el espectro e identifica la clase estelar. Sin candidatos. Usa la Referencia Espectral si la necesitas.',
+    doppler_blueshift:       'Corrimiento al azul',
+    doppler_blueshift_sub:   'Líneas desplazadas a longitudes de onda más cortas',
+    doppler_redshift:        'Corrimiento al rojo',
+    doppler_redshift_sub:    'Líneas desplazadas a longitudes de onda más largas',
+    doppler_none:            'Sin corrimiento Doppler',
+    doppler_none_sub:        'Líneas en posiciones de reposo',
+    doppler_approaching:     '◀ Acercándose',
+    doppler_approaching_sub: 'Líneas desplazadas hacia el extremo azul',
+    doppler_receding:        'Alejándose ▶',
+    doppler_receding_sub:    'Líneas desplazadas hacia el extremo rojo',
+    progress_modal_title:    'INFORME DE PROGRESO',
 
     // -- Act I -------------------------------------------------
     act1_heading:      'Acto I — Análisis Espectrográfico',
@@ -7940,25 +8288,100 @@ let musicInitialised = false;
 // Chord definitions: arrays of frequency ratios above the root
 // Root = A3 (220 Hz) for home sector
 const CHORD_ROOTS = {
-  home:        220,    // A3  — familiar, warm
-  inner:       246.94, // B3  — bright, tense
-  habitable:   196,    // G3  — open, hopeful
-  redfield:    207.65, // Ab3 — melancholic
-  whitering:   233.08, // Bb3 — noble, distant
-  deepfield:   174.61, // F3  — mysterious, deep
-  graveyard:   164.81, // E3  — dark, haunting
-  voidmargin:  185,    // F#3 — lonely, vast
-  forbiddenzone:146.83,// D3  — ominous, heavy
+  home:          220,    // A3  — familiar, warm
+  inner:         246.94, // B3  — bright, tense
+  habitable:     196,    // G3  — open, hopeful
+  redfield:      207.65, // Ab3 — melancholic
+  whitering:     233.08, // Bb3 — noble, distant
+  deepfield:     174.61, // F3  — mysterious, deep
+  graveyard:     164.81, // E3  — dark, haunting
+  voidmargin:    185,    // F#3 — triumphant fanfare root
+  forbiddenzone: 146.83, // D3  — ominous, heavy
+  heliopause:    261.63, // C4  — epic, triumphant
 };
 
-// Intervals above root (in semitone ratios) for each chord in progression
-// Minor pentatonic flavour: root, minor 3rd, 5th, minor 7th
-const CHORD_PROGRESSION = [
-  [1, 1.189, 1.498, 1.782],   // Am  root chord
-  [1.335, 1.587, 2,    2.378], // F   major (up a 4th)
-  [1.498, 1.782, 2.245, 2.670],// C   major (up a 5th)
-  [1.682, 2,    2.520, 2.996], // G   major (up a 6th)
-];
+// Per-sector chord progressions — Tier 4+ sectors get unique progressions
+// Intervals are semitone ratios above root
+const SECTOR_CHORD_PROGRESSIONS = {
+  // T1-T3 sectors: minor pentatonic (same as before)
+  default: [
+    [1, 1.189, 1.498, 1.782],
+    [1.335, 1.587, 2,    2.378],
+    [1.498, 1.782, 2.245, 2.670],
+    [1.682, 2,    2.520, 2.996],
+  ],
+  // Graveyard: slow diminished/half-dim chords — ominous wonder
+  // Root + minor 3rd + tritone (b5) + minor 7th
+  graveyard: [
+    [1, 1.189, 1.414, 1.782],     // dim7 feel
+    [0.891, 1.059, 1.335, 1.587], // b7 chord — heavy
+    [1, 1.260, 1.587, 1.891],     // minor with raised 5th — eerie
+    [0.943, 1.189, 1.414, 1.782], // another dim voicing
+  ],
+  // Void Margin: major with added 2nd — triumphant, vast, open
+  voidmargin: [
+    [1, 1.260, 1.498, 2.0],       // pure major 5th power chord
+    [1.335, 1.587, 2.0,  2.670],  // IV major
+    [1.498, 1.782, 2.245, 2.996], // V major — push to resolve
+    [1, 1.260, 1.498, 1.782],     // back to I with 7th
+  ],
+  // Forbidden Zone: chromatic tension — mysterious, unsettling
+  forbiddenzone: [
+    [1, 1.122, 1.414, 1.782],     // minor with flat 2 — very dark
+    [0.891, 1.059, 1.335, 1.782], // tritone substitution
+    [1.059, 1.260, 1.587, 2.0],   // suspended unresolved
+    [1, 1.189, 1.498, 1.782],     // brief minor resolution
+  ],
+  // Heliopause: major 7th chords — epic, triumphant, Star Trek feel
+  heliopause: [
+    [1, 1.260, 1.498, 1.888],     // major 7th — cinematic
+    [1.335, 1.587, 2.0,  2.520],  // IV major 7th
+    [1.498, 1.782, 2.245, 2.670], // V major — builds
+    [1.260, 1.498, 1.888, 2.378], // II major 7th — surprise
+  ],
+};
+
+// Sector-specific melody patterns (ratios above root)
+// These give each Tier 4 sector a distinct melodic character
+const SECTOR_MELODY_PATTERNS = {
+  graveyard: {
+    // Slow descending minor phrases — wonder and dread
+    primary: [1.498, 1.335, 1.189, 1.0, 0.891, 1.0, 1.189, 1.335,
+              1.498, 1.782, 1.498, 1.335, 1.189, 1.0, 0.891, 0.749],
+    counter: [2.0, 1.782, 1.587, 1.498, 1.335, 1.189, 1.0, 1.189,
+              1.498, 1.335, 1.189, 1.0, 0.891, 1.0, 1.189, 1.335],
+    tempo: 4800, // slower — more ominous
+  },
+  voidmargin: {
+    // Triumphant ascending fanfare then descent
+    primary: [1.0, 1.335, 1.498, 2.0, 2.670, 2.0, 1.498, 1.335,
+              1.0, 1.498, 2.0, 2.670, 3.0, 2.670, 2.0, 1.498],
+    counter: [1.498, 1.782, 2.0, 2.378, 2.0, 1.782, 1.498, 1.335,
+              1.0, 1.335, 1.498, 2.0, 2.378, 2.0, 1.782, 1.498],
+    tempo: 2200, // faster — fanfare energy
+  },
+  forbiddenzone: {
+    // Chromatic creeping — mysterious
+    primary: [1.0, 1.059, 1.122, 1.189, 1.260, 1.189, 1.122, 1.059,
+              1.0, 0.943, 1.0, 1.059, 1.189, 1.260, 1.335, 1.260],
+    counter: [1.498, 1.414, 1.335, 1.260, 1.189, 1.260, 1.335, 1.414,
+              1.498, 1.587, 1.498, 1.414, 1.335, 1.260, 1.189, 1.260],
+    tempo: 3800,
+  },
+  heliopause: {
+    // Epic major arpeggios — Star Trek meets chiptune triumph
+    primary: [1.0, 1.260, 1.498, 1.888, 2.0, 1.888, 1.498, 1.260,
+              1.0, 1.498, 2.0, 2.520, 2.670, 2.520, 2.0, 1.498,
+              1.888, 2.0, 2.378, 2.670, 3.0, 2.670, 2.378, 2.0],
+    counter: [2.0, 1.888, 1.498, 1.260, 1.0, 1.260, 1.498, 1.888,
+              2.0, 2.378, 2.670, 2.378, 2.0, 1.888, 1.498, 2.0,
+              1.498, 1.888, 2.0, 2.378, 2.0, 1.888, 2.0, 2.378],
+    tempo: 2000, // fast and energetic
+  },
+};
+
+// Fallback generic progression
+const CHORD_PROGRESSION = SECTOR_CHORD_PROGRESSIONS.default;
 
 let padOscillators   = [];
 let melodyTimeout    = null;
@@ -8044,9 +8467,9 @@ function startPad(frequencies){
   frequencies.forEach(freq => {
     // Create 3 oscillators per note: saw + 2 detuned sines
     const configs = [
-      { type:'sawtooth', detune:0,   gainAmt:0.04 },
-      { type:'sine',     detune:-7,  gainAmt:0.06 },
-      { type:'sine',     detune:+5,  gainAmt:0.05 },
+      { type:'sawtooth', detune:0,   gainAmt:0.020 }, // was 0.04 — lower pad
+      { type:'sine',     detune:-7,  gainAmt:0.030 }, // was 0.06
+      { type:'sine',     detune:+5,  gainAmt:0.022 }, // was 0.05
     ];
 
     configs.forEach(cfg => {
@@ -8102,15 +8525,16 @@ function stopPad(){
 function playChord(index){
   if(!audioCtx || !musicActive) return;
   const root       = CHORD_ROOTS[state.currentSectorId] || 220;
-  const ratios     = CHORD_PROGRESSION[index % CHORD_PROGRESSION.length];
+  const progression = SECTOR_CHORD_PROGRESSIONS[state.currentSectorId] || SECTOR_CHORD_PROGRESSIONS.default;
+  const ratios     = progression[index % progression.length];
   const frequencies = ratios.map(r => root * r);
   startPad(frequencies);
 
-  // Shift chord every 8 seconds — half the previous length, more movement
+  const tempo = (SECTOR_MELODY_PATTERNS[state.currentSectorId]?.tempo || 8000);
   chordTimer = setTimeout(() => {
-    chordIndex = (chordIndex + 1) % CHORD_PROGRESSION.length;
+    chordIndex = (chordIndex + 1) % progression.length;
     playChord(chordIndex);
-  }, 8000);
+  }, tempo * 1.6); // chords change a bit slower than melody
 }
 
 /*
@@ -8127,22 +8551,24 @@ function playMelodyNote(){
   if(!audioCtx || !musicActive || !masterGain) return;
 
   const root = CHORD_ROOTS[state.currentSectorId] || 220;
+  const sectorPattern = SECTOR_MELODY_PATTERNS[state.currentSectorId];
 
-  // Primary: pentatonic arc — two octaves, 20 steps
-  const primaryPattern = [
+  // Primary: use sector pattern if available, else generic pentatonic arc
+  const primaryPattern = sectorPattern ? sectorPattern.primary : [
     2.0,   2.378, 2.670, 3.0,   3.564,
     3.0,   2.670, 2.378, 2.0,   1.782,
     1.498, 1.782, 2.0,   2.378, 2.670,
     3.0,   3.170, 3.564, 3.0,   2.670
   ];
 
-  // Counter: gentle contrary motion
-  const counterPattern = [
+  const counterPattern = sectorPattern ? sectorPattern.counter : [
     1.498, 1.782, 2.0,   2.378, 2.670,
     2.378, 2.0,   1.782, 1.498, 1.335,
     1.0,   1.189, 1.498, 1.782, 2.0,
     2.378, 2.670, 2.378, 2.0,   1.782
   ];
+
+  const tempo = sectorPattern ? sectorPattern.tempo : 3000;
 
   const primaryFreq = root * primaryPattern[melodyStep % primaryPattern.length];
   const counterFreq = root * counterPattern[counterStep % counterPattern.length];
@@ -8197,9 +8623,9 @@ function playMelodyNote(){
     }, 800 + Math.random() * 400);
   }
 
-  // Next note: 2.5–4 seconds — noticeably more melodic pacing
-  const nextIn = 2500 + Math.random() * 1500;
-  melodyTimeout = setTimeout(playMelodyNote, nextIn);
+  // Next note: spacing based on sector tempo
+  const noteSpacing = tempo * 0.7 + Math.random() * tempo * 0.5;
+  melodyTimeout = setTimeout(playMelodyNote, noteSpacing);
 }
 
 /*
@@ -8627,6 +9053,60 @@ function initNebula(){
       ctx.beginPath(); ctx.arc(px2,py2,rad,0,Math.PI*2); ctx.fill();
     });
 
+    // ── TDE FISHHOOK — material wrapping around the BH ───────
+    // The stream reaches the photon sphere, bends hard around the BH
+    // clockwise (right→down→left), forming the "6" shape seen in
+    // real TDE simulations. Two-pass nebula blobs same as the stream.
+    {
+      // Hook starts where stream meets the BH influence zone
+      var hookR  = BH_R * 3.8;   // orbit radius of the bound material
+      var hookStartAng = -0.35;   // where hook meets incoming stream (upper right)
+      var hookSweep    = Math.PI * 1.35; // sweeps ~243° clockwise to form "6"
+      var HOOK_STEPS   = 55;
+
+      // Ripple animation along the hook
+      var hookPhase = frameT * 0.025;
+
+      for(var hi=0; hi<HOOK_STEPS; hi++){
+        var ht  = hi / (HOOK_STEPS-1);  // 0=start 1=end
+        var ang = hookStartAng + ht * hookSweep; // clockwise sweep
+
+        // Radius tapers inward slightly then back out — bound orbit isn't circular
+        var rOffset = 1.0 - 0.22*Math.sin(Math.PI*ht);
+        var hx = SX + Math.cos(ang) * hookR * rOffset;
+        var hy = SY + Math.sin(ang) * hookR * rOffset * 0.55;
+
+        // Hook gets hotter (bluer) toward leading edge where it rejoins
+        var hookHeat = Math.pow(ht, 0.8);
+        var pulse2   = 0.8 + 0.2*Math.sin(hookPhase + ht*8);
+
+        // Fade in from stream end, fade out at hook tail
+        var fadeIn  = Math.min(1, ht * 8);
+        var fadeOut = Math.min(1, (1-ht)*3);
+        var hookAlpha = 0.038 * fadeIn * fadeOut * pulse2;
+
+        // Stream width — narrower as material compresses into orbit
+        var hookW = Math.min(W,H) * (0.020 - hookHeat*0.008);
+
+        var hrr = Math.floor(255*(1-hookHeat*0.3));
+        var hgg = Math.floor(190 + hookHeat*65);
+
+        // Wide outer haze
+        var hb1 = ctx.createRadialGradient(hx,hy,0,hx,hy,hookW*2.0);
+        hb1.addColorStop(0,  'rgba('+hrr+','+hgg+',255,'+(hookAlpha*1.0).toFixed(3)+')');
+        hb1.addColorStop(0.5,'rgba('+hrr+','+hgg+',255,'+(hookAlpha*0.4).toFixed(3)+')');
+        hb1.addColorStop(1,  'rgba(0,0,0,0)');
+        ctx.beginPath(); ctx.arc(hx,hy,hookW*2.0,0,Math.PI*2);
+        ctx.fillStyle=hb1; ctx.fill();
+        // Inner bright core
+        var hb2 = ctx.createRadialGradient(hx,hy,0,hx,hy,hookW*0.8);
+        hb2.addColorStop(0,  'rgba('+hrr+','+hgg+',255,'+(hookAlpha*2.2).toFixed(3)+')');
+        hb2.addColorStop(1,  'rgba(0,0,0,0)');
+        ctx.beginPath(); ctx.arc(hx,hy,hookW*0.8,0,Math.PI*2);
+        ctx.fillStyle=hb2; ctx.fill();
+      }
+    }
+
     // ── TDE DISRUPTION FLASH ────────────────────────────────
     var tdePulse=0.5+0.5*Math.sin(frameT*0.022);
     var tdeAlpha=0.55+tdePulse*0.35;
@@ -8976,6 +9456,34 @@ document.getElementById('educator-btn').addEventListener('click', ()=>{
 document.getElementById('educator-close').addEventListener('click', ()=>{
   document.getElementById('educator-panel').style.display = 'none';
   hideOverlay();
+});
+
+// Progress report accessible from HUD clipboard/print button at any time
+document.getElementById('progress-btn').addEventListener('click', ()=>{
+  buildPrintCard();
+  const existing = document.getElementById('progress-modal');
+  if(existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'progress-modal';
+  modal.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:100;background:rgba(2,8,30,0.97);border:1px solid rgba(60,100,200,0.4);border-radius:8px;padding:20px 24px;font-family:\'Share Tech Mono\',monospace;min-width:280px;text-align:center';
+  const s = state;
+  modal.innerHTML = `
+    <div style="font-size:10px;color:#4060a0;letter-spacing:2px;margin-bottom:12px">PROGRESS REPORT</div>
+    <div style="font-size:13px;color:#5070a0;margin-bottom:16px;font-family:system-ui,sans-serif">
+      ${s.found} stars &nbsp;·&nbsp; ${s.colonies} colonies &nbsp;·&nbsp; Score ${(s.score||0).toLocaleString()}
+    </div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button id="pm-print" style="background:rgba(10,30,80,0.9);border:1px solid rgba(60,100,200,0.4);color:#6090e0;font-family:inherit;font-size:11px;padding:8px 16px;border-radius:4px;cursor:pointer">🖨 Print</button>
+      <button id="pm-copy"  style="background:rgba(10,30,80,0.9);border:1px solid rgba(60,100,200,0.4);color:#6090e0;font-family:inherit;font-size:11px;padding:8px 16px;border-radius:4px;cursor:pointer">📋 Copy text</button>
+      <button id="pm-close" style="background:rgba(30,10,10,0.8);border:1px solid rgba(100,40,40,0.4);color:#804040;font-family:inherit;font-size:11px;padding:8px 16px;border-radius:4px;cursor:pointer">✕ Close</button>
+    </div>`;
+  document.body.appendChild(modal);
+  document.getElementById('pm-print').addEventListener('click', ()=> window.print());
+  document.getElementById('pm-copy').addEventListener('click', function(){
+    const txt = buildSessionText ? buildSessionText() : 'Session report unavailable';
+    if(navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>{ this.textContent='✓ Copied!'; });
+  });
+  document.getElementById('pm-close').addEventListener('click', ()=> modal.remove());
 });
 
 /* ================================================================
@@ -10800,7 +11308,7 @@ const GUIDE_ES = {
     </div>
     <div class="tip-box green">Eso es todo lo que necesitas para jugar. Los detalles científicos de cada instrumento están a continuación si tienes curiosidad.</div>
     <details style="margin-top:8px">
-      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ ¿Por qué estos umbrales? (detalle científico)</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">¿Por qué estos umbrales? (detalle científico)</summary>
       <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
         <p><span class="highlight">Presión (0.3–3.0 atm)</span> — La Tierra tiene 1.0 atm. Demasiado fina y el agua se evapora o congela. Demasiado densa y se produce un efecto invernadero aplastante. Marte tiene 0.006 atm — muy por debajo.</p>
         <p style="margin-top:6px"><span class="highlight">Temperatura (−20 a +70°C)</span> — Rango de agua líquida con margen para extremófilos. Más amplio que 0–100°C porque algunos microbios sobreviven a −20°C en salmuera y hasta +120°C en chimeneas hidrotermales.</p>
@@ -10823,14 +11331,14 @@ const GUIDE_ES = {
     </div>
     <div class="tip-box green">No necesitas entender estos rompecabezas para jugar. Pulsa Omitir y vuelve a esta guía cuando estés listo.</div>
     <details style="margin-bottom:8px">
-      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Cómo funciona el desplazamiento Doppler</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Cómo funciona el desplazamiento Doppler</summary>
       <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
         <p>Cuando una estrella se acerca a la Tierra, sus ondas de luz se comprimen — todas sus líneas espectrales se desplazan levemente a la izquierda (hacia longitudes de onda más cortas/azules). Si se aleja, las ondas se estiran — las líneas se desplazan a la derecha. El rompecabezas muestra dos tiras: el espectro observado y una referencia. Encuentra la misma línea característica en ambas y comprueba en qué dirección se movió.</p>
         <div class="tip-box" style="margin-top:8px">La línea más fácil de seguir: H-alfa del hidrógeno a 656nm (la línea prominente más a la derecha). Si aparece ligeramente a la izquierda de su posición de referencia, la estrella se acerca. Ligeramente a la derecha — se aleja.</div>
       </div>
     </details>
     <details style="margin-bottom:8px">
-      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Cómo funciona el rompecabezas de Kepler</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Cómo funciona el rompecabezas de Kepler</summary>
       <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
         <p>La fórmula es <span class="highlight">a = ∛(T² × M)</span> donde T es el período orbital del planeta en años, M es la masa estelar y a es la distancia a la estrella en UA. La calculadora del juego te guía por los tres pasos.</p>
         <div class="tip-box green" style="margin-top:8px">Ejemplo: T=1yr, M=1 → 1² × 1 = 1 → ∛1 = <span class="good">1.0 UA</span> — órbita de la Tierra. Dentro de la zona habitable del Sol (0.95–1.37 UA). ✓</div>
@@ -10838,13 +11346,13 @@ const GUIDE_ES = {
       </div>
     </details>
     <details style="margin-bottom:8px">
-      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Cómo funciona la identificación de elementos</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Cómo funciona la identificación de elementos</summary>
       <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
         <p>Cada elemento emite luz a longitudes de onda específicas — su huella espectral. El rompecabezas muestra un patrón de emisión y pregunta qué elemento lo produjo. Al principio, las cuatro opciones muestran su propia tira de emisión para comparación visual. Tras 5 aciertos correctos, las tiras desaparecen — deberás recordar los patrones de memoria o usar la pestaña Espectros de Elementos en el 📖 Glosario.</p>
       </div>
     </details>
     <details style="margin-bottom:8px">
-      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Cómo funciona la evolución estelar</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Cómo funciona la evolución estelar</summary>
       <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
         <p>La masa de una estrella determina toda su vida y su muerte. El rompecabezas da la masa en masas solares (M☉) y pregunta en qué se convertirá:</p>
         <ul style="margin:6px 0 0 16px;line-height:2">
@@ -10856,11 +11364,11 @@ const GUIDE_ES = {
       </div>
     </details>
     <details style="margin-bottom:8px">
-      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Configuración electrónica (aparece tras ID de Elemento correcto)</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Configuración electrónica (aparece tras ID de Elemento correcto)</summary>
       <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
         <p>Tras identificar correctamente un elemento, una pregunta de seguimiento pide que identifiques su configuración electrónica en estado fundamental. Los electrones de valencia — el nivel más externo — son los que producen las líneas de emisión que ves. Tres niveles de dificultad: elige la configuración correcta entre cuatro opciones (0–4 aciertos) → solo se muestra la capa de valencia (5–9) → todos los pasos en blanco (10+). La pestaña <span class="highlight">⚛️ Configuraciones</span> del 📖 Glosario es la referencia completa.</p>
         <details style="margin-top:10px">
-          <summary style="cursor:pointer;font-size:10px;color:#6090c0;padding:6px 0;letter-spacing:1px">▸ Cómo calcular cualquier configuración tú mismo</summary>
+          <summary style="cursor:pointer;font-size:10px;color:#6090c0;padding:6px 0;letter-spacing:1px">Cómo calcular cualquier configuración tú mismo</summary>
           <div style="margin-top:8px;font-size:11px;color:#4a6080;line-height:1.9">
             <p>Dos pasos: (1) cuenta los electrones — igual al número atómico. (2) Rellena subcapas en orden: <span class="highlight">1s → 2s → 2p → 3s → 3p → 4s → 3d → 4p → 5s → 4d → 5p → 6s → 4f → 5d → 6p</span>. Capacidades: s=2, p=6, d=10, f=14.</p>
             <p style="margin-top:6px"><strong style="color:#8090c0">Ejemplo 1 — Hidrógeno (H), nº atómico 1:</strong><br>1 electrón → rellena 1s parcialmente → <span class="highlight">1s¹</span></p>
@@ -10872,14 +11380,14 @@ const GUIDE_ES = {
       </div>
     </details>
     <details style="margin-bottom:8px">
-      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Carrera de Exploración — modo cronometrado</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Carrera de Exploración — modo cronometrado</summary>
       <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
         <p>La Carrera de Exploración es un modo opcional accesible desde la pantalla <span class="highlight">⬡ Saltar Sector</span>. Clasifica 10 estrellas correctamente en 10 minutos. Aparece una barra de temporizador naranja en el HUD.</p>
         <p>Se otorga un bonus de velocidad de hasta +1 000 puntos al completar — cuanto más rápido termines, más puntos. Pulsa <span class="highlight">Salir</span> en la barra del temporizador para terminar antes sin penalización.</p>
       </div>
     </details>
     <details style="margin-bottom:8px">
-      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Objetos misteriosos — clasificaciones anómalas</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Objetos misteriosos — clasificaciones anómalas</summary>
       <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
         <p>Cada 8–14 estrellas puedes encontrar un objeto que no encaja en ninguna clase OBAFGKM:</p>
         <ul style="margin:6px 0 0 16px;line-height:2">
@@ -10891,7 +11399,7 @@ const GUIDE_ES = {
       </div>
     </details>
     <details>
-      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Eventos especiales — estrellas variables, erupciones, binarias</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Eventos especiales — estrellas variables, erupciones, binarias</summary>
       <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
         <p>Cada 6–9 escaneos correctos aparece una estrella de evento especial. Escucharás un carillón de tres notas y verás una insignia de colores. Tres tipos:</p>
         <ul style="margin:6px 0 0 16px;line-height:2">
@@ -10921,7 +11429,7 @@ const GUIDE_ES = {
       <li><span class="highlight">⬡ Saltar Sector</span> se desbloquea tras tu primera colonia · incluye la ⚡ Carrera de Exploración</li>
     </ul>
     <details style="margin-bottom:8px">
-      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Rompecabezas bonus (aparecen tras acierto de emisión)</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Rompecabezas bonus (aparecen tras acierto de emisión)</summary>
       <ul style="font-size:11px;color:#5070a0;line-height:2;margin:10px 0 4px 20px">
         <li><span class="highlight">Doppler</span> (Nivel 2+) — compara posiciones de líneas para saber si la estrella se acerca o aleja. +75 pts.</li>
         <li><span class="highlight">ID de Elemento</span> (opcional → obligatorio a 20 estrellas) — identifica un elemento por su espectro. +125 a +500 pts.</li>
@@ -10930,7 +11438,7 @@ const GUIDE_ES = {
       </ul>
     </details>
     <details style="margin-bottom:8px">
-      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Dificultad de sector y tipos de espectro</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Dificultad de sector y tipos de espectro</summary>
       <ul style="font-size:11px;color:#5070a0;line-height:2;margin:10px 0 4px 20px">
         <li><span class="highlight">Nivel 1</span> — espectros de absorción y emisión. Nebulosa Natal, Cinturón Habitable.</li>
         <li><span class="highlight">Nivel 2</span> — más espectros de emisión + rompecabezas Doppler. Anillo Blanco, Campo de Enanas Rojas.</li>
@@ -10939,7 +11447,7 @@ const GUIDE_ES = {
       </ul>
     </details>
     <details style="margin-bottom:8px">
-      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Referencia de puntuación</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Referencia de puntuación</summary>
       <table class="score-table" style="margin-top:10px">
         <tr><td>Acierto de emisión</td><td>+100 + racha (+20/racha)</td></tr>
         <tr><td>Primer descubrimiento</td><td>+50</td></tr>
@@ -10955,7 +11463,7 @@ const GUIDE_ES = {
       </table>
     </details>
     <details>
-      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">▸ Desbloqueos de progresión</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#6090c0;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(40,70,130,0.3)">Desbloqueos de progresión</summary>
       <ul style="font-size:11px;color:#5070a0;line-height:2;margin:10px 0 4px 20px">
         <li><span class="good">Colonia 1</span> — Saltar Sector desbloqueado</li>
         <li><span class="good">Colonia 3</span> — Escaneo Profundo con Telescopio (50 cr/escaneo)</li>
@@ -10972,7 +11480,7 @@ const GUIDE_ES = {
       <span style="color:#c090ff">El Modo Investigación es una capa de prestigio</span> — no reemplaza el juego principal. Los diez sectores siguen siendo jugables con sus rompecabezas estándar. Las variantes del Modo Investigación aparecen al rejugar los sectores tras el desbloqueo.
     </div>
     <details open style="margin-top:14px">
-      <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">▸ Diagrama HR (reemplaza los botones de clasificación)</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">Diagrama HR (reemplaza los botones de clasificación)</summary>
       <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
         <p>En lugar de hacer clic en O B A F G K M, colocas la estrella en un diagrama de Hertzsprung-Russell interactivo con cinco regiones: Supergigante, Gigante, Subgigante, Secuencia Principal y Enana Blanca.</p>
         <p>La clave que enseña este rompecabezas: <span class="highlight">la temperatura sola no clasifica una estrella</span>. Una temperatura de tipo G (5 750 K) podría corresponder a una enana de secuencia principal, una subgigante, una gigante o incluso una enana blanca. La luminosidad y el radio junto con la temperatura determinan la posición en el diagrama — y por tanto la clase de luminosidad (Ia, II, III, IV, V).</p>
@@ -10980,7 +11488,7 @@ const GUIDE_ES = {
       </div>
     </details>
     <details style="margin-top:8px">
-      <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">▸ Masa de Binaria Espectroscópica (rompecabezas obligatorio para espectros compuestos)</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">Masa de Binaria Espectroscópica (rompecabezas obligatorio para espectros compuestos)</summary>
       <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
         <p>Cuando se detecta un espectro binario compuesto, las líneas de absorción de ambas estrellas son visibles desplazándose en direcciones opuestas. La amplitud de velocidad de cada estrella es inversamente proporcional a su masa:</p>
         <div class="tip-box" style="text-align:center;font-size:13px"><span class="highlight">M₁ / M₂ = V₂ / V₁</span></div>
@@ -10989,7 +11497,7 @@ const GUIDE_ES = {
       </div>
     </details>
     <details style="margin-top:8px">
-      <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">▸ Registro de Investigación (reemplaza el Informe de Misión)</summary>
+      <summary style="cursor:pointer;font-size:11px;color:#c090ff;letter-spacing:1px;padding:8px 0;border-bottom:1px solid rgba(100,60,200,0.3)">Registro de Investigación (reemplaza el Informe de Misión)</summary>
       <div style="margin-top:10px;font-size:11px;color:#4a6080;line-height:1.8">
         <p>En el Modo Investigación, el resumen de sesión se convierte en un Registro de Investigación con todas las cantidades derivadas. Para cada estrella analizada registra: tipo espectral y clase de luminosidad, cociente de masas binarias, estimación de edad por litio, período orbital y clasificación del planeta, líneas trazadoras del medio interestelar y configuración electrónica de cada elemento identificado.</p>
         <p style="margin-top:8px">El Registro de Investigación puede imprimirse o copiarse — está formateado como un breve informe observacional apto para entregarse como ejercicio de laboratorio de nivel universitario introductorio.</p>
@@ -11283,10 +11791,13 @@ function initTitleAnimation(){
   if(!h1 || !cvs) return;
 
   function sizeCanvas(){
-    const r = h1.getBoundingClientRect();
-    const z = currentZoom || 1;
-    cvs.width  = (r.width  / z) + 120;
-    cvs.height = (r.height / z) + 80;
+    // Use a generous fixed size based on the font measurement
+    // rather than getBoundingClientRect which is affected by zoom
+    const ctx2 = cvs.getContext('2d');
+    ctx2.font = '400 48px \'Share Tech Mono\',\'Courier New\',monospace';
+    const measured = ctx2.measureText('SPECTRA EXPLORERS').width;
+    cvs.width  = Math.ceil(measured) + 160;
+    cvs.height = 140;
   }
   sizeCanvas();
 
@@ -11590,6 +12101,8 @@ function playEndgameCelebration(){
     ac2 = new (window.AudioContext||window.webkitAudioContext)();
     const master = ac2.createGain(); master.gain.value=0; master.connect(ac2.destination);
     master.gain.linearRampToValueAtTime(0.35, ac2.currentTime+0.3);
+    // Store reference so Continue button can stop the music
+    window._endgameAC = {ctx: ac2, gain: master};
 
     // Fanfare sequence — C major ascending arpeggio then chord
     const notes=[
@@ -11734,8 +12247,16 @@ function showEndgameCard(overlay){
   document.getElementById('eg-close').addEventListener('click',()=>{
     card.remove();
     if(overlay) overlay.remove();
+    // Stop victory music
+    if(window._endgameAC){
+      try{
+        window._endgameAC.gain.linearRampToValueAtTime(0, window._endgameAC.ctx.currentTime+0.5);
+        setTimeout(()=>{ try{ window._endgameAC.ctx.close(); }catch(e){} window._endgameAC=null; }, 600);
+      }catch(e){ window._endgameAC=null; }
+    }
   });
   document.getElementById('eg-replay').addEventListener('click',()=>{
+    if(window._endgameAC){ try{ window._endgameAC.ctx.close(); }catch(e){} window._endgameAC=null; }
     card.remove();
     if(overlay) overlay.remove();
     location.reload();
