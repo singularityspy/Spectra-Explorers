@@ -1,4 +1,44 @@
-<!DOCTYPE html>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center">
+
+      <!-- Arcade section header -->
+      <div style="text-align:center;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(0,160,200,0.3);width:100%">
+        <div style="font-size:18px;margin-bottom:4px">⬡</div>
+        <div style="font-size:11px;letter-spacing:4px;color:#00c8c8;text-transform:uppercase;margin-bottom:4px">Stellar Arcade</div>
+        <div style="font-size:10px;color:#3a6080;line-height:1.7">Skill-based science mini-games.<br>No story — just reflexes and learning.</div>
+      </div>
+
+      <!-- Games preview list -->
+      <div style="width:100%;margin-bottom:24px">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,80,100,0.2)">
+          <span style="font-size:16px;color:#ff4080">⬡</span>
+          <div>
+            <div style="font-size:9px;letter-spacing:2px;color:#c04060;text-transform:uppercase">Spectra Rush</div>
+            <div style="font-size:9px;color:#303050">Classify falling stellar spectra</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,80,100,0.2)">
+          <span style="font-size:16px;color:#40c0ff">◈</span>
+          <div>
+            <div style="font-size:9px;letter-spacing:2px;color:#2060a0;text-transform:uppercase">Wavelength Catcher</div>
+            <div style="font-size:9px;color:#303050">Catch element emission lines</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;opacity:0.4">
+          <span style="font-size:16px;color:#505070">⚡</span>
+          <div>
+            <div style="font-size:9px;letter-spacing:2px;color:#404060;text-transform:uppercase">Ion Storm</div>
+            <div style="font-size:9px;color:#252540">Coming soon</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Single CTA -->
+      <div onclick="arcadeOpen()" style="width:100%;background:rgba(0,0,0,0.6);border:2px solid rgba(0,160,200,0.5);border-radius:10px;padding:18px;cursor:pointer;text-align:center;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(0,220,240,0.9)';this.style.background='rgba(0,30,50,0.7)'" onmouseout="this.style.borderColor='rgba(0,160,200,0.5)';this.style.background='rgba(0,0,0,0.6)'">
+        <div style="font-size:11px;letter-spacing:5px;color:#00c8c8;text-transform:uppercase;margin-bottom:4px">⬡ Enter the Arcade</div>
+        <div style="font-size:9px;color:#205060;letter-spacing:1px">Pick your game · Set a high score</div>
+      </div>
+
+    </div><!DOCTYPE html>
 <!--
   -================================================================-
   |              SPECTRA EXPLORERS — v3.0                             |
@@ -984,6 +1024,72 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
   z-index:30;opacity:0;transition:opacity 0.18s;text-shadow:0 0 10px currentColor;
 }
 /* ── END SPECTRA RUSH styles ───────────────────────────────────── */
+
+/* ── STELLAR ARCADE BACKDROP ── */
+
+
+/* ── WAVELENGTH CATCHER scoped styles ── */
+#wc-panel *{box-sizing:border-box}
+#wc-panel #wc-wrap{position:relative;width:min(560px,98%);margin:0 auto}
+#wc-panel #wc-hud{display:flex;align-items:baseline;justify-content:space-between;padding:0 4px 7px}
+#wc-panel .hud-title{font-size:12px;letter-spacing:5px;color:#40c0ff;text-shadow:0 0 14px rgba(64,192,255,0.6);text-transform:uppercase}
+#wc-panel .hud-meta{display:flex;gap:14px;font-size:9px;letter-spacing:2px;color:#3a6080;text-transform:uppercase}
+#wc-panel .hud-meta span{color:#40c0ff;font-size:11px}
+#wc-panel #wc-mode-badge{text-align:center;padding:3px 0 5px;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#3a6080;transition:color 0.3s}
+#wc-panel #wc-dir-row{display:flex;justify-content:space-between;padding:2px 4px;font-size:9px;letter-spacing:2px}
+#wc-panel #wc-dir-left{color:#5080ff}
+#wc-panel #wc-dir-right{color:#ff5050}
+#wc-panel #wc-game-canvas{display:block;width:100%;border:1px solid rgba(64,192,255,0.35);border-radius:6px;background:#000812;box-shadow:0 0 40px rgba(0,100,200,0.18);cursor:none}
+#wc-panel #wc-spec-wrap{margin-top:7px;border:1px solid rgba(64,192,255,0.25);border-radius:4px;overflow:hidden}
+#wc-panel #wc-spec-canvas{display:block;width:100%;height:40px}
+#wc-panel #wc-spec-labels{display:flex;justify-content:space-between;font-size:7px;letter-spacing:1px;color:#1c2e3e;padding:2px 3px 1px}
+#wc-panel #wc-hint-bar{margin-top:6px;padding:6px 10px;background:rgba(0,8,24,0.7);border:1px solid rgba(0,60,100,0.3);border-radius:4px;display:flex;justify-content:space-between;align-items:center;font-size:9px;letter-spacing:1.5px}
+#wc-panel #wc-hint-text{color:#3a6080;flex:1;transition:color 0.3s}
+#wc-panel #wc-combo-disp{font-size:10px;letter-spacing:2px;white-space:nowrap}
+#wc-panel #wc-progress-row{display:flex;align-items:center;gap:7px;margin-top:5px;font-size:8px;letter-spacing:2px;color:#1c3040}
+#wc-panel #wc-progress-bar{flex:1;height:6px;background:rgba(0,40,60,0.5);border-radius:3px;overflow:hidden;border:1px solid rgba(0,100,140,0.3)}
+#wc-panel #wc-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#40c0ff,#00ffcc);border-radius:3px;transition:width 0.25s}
+#wc-panel #wc-progress-lbl{color:#40c0ff;min-width:28px;text-align:right}
+#wc-panel #wc-speed-row{display:flex;align-items:center;gap:7px;margin-top:4px;font-size:8px;letter-spacing:2px}
+#wc-panel #wc-speed-bar{flex:1;height:3px;background:rgba(0,30,60,0.6);border-radius:2px;overflow:hidden}
+#wc-panel #wc-speed-fill{height:100%;width:0%;background:linear-gradient(90deg,#40c0ff,#ff4080);transition:width 0.5s}
+#wc-panel #wc-flash-msg{position:absolute;top:22px;left:50%;transform:translateX(-50%);font-size:15px;letter-spacing:3px;pointer-events:none;white-space:nowrap;z-index:30;opacity:0;transition:opacity 0.18s;text-shadow:0 0 10px currentColor}
+#wc-panel #wc-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,2,14,0.94);border-radius:6px;z-index:20;gap:12px}
+#wc-panel #wc-overlay h2{font-size:17px;letter-spacing:6px;color:#40c0ff;text-shadow:0 0 20px rgba(64,192,255,0.7);text-transform:uppercase}
+#wc-panel #wc-overlay p{font-size:10px;letter-spacing:1.5px;color:#3a6080;text-align:center;max-width:380px;line-height:2}
+#wc-panel .big-score{font-size:30px;color:#00ffcc;text-shadow:0 0 24px rgba(0,255,180,0.6);letter-spacing:4px}
+#wc-panel .ov-btn{padding:10px 30px;background:rgba(0,140,180,0.2);border:1px solid rgba(64,192,255,0.5);border-radius:5px;color:#40c0ff;font-family:inherit;font-size:10px;letter-spacing:3px;cursor:pointer;text-transform:uppercase;transition:all 0.15s}
+#wc-panel .ov-btn:hover{background:rgba(0,180,220,0.3);box-shadow:0 0 14px rgba(64,192,255,0.4)}
+#wc-panel .sub{font-size:8px;color:#203040;letter-spacing:3px;text-transform:uppercase}
+#wc-panel #wc-mode-legend{display:flex;gap:16px;font-size:8px;letter-spacing:1.5px;color:#304050}
+#wc-panel #wc-mode-legend em{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:3px}
+#wc-panel #wc-lock-hint{position:absolute;top:8px;right:8px;font-size:8px;letter-spacing:2px;color:rgba(64,192,255,0.5);pointer-events:none;transition:opacity 0.5s;z-index:5}
+
+/* ── STELLAR ARCADE SCREEN ── */
+#arcade-screen{background:#000008}
+#arcade-screen #arcade-game-view{display:none}
+#arcade-screen.game-active #arcade-lobby{display:none}
+#arcade-screen.game-active #arcade-game-view{display:flex!important}
+#arcade-game-area .panel{position:relative!important;transform:none!important;
+  top:auto!important;left:auto!important;width:100%!important;
+  max-height:none!important;border-radius:0!important;
+  border-left:none!important;border-right:none!important;border-bottom:none!important;
+  display:block!important;box-shadow:none!important;z-index:auto!important}
+#arcade-game-area #spectra-rush-panel,
+#arcade-game-area #wc-panel{
+  max-width:680px;margin:0 auto;padding:16px;
+  border:none!important;background:transparent!important}
+
+/* panels shown in arcade via arcade-active class */
+#spectra-rush-panel.arcade-active,
+#wc-panel.arcade-active{
+  display:block!important;width:100%;max-width:680px;
+  position:relative!important;transform:none!important;
+  top:auto!important;left:auto!important;
+  border-radius:8px;z-index:auto;
+}
+#arcade-lobby.hidden{display:none!important}
+#arcade-loading.active{display:flex!important}
 </style>
 </head>
 <body>
@@ -1074,7 +1180,6 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
   <div id="nav-btns">
     <button class="nav-btn" id="sector-btn" disabled title="Unlock: establish your first colony">⬡ Sector Jump</button>
     <button class="nav-btn" id="scope-btn"  disabled title="Unlock: jump to a new sector, then correctly scan a star">◉ Telescope</button>
-    <button class="nav-btn" id="rush-btn" onclick="MG_Rush.open()" title="Spectra Rush mini-game">⬡ Rush</button>
 
     <!-- Auto-Scan dropdown -->
     <div class="nav-dropdown" id="autoscan-dropdown">
@@ -2213,26 +2318,21 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
        WELCOME SCREEN — shown after name entry
   ========================================================== -->
   <div id="welcome-screen" style="display:none">
-    <canvas id="title-starfield" style="position:fixed;inset:0;pointer-events:none"></canvas>
-
-    <!-- Floating top badge -->
-    <div style="position:relative;z-index:2;text-align:center;margin-bottom:6px">
-      <div style="font-size:9px;letter-spacing:5px;color:#8040b0;text-transform:uppercase;margin-bottom:8px">✦ MISSION BRIEFING ✦</div>
-      <h1 style="font-size:clamp(22px,3vw,36px);letter-spacing:8px;font-family:'Share Tech Mono','Courier New',monospace;font-weight:400;margin:0 0 4px;background:linear-gradient(135deg,#00d4ff 0%,#c040ff 50%,#ff60c0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:none">SPECTRA EXPLORERS</h1>
-      <div style="font-size:10px;letter-spacing:4px;color:#6030a0;text-transform:uppercase;margin-bottom:2px">Stellar Classification · Planetary Survey · First Contact</div>
-    </div>
-
-    <!-- Mission description -->
-    <div style="position:relative;z-index:2;max-width:520px;text-align:center;margin-bottom:22px">
-      <p style="font-size:12px;color:#7080b0;line-height:1.9;margin:0">
-        Ten sectors. Hundreds of stars. One signal from across the void.<br>
-        <em style="color:#7050a0">Classify the light. Find the worlds. Decode the message.</em>
-      </p>
-    </div>
-
-    <!-- Difficulty select -->
-    <div style="position:relative;z-index:2;margin-bottom:8px;font-size:9px;letter-spacing:3px;color:#8060c0;text-transform:uppercase">— Choose Your Mission Rank —</div>
-    <div id="level-grid" style="position:relative;z-index:2">
+  <canvas id="title-starfield" style="position:fixed;inset:0;pointer-events:none"></canvas>
+  <div style="position:relative;z-index:2;text-align:center;margin-bottom:16px">
+    <div style="font-size:9px;letter-spacing:5px;color:#8040b0;text-transform:uppercase;margin-bottom:8px">✦ SPECTRA EXPLORERS ✦</div>
+    <h1 style="font-size:clamp(20px,2.8vw,34px);letter-spacing:8px;font-family:'Share Tech Mono',monospace;font-weight:400;margin:0 0 4px;background:linear-gradient(135deg,#00d4ff 0%,#c040ff 50%,#ff60c0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">SPECTRA EXPLORERS</h1>
+    <div style="font-size:9px;letter-spacing:3px;color:#6030a0;text-transform:uppercase">Stellar Classification · Planetary Survey · First Contact</div>
+  </div>
+  <div style="position:relative;z-index:2;display:flex;gap:20px;width:100%;max-width:900px;align-items:flex-start">
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center">
+      <div style="text-align:center;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(120,50,200,0.3);width:100%">
+        <div style="font-size:18px;margin-bottom:4px">🌌</div>
+        <div style="font-size:11px;letter-spacing:4px;color:#c040ff;text-transform:uppercase;margin-bottom:4px">Expedition Mode</div>
+        <div style="font-size:10px;color:#7060a0;line-height:1.7">Story-driven mission. Classify stars,<br>build colonies, decode alien signals.</div>
+      </div>
+      <div style="font-size:8px;letter-spacing:3px;color:#8060c0;text-transform:uppercase;margin-bottom:10px">— Choose Mission Rank —</div>
+<div style="display:grid;grid-template-columns:1fr;gap:10px;width:100%;position:relative;z-index:2">
       <!-- BEGINNER -->
       <div class="level-card" data-level="beginner">
         <div style="display:flex;align-items:center;justify-content:flex-start;gap:10px;margin-bottom:10px">
@@ -2288,11 +2388,54 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
     <div style="position:absolute;bottom:6px;left:14px;font-size:8px;color:#5060a0;letter-spacing:1px">v1.0.0</div>
     <button id="educator-btn">For Educators ↗</button>
   </div>
+      <div style="margin-top:10px">
+        <button id="educator-btn" onclick="document.getElementById('educator-panel').style.display='block'" style="background:rgba(10,20,60,0.7);border:1px solid rgba(40,80,180,0.4);color:#4060a0;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:6px 16px;border-radius:4px;cursor:pointer;text-transform:uppercase">📋 For Educators ↗</button>
+      </div>
+    </div>
+    <div style="width:1px;background:linear-gradient(to bottom,transparent,rgba(100,150,255,0.3),rgba(0,200,200,0.4),rgba(100,150,255,0.3),transparent);align-self:stretch;flex-shrink:0;margin:20px 0"></div>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center">
 
-  <!-- ==========================================================
-       EDUCATOR PANEL
-  ========================================================== -->
-  <div class="panel" id="educator-panel">
+      <!-- Arcade header -->
+      <div style="text-align:center;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(0,160,200,0.3);width:100%">
+        <div style="font-size:18px;margin-bottom:4px">⬡</div>
+        <div style="font-size:11px;letter-spacing:4px;color:#00c8c8;text-transform:uppercase;margin-bottom:4px">Stellar Arcade</div>
+        <div style="font-size:10px;color:#3a6080;line-height:1.7">Skill-based science mini-games.<br>No story — just reflexes and learning.</div>
+      </div>
+
+      <!-- Games preview list -->
+      <div style="width:100%;margin-bottom:22px">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,80,100,0.2)">
+          <span style="font-size:16px;color:#ff4080">⬡</span>
+          <div>
+            <div style="font-size:9px;letter-spacing:2px;color:#c04060;text-transform:uppercase">Spectra Rush</div>
+            <div style="font-size:9px;color:#303050">Classify falling stellar spectra</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,80,100,0.2)">
+          <span style="font-size:16px;color:#40c0ff">◈</span>
+          <div>
+            <div style="font-size:9px;letter-spacing:2px;color:#2060a0;text-transform:uppercase">Wavelength Catcher</div>
+            <div style="font-size:9px;color:#303050">Catch element emission lines</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;opacity:0.4">
+          <span style="font-size:16px;color:#505070">⚡</span>
+          <div>
+            <div style="font-size:9px;letter-spacing:2px;color:#404060;text-transform:uppercase">Ion Storm</div>
+            <div style="font-size:9px;color:#252540">Coming soon</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Single Enter the Arcade CTA -->
+      <div onclick="arcadeOpen()" style="width:100%;background:rgba(0,0,0,0.6);border:2px solid rgba(0,160,200,0.5);border-radius:10px;padding:18px;cursor:pointer;text-align:center" onmouseover="this.style.borderColor='rgba(0,220,240,0.9)';this.style.background='rgba(0,30,50,0.7)'" onmouseout="this.style.borderColor='rgba(0,160,200,0.5)';this.style.background='rgba(0,0,0,0.6)'">
+        <div style="font-size:11px;letter-spacing:5px;color:#00c8c8;text-transform:uppercase;margin-bottom:4px">⬡ Enter the Arcade</div>
+        <div style="font-size:9px;color:#205060;letter-spacing:1px">Pick your game · Set a high score</div>
+      </div>
+
+    </div>
+  </div>
+<div class="panel" id="educator-panel">
     <div style="padding:18px 24px 14px;border-bottom:1px solid rgba(60,100,180,0.2)">
       <div style="font-size:9px;letter-spacing:3px;color:#4060a0;text-transform:uppercase;margin-bottom:4px">For Educators</div>
       <div style="font-size:20px;color:#a0c8ff;margin-bottom:2px">Spectra Explorer — Educator Guide</div>
@@ -2485,20 +2628,137 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
       <button class="pbtn pbtn-close" id="educator-close">Close</button>
     </div>
   </div>
-
-  <!-- PRINT CARD — only visible when printing -->
   <div id="print-card"></div>
-
-
-
-
 </div><!-- end welcome-screen -->
+
+<!-- ================================================================
+     STELLAR ARCADE SCREEN — dedicated full-screen area
+     Shows/hides independently of main game and welcome screen
+================================================================ -->
+<div id="arcade-screen" style="display:none;position:fixed;inset:0;z-index:30;background:#000008;font-family:'Share Tech Mono','Courier New',monospace;overflow:hidden">
+
+  <canvas id="arcade-bg-canvas" style="position:absolute;inset:0;pointer-events:none;z-index:0"></canvas>
+  <div style="position:absolute;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.01) 2px,rgba(255,255,255,0.01) 4px)"></div>
+
+  <!-- Top nav - always visible -->
+  <div id="arcade-nav" style="position:absolute;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-bottom:1px solid rgba(255,40,120,0.15);background:rgba(0,0,8,0.7)">
+    <button onclick="arcadeClose()" style="background:transparent;border:1px solid rgba(255,40,120,0.3);color:#ff4080;font-family:inherit;font-size:8px;letter-spacing:2px;padding:5px 14px;border-radius:3px;cursor:pointer;text-transform:uppercase">← Main Menu</button>
+    <div style="font-size:9px;letter-spacing:6px;color:#301828;text-transform:uppercase">⬡ STELLAR ARCADE</div>
+    <div id="arcade-nav-right" style="font-size:8px;letter-spacing:2px;color:#301828;min-width:90px;text-align:right">v1.0</div>
+  </div>
+
+  <!-- LOBBY -->
+  <div id="arcade-lobby" style="position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 20px 20px">
+    <div style="text-align:center;margin-bottom:30px">
+      <div style="font-size:10px;letter-spacing:8px;color:#ff4080;text-transform:uppercase;margin-bottom:10px">· INSERT COIN ·</div>
+      <div style="font-size:clamp(22px,4vw,44px);letter-spacing:5px;font-weight:400;text-transform:uppercase;margin-bottom:8px"><span style="color:#ff4080">S</span><span style="color:#ff7030">T</span><span style="color:#ffcc00">E</span><span style="color:#80ff40">L</span><span style="color:#40ffcc">L</span><span style="color:#40c0ff">A</span><span style="color:#8040ff">R</span><span style="color:#222"> </span><span style="color:#c040ff">A</span><span style="color:#ff40c0">R</span><span style="color:#ff4080">C</span><span style="color:#ff7030">A</span><span style="color:#ffcc00">D</span><span style="color:#80ff40">E</span></div>
+      <div style="font-size:9px;letter-spacing:4px;color:#1a1a30;text-transform:uppercase">Science · Reflexes · Discovery</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;width:100%;max-width:660px;margin-bottom:24px">
+
+        <!-- SPECTRA RUSH CABINET -->
+        <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;position:relative" onclick="arcadeSelectGame('rush')">
+          <!-- Cabinet body -->
+          <div style="width:100%;background:linear-gradient(180deg,#1a0010 0%,#2a0020 40%,#1a0010 100%);border:2px solid #ff4080;border-radius:10px 10px 6px 6px;position:relative;overflow:hidden;padding:10px 10px 6px">
+            <!-- Marquee -->
+            <div style="background:#ff4080;margin:-10px -10px 8px;padding:6px 10px;text-align:center">
+              <div style="font-size:10px;letter-spacing:4px;color:#000;text-transform:uppercase;font-weight:700">Spectra Rush</div>
+            </div>
+            <!-- Screen bezel -->
+            <div style="background:#000;border:3px solid #600030;border-radius:4px;padding:3px;margin-bottom:8px">
+              <!-- Screen content - mini preview -->
+              <div style="background:#000308;height:80px;border-radius:2px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
+                <canvas id="rush-attract-canvas" width="160" height="74" style="display:block;width:100%"></canvas>
+              </div>
+            </div>
+            <!-- Coin slot + button -->
+            <div style="text-align:center;padding:4px 0 2px">
+              <div style="display:inline-block;background:#ff4080;color:#000;font-size:8px;letter-spacing:3px;padding:5px 20px;border-radius:20px;font-weight:700;transition:all 0.15s" onmouseover="this.style.background='#ff60a0'" onmouseout="this.style.background='#ff4080'">▶ PLAY</div>
+            </div>
+          </div>
+          <!-- Cabinet base -->
+          <div style="width:90%;height:10px;background:#1a0010;border:2px solid #ff4080;border-top:none;border-radius:0 0 8px 8px"></div>
+          <div style="margin-top:8px;font-size:8px;letter-spacing:2px;color:#2a1018">HI <span id="lobby-rush-hi" style="color:#ff4080">---</span></div>
+        </div>
+
+        <!-- WAVELENGTH CATCHER CABINET -->
+        <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;position:relative" onclick="arcadeSelectGame('catcher')">
+          <div style="width:100%;background:linear-gradient(180deg,#001020 0%,#001830 40%,#001020 100%);border:2px solid #40c0ff;border-radius:10px 10px 6px 6px;position:relative;overflow:hidden;padding:10px 10px 6px">
+            <div style="background:#40c0ff;margin:-10px -10px 8px;padding:6px 10px;text-align:center">
+              <div style="font-size:10px;letter-spacing:4px;color:#000;text-transform:uppercase;font-weight:700">Wavelength Catcher</div>
+            </div>
+            <div style="background:#000;border:3px solid #003060;border-radius:4px;padding:3px;margin-bottom:8px">
+              <div style="background:#000810;height:80px;border-radius:2px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center">
+                <canvas id="catcher-attract-canvas" width="160" height="74" style="display:block;width:100%"></canvas>
+              </div>
+            </div>
+            <div style="text-align:center;padding:4px 0 2px">
+              <div style="display:inline-block;background:#40c0ff;color:#000;font-size:8px;letter-spacing:3px;padding:5px 20px;border-radius:20px;font-weight:700;transition:all 0.15s" onmouseover="this.style.background='#60d0ff'" onmouseout="this.style.background='#40c0ff'">▶ PLAY</div>
+            </div>
+          </div>
+          <div style="width:90%;height:10px;background:#001020;border:2px solid #40c0ff;border-top:none;border-radius:0 0 8px 8px"></div>
+          <div style="margin-top:8px;font-size:8px;letter-spacing:2px;color:#102030">HI <span id="lobby-catcher-hi" style="color:#40c0ff">---</span></div>
+        </div>
+
+        <!-- ION STORM CABINET (coming soon) -->
+        <div style="display:flex;flex-direction:column;align-items:center;opacity:0.35;pointer-events:none">
+          <div style="width:100%;background:linear-gradient(180deg,#080808 0%,#101010 40%,#080808 100%);border:2px dashed #303050;border-radius:10px 10px 6px 6px;overflow:hidden;padding:10px 10px 6px">
+            <div style="background:#303050;margin:-10px -10px 8px;padding:6px 10px;text-align:center">
+              <div style="font-size:10px;letter-spacing:4px;color:#606080;text-transform:uppercase;font-weight:700">Ion Storm</div>
+            </div>
+            <div style="background:#000;border:3px solid #202040;border-radius:4px;padding:3px;margin-bottom:8px">
+              <div style="background:#050508;height:80px;border-radius:2px;display:flex;align-items:center;justify-content:center">
+                <div style="font-size:9px;letter-spacing:3px;color:#252540;text-transform:uppercase">Coming Soon</div>
+              </div>
+            </div>
+            <div style="text-align:center;padding:4px 0 2px">
+              <div style="display:inline-block;background:#252540;color:#404060;font-size:8px;letter-spacing:3px;padding:5px 20px;border-radius:20px">LOCKED</div>
+            </div>
+          </div>
+          <div style="width:90%;height:10px;background:#080808;border:2px dashed #303050;border-top:none;border-radius:0 0 8px 8px"></div>
+        </div>
+
+      </div>
+<div style="width:100%;max-width:660px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,40,120,0.12);border-radius:8px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:8px;letter-spacing:3px;color:#301020;text-transform:uppercase">🏆 Top Scores</div>
+      <div id="arcade-leaderboard-tease" style="font-size:8px;letter-spacing:2px;color:#281820">Play to set a score</div>
+      <div style="font-size:8px;letter-spacing:2px;color:#201020">Local Board</div>
+    </div>
+  </div>
+
+  <!-- NOW LOADING -->
+  <div id="arcade-loading" style="display:none;position:absolute;inset:0;z-index:8;background:#000008;align-items:center;justify-content:center;flex-direction:column;padding-top:44px">
+    <div id="arcade-loading-title" style="font-size:clamp(18px,3vw,30px);letter-spacing:6px;color:#ff4080;text-transform:uppercase;margin-bottom:16px">SPECTRA RUSH</div>
+    <div style="font-size:9px;letter-spacing:5px;color:#301828;text-transform:uppercase;margin-bottom:24px">NOW LOADING</div>
+    <div style="width:220px;height:3px;background:rgba(255,40,120,0.1);border-radius:2px;overflow:hidden;margin-bottom:24px">
+      <div id="arcade-loading-bar" style="height:100%;width:0%;background:#ff4080;border-radius:2px;transition:width 0.08s linear"></div>
+    </div>
+    <div id="arcade-coin-anim" style="font-size:26px;height:32px"></div>
+  </div>
+
+  <!-- GAME VIEW -->
+  <div id="arcade-game-view" style="display:none;position:absolute;inset:0;z-index:6;background:#000008;padding-top:44px;overflow:auto">
+    <div style="padding:8px 16px;border-bottom:1px solid rgba(255,40,120,0.1)">
+      <button onclick="arcadeBackToLobby()" style="background:transparent;border:1px solid rgba(80,40,100,0.4);color:#604080;font-family:inherit;font-size:8px;letter-spacing:2px;padding:5px 14px;border-radius:3px;cursor:pointer;text-transform:uppercase" onmouseover="this.style.borderColor='rgba(255,40,120,0.5)';this.style.color='#ff4080'" onmouseout="this.style.borderColor='rgba(80,40,100,0.4)';this.style.color='#604080'">← Back to Lobby</button>
+    </div>
+    <div id="arcade-game-area" style="min-height:calc(100vh - 90px);display:flex;align-items:flex-start;justify-content:center;padding:16px"></div>
+  </div>
+
+</div>
+<!-- END STELLAR ARCADE SCREEN -->
+
+
+
+
+</div><!-- end #ui -->
+
 
   <!-- ================================================================
        MINI-GAME: SPECTRA RUSH
        Remove by deleting from here to END SPECTRA RUSH comment below
   ================================================================ -->
-  <div class="panel" id="spectra-rush-panel" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(720px,96vw);max-height:96vh;overflow:hidden;z-index:35;padding:20px;background:rgba(2,5,18,0.98);border-color:rgba(0,160,200,0.4)">
+  <div class="panel" id="spectra-rush-panel" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(720px,96vw);max-height:96vh;overflow:hidden;z-index:910;padding:20px;background:rgba(2,5,18,0.98);border-color:rgba(0,160,200,0.4)">
     <div id="game-wrap">
       <div id="sr-hud">
         <div class="title">⬡ Spectra Rush</div>
@@ -2578,13 +2838,98 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
     
     
     <div style="text-align:center;margin-top:10px">
-      <button class="pbtn pbtn-close" onclick="MG_Rush.close();closeAllPanels()">✕ Close</button>
+      <button class="pbtn pbtn-close" onclick="arcadeBackToLobby()">✕ Close</button>
     </div>
   <!-- END SPECTRA RUSH -->
-</div><!-- end #ui -->
+
+
+  <!-- WAVELENGTH CATCHER panel -->
+  <div class="panel" id="wc-panel" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(720px,96vw);max-height:96vh;overflow:auto;z-index:910;padding:20px;background:rgba(2,5,18,0.98)">
+<div id="wc-wrap">
+  <div id="wc-hud">
+    <div class="hud-title">◈ Wavelength Catcher</div>
+    <div class="hud-meta">
+      Score&nbsp;<span id="wc-score-val">0</span>
+      &nbsp;|&nbsp;Level&nbsp;<span id="wc-level-val">1</span>
+      &nbsp;|&nbsp;Lives&nbsp;<span id="wc-lives-val">♥♥♥</span>
+    </div>
+  </div>
+
+  <div id="wc-mode-badge" style="color:#4060a0">— SINGLE BLOCK · ALIGN DOT WITH SPECTRUM —</div>
+  <div id="wc-dir-row">
+    <span id="wc-dir-left">← VIOLET 380nm</span>
+    <span id="wc-dir-right">700nm RED →</span>
+  </div>
+
+  <div style="position:relative">
+  <div id="wc-lock-hint" style="position:absolute;top:8px;right:8px;font-size:8px;letter-spacing:2px;color:rgba(64,192,255,0.5);pointer-events:none;transition:opacity 0.5s;z-index:5">CLICK CANVAS TO LOCK CURSOR · ESC TO RELEASE</div>
+    <canvas id="wc-game-canvas" width="680" height="680"></canvas>
+    <div id="wc-flash-msg"></div>
+    <div id="wc-overlay">
+      <div class="sub">Mini-Game · Spectra Explorers</div>
+      <h2>Wavelength Catcher</h2>
+      <p>
+        Elements fall as glowing blocks.<br>
+        Each block shows a coloured emission dot.<br><br>
+        Move the paddle so the dot lands on its<br>
+        matching colour on the <strong style="color:#40c0ff">spectrum bar below</strong>.<br><br>
+        The bar is your answer key — always visible.
+      </p>
+      <div id="wc-mode-legend">
+        <span><em style="background:#40c0ff"></em>SINGLE — one dot per block</span>
+        <span><em style="background:#ff8040"></em>DUAL — catch the ringed dot</span>
+        <span><em style="background:#ff4080"></em>STORM — two blocks at once</span>
+      </div>
+      <button class="ov-btn" id="wc-start-btn">▶ Begin</button>
+      <div class="sub" style="margin-top:-6px">Mouse or touch · Click canvas to lock cursor · ESC to release</div>
+    </div>
+  </div>
+
+  <!-- Always-visible answer key -->
+  <div id="wc-spec-wrap">
+    <canvas id="wc-spec-canvas" width="680" height="40"></canvas>
+  </div>
+  <div id="wc-spec-labels">
+    <span>380nm · Violet</span>
+    <span>450nm · Blue</span>
+    <span>510nm · Green</span>
+    <span>570nm · Yellow</span>
+    <span>630nm · Red</span>
+    <span>700nm</span>
+  </div>
+
+  <div id="wc-hint-bar">
+    <span id="wc-hint-text">Align the glowing dot with its colour on the spectrum bar</span>
+    <span id="wc-combo-disp" style="color:#304050">COMBO ×<span id="wc-combo-val">1</span></span>
+  </div>
+
+  <div id="wc-progress-row">
+    <span style="color:#40c0ff">PROGRESS</span>
+    <div id="wc-progress-bar"><div id="wc-progress-fill"></div></div>
+    <span id="wc-progress-lbl" style="color:#40c0ff">0/5</span>
+  </div>
+  <div id="wc-speed-row">
+    <span style="color:#ff6040">⚡ SPEED</span>
+    <div id="wc-speed-bar"><div id="wc-speed-fill"></div></div>
+    <span id="wc-speed-lbl" style="color:#ff6040;min-width:28px">×1.0</span>
+  </div>
+</div>
+    <div style="text-align:center;margin-top:8px">
+      <button class="pbtn pbtn-close" onclick="arcadeBackToLobby()">✕ Close</button>
+    </div>
+  </div>
+  <!-- END WAVELENGTH CATCHER -->
 
 
 <script>
+
+
+
+
+
+
+
+
 // ── Forward declarations — ALL variables used before their declaration line ──
 // Must appear before 'use strict' to avoid Temporal Dead Zone (TDZ) crashes.
 // The game adds visual polish vars late in the file; declaring them here first
@@ -4407,8 +4752,8 @@ function closeAllPanels(){
    'sector-panel','telescope-panel','leaderboard-panel','guide-panel',
    'doppler-panel','kepler-panel','element-panel','evolution-panel',
    'glossary-panel','summary-panel','educator-panel',
-   'lithium-panel','radvel-panel','ism-panel','spectra-rush-panel'].forEach(id=>{
-    document.getElementById(id).style.display='none';
+   'lithium-panel','radvel-panel','ism-panel','spectra-rush-panel','wc-panel'].forEach(id=>{
+    const _el=document.getElementById(id); if(_el) _el.style.display='none';
   });
   if(sysmapAnim){ cancelAnimationFrame(sysmapAnim); sysmapAnim=null; }
   if(keplerAnim){ cancelAnimationFrame(keplerAnim); keplerAnim=null; }
@@ -15022,44 +15367,976 @@ function resizeRush(){
 
 let _rushWired = false;
 function openRush(){
-  if(!window._gameStarted) return;
-  // Wire events once on first open
+  const p = document.getElementById('spectra-rush-panel');
+  if(p){ p.classList.add('arcade-active'); }
   if(!_rushWired){
     _rushWired = true;
-    document.querySelectorAll('#spectra-rush-panel .ans-btn').forEach(btn => {
-      btn.addEventListener('click', () => handleAnswerType(btn.dataset.type));
+    document.querySelectorAll('#spectra-rush-panel .ans-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>handleAnswerType(btn.dataset.type));
     });
-    [0,1,2,3].forEach(i => {
-      const el = document.getElementById('ref-'+i);
-      if(el) el.addEventListener('click', () => handleAnswerRef(i));
+    [0,1,2,3].forEach(i=>{
+      const el=document.getElementById('ref-'+i);
+      if(el) el.addEventListener('click',()=>handleAnswerRef(i));
     });
-    const sbtn = document.getElementById('sr-start-btn');
-    if(sbtn) sbtn.addEventListener('click', startGame);
+    const sb=document.getElementById('sr-start-btn');
+    if(sb) sb.addEventListener('click',startGame);
   }
-  showOverlay();
-  document.getElementById('spectra-rush-panel').style.display = 'block';
-  if(gameRunning){ gameRunning = false; stopMusic(); }
-  // Apply style-aware progress bar colour
-  const _pf = document.getElementById('progress-fill');
-  if(_pf) _pf.style.background = `linear-gradient(90deg, ${getRushAccent('pts')}, ${getRushAccent('combo')})`;
+  if(gameRunning){ gameRunning=false; stopMusic(); }
+  const pf=document.getElementById('progress-fill');
+  if(pf) pf.style.background=`linear-gradient(90deg,${getRushAccent('pts')},${getRushAccent('combo')})`;
   resizeRush();
-  setTimeout(startGame, 80);
+  setTimeout(startGame,80);
 }
 
 function closeRush(){
-  gameRunning = false;
-  stopMusic();
-  const p = document.getElementById('spectra-rush-panel');
-  if(p) p.style.display = 'none';
+  gameRunning=false; stopMusic();
+  const p=document.getElementById('spectra-rush-panel');
+  if(p){ p.style.display='none'; p.classList.remove('arcade-active'); }
+  try{ const hi=parseInt(localStorage.getItem('sr_hiscore')||'0');
+       if(score>hi) localStorage.setItem('sr_hiscore',score); }catch(e){}
 }
 
 return { open: openRush, close: closeRush };
 })();
 
 
+
 /* ================================================================
-   STARTUP
+   MINI-GAME: WAVELENGTH CATCHER — window.MG_Catcher
 ================================================================ */
+window.MG_Catcher = (function(){
+'use strict';
+'use strict';
+// ══════════════════════════════════════════════════════════════════
+// WAVELENGTH CATCHER v2
+// Teaching mechanic: block X position = wavelength position on bar.
+// Players align paddle with colour = learn wavelengths by reflex.
+// Design rule: mechanic teaches content WITHOUT requiring prior knowledge.
+// ══════════════════════════════════════════════════════════════════
+
+// ── Element data — real emission wavelengths ──────────────────────
+const ELEMENTS = [
+  // Tier 1: maximally distinct colours — easy to tell apart at a glance
+  { sym:'H',  name:'Hydrogen',  lines:[656],      tier:1, desc:'Red — most common element in universe' },
+  { sym:'Na', name:'Sodium',    lines:[589],      tier:1, desc:'Yellow — sodium vapour streetlights' },
+  { sym:'Ca', name:'Calcium',   lines:[393],      tier:1, desc:'Violet — strong in stellar atmospheres' },
+  { sym:'He', name:'Helium',    lines:[502],      tier:1, desc:'Cyan — first discovered in the Sun' },
+  { sym:'Hg', name:'Mercury',   lines:[546],      tier:1, desc:'Green — fluorescent lamp glow' },
+  // Tier 2: neighbouring colours — need more precision
+  { sym:'Li', name:'Lithium',   lines:[671],      tier:2, desc:'Deep red — close to hydrogen, different shade' },
+  { sym:'K',  name:'Potassium', lines:[404],      tier:2, desc:'Violet — close to calcium, distinguish carefully' },
+  { sym:'Mg', name:'Magnesium', lines:[518],      tier:2, desc:'Green — slightly different from mercury' },
+  { sym:'Ne', name:'Neon',      lines:[585],      tier:2, desc:'Orange-yellow — the warm neon sign colour' },
+  { sym:'Sr', name:'Strontium', lines:[461],      tier:2, desc:'Blue — used in red fireworks' },
+  // Tier 3: multi-line — block has decoy dots
+  { sym:'Fe', name:'Iron',      lines:[527,430],  tier:3, desc:'Green + blue — rich iron spectrum' },
+  { sym:'Ba', name:'Barium',    lines:[614,554],  tier:3, desc:'Orange + green — barium fireworks' },
+  { sym:'Cu', name:'Copper',    lines:[515,578],  tier:3, desc:'Green + yellow — copper in blue fireworks' },
+  { sym:'Hβ', name:'H-Beta',    lines:[486,434],  tier:3, desc:'Blue Balmer series of hydrogen' },
+];
+
+// ── Wavelength helpers ────────────────────────────────────────────
+const NM_MIN = 380, NM_MAX = 700;
+const nmFrac  = nm => Math.max(0, Math.min(1, (nm - NM_MIN) / (NM_MAX - NM_MIN)));
+const nmToX   = nm => nmFrac(nm) * W;
+
+function nmColor(nm) {
+  if (nm < 400) return 'rgba(140,0,220,1)';
+  if (nm < 440) return 'rgba(80,0,255,1)';
+  if (nm < 480) return 'rgba(0,80,255,1)';
+  if (nm < 510) return 'rgba(0,180,255,1)';
+  if (nm < 540) return 'rgba(0,230,80,1)';
+  if (nm < 570) return 'rgba(160,230,0,1)';
+  if (nm < 600) return 'rgba(255,190,0,1)';
+  if (nm < 630) return 'rgba(255,100,0,1)';
+  if (nm < 660) return 'rgba(240,20,0,1)';
+  return 'rgba(160,0,0,1)';
+}
+function nmColorAlpha(nm, a) { return nmColor(nm).replace(',1)', `,${a})`); }
+function colorDesc(nm) {
+  if (nm < 420) return 'violet';   if (nm < 460) return 'blue-violet';
+  if (nm < 500) return 'blue';     if (nm < 530) return 'cyan-green';
+  if (nm < 560) return 'green';    if (nm < 590) return 'yellow-green';
+  if (nm < 610) return 'yellow';   if (nm < 640) return 'orange-red';
+  return 'deep red';
+}
+
+// ── Canvas setup ──────────────────────────────────────────────────
+const canvas = document.getElementById('wc-game-canvas');
+const ctx    = canvas.getContext('2d');
+const W = canvas.width;   // 560
+const H = canvas.height;  // 680
+
+const PADDLE_Y = H - 30;
+const BW = 72, BH = 72;
+const BASE_SPEED = 270;   // px/s at level 1 — fast from the start
+
+// ── Difficulty scaling ────────────────────────────────────────────
+function getParams(lv) {
+  const speed    = Math.min(560, BASE_SPEED + (lv-1) * 20);
+  const paddleW  = Math.max(28, 90 - (lv-1) * 7);   // catch tolerance px
+  const padDraw  = Math.max(48, 110 - (lv-1) * 7);  // visual paddle width
+  const dual     = lv >= 4;   // two blocks at once
+  const multiDot = lv >= 3;   // multi emission dots with decoy
+  const drift    = lv >= 6 ? (lv - 5) * 0.3 : 0;
+  const tierPool = lv <= 2 ? 1 : lv <= 5 ? 2 : 3;
+  return { speed, paddleW, padDraw, dual, multiDot, drift, tierPool };
+}
+
+// ── Draw spectrum reference strip ─────────────────────────────────
+const sc = document.getElementById('wc-spec-canvas');
+const sctx = sc.getContext('2d');
+// strip drawn on open
+
+// ── Background stars ──────────────────────────────────────────────
+const bgStars = Array.from({length:100}, ()=>({
+  x:Math.random()*W, y:Math.random()*H,
+  r:Math.random()*1.2+0.2, a:Math.random()*0.4+0.08,
+  tw:Math.random()*Math.PI*2,
+}));
+function drawBG(t) {
+  ctx.fillStyle='#000812'; ctx.fillRect(0,0,W,H);
+  bgStars.forEach(s=>{
+    const a=s.a+Math.sin(t*0.0008+s.tw)*0.1;
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,Math.max(0.1,s.r),0,Math.PI*2);
+    ctx.fillStyle=`rgba(180,200,255,${a})`; ctx.fill();
+  });
+}
+
+// ── Game state ────────────────────────────────────────────────────
+let running=false, score=0, lives=3, combo=1;
+let totalCaught=0, level=1, caughtThisLevel=0;
+const PER_LEVEL = 5;
+
+// Two-block support
+let blocks = [];       // array of block objects (1 or 2)
+let blockTimer = 0;
+const SPAWN_GAP   = 700;   // ms between blocks — tight but human-reaction possible
+let   dualPending = false;
+
+let paddleX = W/2, targetX = W/2;
+let lastTime = null;
+
+// ── Audio ─────────────────────────────────────────────────────────
+let aCtx=null, musicNodes=[], musicOn=false;
+const NOTES=[174.61,196,220,261.63,293.66,349.23,392,440,523.25,587.33];
+function initAudio(){ if(aCtx)return; aCtx=new(window.AudioContext||window.webkitAudioContext)(); }
+function startMusic(){
+  if(!aCtx||musicOn)return; musicOn=true;
+  let ni=0, bpm=160;
+  const mst=aCtx.createGain();
+  mst.gain.setValueAtTime(0,aCtx.currentTime);
+  mst.gain.linearRampToValueAtTime(0.18,aCtx.currentTime+1);
+  mst.connect(aCtx.destination);
+  const dly=aCtx.createDelay(0.4); dly.delayTime.setValueAtTime(0.22,aCtx.currentTime);
+  const dlg=aCtx.createGain(); dlg.gain.setValueAtTime(0.18,aCtx.currentTime);
+  dly.connect(dlg); dlg.connect(mst);
+  let bt=aCtx.currentTime+0.1;
+  function sched(){
+    if(!musicOn)return;
+    const bd=60/bpm, freq=NOTES[ni%NOTES.length]; ni++;
+    const o=aCtx.createOscillator(), g=aCtx.createGain();
+    o.type='triangle'; o.frequency.setValueAtTime(freq,bt);
+    g.gain.setValueAtTime(0.22,bt); g.gain.exponentialRampToValueAtTime(0.001,bt+bd*0.7);
+    o.connect(g); g.connect(mst); g.connect(dly);
+    o.start(bt); o.stop(bt+bd);
+    if(ni%4===0){
+      const b2=aCtx.createOscillator(),b2g=aCtx.createGain();
+      b2.type='sine'; b2.frequency.setValueAtTime(freq/2,bt);
+      b2g.gain.setValueAtTime(0.12,bt); b2g.gain.exponentialRampToValueAtTime(0.001,bt+bd*1.5);
+      b2.connect(b2g); b2g.connect(mst); b2.start(bt); b2.stop(bt+bd*2);
+    }
+    bpm=160+(getParams(level).speed-BASE_SPEED)*0.4;
+    bpm=Math.min(210,bpm);
+    bt+=bd;
+    musicNodes.push(setTimeout(sched,Math.max(0,(bt-aCtx.currentTime-0.1)*1000)));
+  }
+  sched();
+}
+function stopMusic(){
+  musicOn=false; musicNodes.forEach(clearTimeout); musicNodes=[];
+  if(aCtx){aCtx.close();aCtx=null;}
+}
+function playTone(nm,ok){
+  if(!aCtx)return;
+  const f=ok?280+nmFrac(nm)*560:120;
+  const o=aCtx.createOscillator(),g=aCtx.createGain();
+  o.type=ok?'sine':'square'; o.frequency.setValueAtTime(f,aCtx.currentTime);
+  g.gain.setValueAtTime(ok?0.28:0.12,aCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,aCtx.currentTime+(ok?0.35:0.18));
+  o.connect(g); g.connect(aCtx.destination); o.start(); o.stop(aCtx.currentTime+0.35);
+}
+
+// ── Block creation ────────────────────────────────────────────────
+function makeBlock(p, offsetY=0) {
+  const pool = ELEMENTS.filter(e=>e.tier<=p.tierPool);
+  const el   = pool[Math.floor(Math.random()*pool.length)];
+  const tNm  = el.lines[0];
+  // Multi-dot: always inject a decoy line from a DIFFERENT element
+  // so the player must identify the RINGED (target) dot vs the decoy
+  let allLines = [tNm];
+  if (p.multiDot) {
+    // Pick a decoy nm from a different element, preferably visually distinct
+    const decoyPool = ELEMENTS.filter(e => e.lines[0] !== tNm && Math.abs(e.lines[0]-tNm) > 40);
+    if (decoyPool.length > 0) {
+      const decoy = decoyPool[Math.floor(Math.random()*decoyPool.length)];
+      allLines = Math.random() > 0.5 ? [tNm, decoy.lines[0]] : [decoy.lines[0], tNm];
+    }
+  }
+  const wavelengthX = Math.max(BW/2+4, Math.min(W-BW/2-4, nmToX(tNm)));
+  // In drift mode: spawn at random position, glide toward wavelengthX
+  // In no-drift mode: spawn directly at wavelengthX
+  // Random spawn once multi-dot is active (level 3+) — position no longer gives answer away
+  // Block glides toward wavelengthX during fall so it still ends up at the correct spot
+  const spawnX = p.multiDot
+    ? Math.max(BW/2+4, Math.min(W-BW/2-4, 80 + Math.random()*(W-160)))
+    : wavelengthX;
+  return {
+    el, tNm, allLines,
+    x: spawnX,
+    correctX: wavelengthX, // used only for guide line / reference (not catch)
+    wavelengthX,
+    y: -BH - offsetY,
+    driftDir: 0, // unused — block moves toward wavelengthX instead
+    flash:null, flashTimer:0, answered:false,
+  };
+}
+
+function makePairedBlock(p, anchorNm) {
+  // Pick an element whose correctX is within MAX_PAIR_DIST of the anchor block.
+  // This guarantees both blocks are catchable with one paddle swing.
+  const MIN_PAIR_DIST = 180; // px — must move paddle (can't sit still)
+  const MAX_PAIR_DIST = 260; // px — still reachable in SPAWN_GAP time
+  const anchorX = Math.max(BW/2+4, Math.min(W-BW/2-4, nmToX(anchorNm)));
+  const pool = ELEMENTS.filter(e => e.tier <= p.tierPool);
+
+  // Pick elements whose wavelength is between MIN and MAX distance from anchor
+  const nearby = pool.filter(e => {
+    const cx = Math.max(BW/2+4, Math.min(W-BW/2-4, nmToX(e.lines[0])));
+    const dist = Math.abs(cx - anchorX);
+    return dist >= MIN_PAIR_DIST && dist <= MAX_PAIR_DIST && e.lines[0] !== anchorNm;
+  });
+
+  // Fall back to closest available if none in range
+  const candidates = nearby.length > 0 ? nearby : pool.filter(e => e.lines[0] !== anchorNm);
+  const el = candidates.sort((a, b) => {
+    const da = Math.abs(nmToX(a.lines[0]) - anchorX);
+    const db = Math.abs(nmToX(b.lines[0]) - anchorX);
+    return da - db;
+  })[0] || pool[0];
+
+  const tNm = el.lines[0];
+  let allLines = [tNm];
+  if (p.multiDot) {
+    const decoyPool = ELEMENTS.filter(e => e.lines[0] !== tNm && Math.abs(e.lines[0]-tNm) > 40);
+    if (decoyPool.length > 0) {
+      const decoy = decoyPool[Math.floor(Math.random()*decoyPool.length)];
+      allLines = Math.random() > 0.5 ? [tNm, decoy.lines[0]] : [decoy.lines[0], tNm];
+    }
+  }
+  const wavelengthX = Math.max(BW/2+4, Math.min(W-BW/2-4, nmToX(tNm)));
+  // Random spawn once multi-dot is active (level 3+) — position no longer gives answer away
+  // Block glides toward wavelengthX during fall so it still ends up at the correct spot
+  const spawnX = p.multiDot
+    ? Math.max(BW/2+4, Math.min(W-BW/2-4, 80 + Math.random()*(W-160)))
+    : wavelengthX;
+  return {
+    el, tNm, allLines,
+    x: spawnX,
+    correctX: wavelengthX,
+    wavelengthX,
+    y: -BH,
+    driftDir: 0,
+    flash:null, flashTimer:0, answered:false,
+  };
+}
+
+function spawnWave() {
+  const p = getParams(level);
+  const first = makeBlock(p, 0);
+  blocks.push(first);
+  if (p.dual && p.multiDot) {
+    // STORM mode: second block spawns after delay — player must MOVE after first catch
+    // Delay = SPAWN_GAP (600ms) — human reaction time is ~200-300ms, so this is tight
+    dualPending = true;
+  } else if (p.dual) {
+    // DUAL mode: second block spawns SPAWN_GAP ms later (sequential)
+    dualPending = true;
+  }
+}
+
+// ── Draw one block ────────────────────────────────────────────────
+function drawBlock(b) {
+  const bx=b.x-BW/2, by=b.y-BH/2;
+  const urgency = Math.max(0,(b.y-(H*0.55))/(H*0.38));
+
+  // Shadow / flash glow
+  if(b.flash==='correct'){
+    ctx.shadowBlur=28; ctx.shadowColor=nmColorAlpha(b.tNm,0.9);
+  } else if(b.flash==='wrong'){
+    ctx.shadowBlur=18; ctx.shadowColor='rgba(255,40,40,0.8)';
+  } else if(urgency>0.25){
+    ctx.shadowBlur=10*urgency; ctx.shadowColor='rgba(255,80,40,0.5)';
+  }
+
+  // Block body
+  const borderCol = b.flash==='correct' ? nmColor(b.tNm)
+                  : b.flash==='wrong'   ? '#ff4040'
+                  : `rgba(55,90,150,${0.4+urgency*0.45})`;
+  ctx.fillStyle='rgba(3,7,22,0.93)';
+  ctx.strokeStyle=borderCol; ctx.lineWidth=b.flash?2.5:1.5;
+  rRect(ctx,bx,by,BW,BH,7); ctx.fill(); ctx.stroke();
+  ctx.shadowBlur=0;
+
+  // Symbol
+  ctx.font='bold 24px Share Tech Mono,monospace';
+  ctx.textAlign='center';
+  ctx.fillStyle='rgba(180,215,240,0.92)';
+  ctx.fillText(b.el.sym, b.x, by+34);
+
+  // Name
+  ctx.font='7px Share Tech Mono,monospace';
+  ctx.shadowBlur=6; ctx.shadowColor='rgba(0,200,200,0.6)';
+  ctx.fillStyle='rgba(0,200,200,0.88)';
+  ctx.fillText(b.el.name, b.x, by+47);
+  ctx.shadowBlur=0;
+
+  // Emission dots — the core visual teaching element
+  b.allLines.forEach((nm,i)=>{
+    const isT = nm===b.tNm;
+    const dotY = by+BH-12;
+    const dotX = b.allLines.length===1 ? b.x : b.x+(i-(b.allLines.length-1)/2)*16;
+    const r = isT?7:4.5;
+    const col = nmColor(nm);
+
+    // Glow halo
+    const g=ctx.createRadialGradient(dotX,dotY,0,dotX,dotY,r*3.5);
+    g.addColorStop(0,col.replace(',1)',',0.55)'));
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(dotX,dotY,Math.max(0.1,r*3.5),0,Math.PI*2);
+    ctx.fillStyle=g; ctx.fill();
+
+    // Core dot
+    ctx.beginPath(); ctx.arc(dotX,dotY,Math.max(0.1,r),0,Math.PI*2);
+    ctx.fillStyle=col; ctx.fill();
+
+    // Ring around target
+    if(isT){
+      ctx.beginPath(); ctx.arc(dotX,dotY,Math.max(0.1,r+4),0,Math.PI*2);
+      ctx.strokeStyle=col.replace(',1)',',0.7)');
+      ctx.lineWidth=1.5; ctx.stroke();
+    }
+  });
+
+  // Vertical guide — minimal, non-revealing
+  if(!b.answered){
+    const isDrifting = getParams(level).multiDot; // random spawn = no direct guide
+    if(b.allLines.length === 1 && !isDrifting){
+      // Single dot, no drift: bright guide to spectrum bar (training wheels)
+      ctx.setLineDash([3,5]);
+      ctx.beginPath();
+      ctx.moveTo(b.wavelengthX, b.y+BH/2+4);
+      ctx.lineTo(b.wavelengthX, H);
+      ctx.strokeStyle=nmColorAlpha(b.tNm,0.4);
+      ctx.lineWidth=1.5; ctx.stroke();
+      ctx.setLineDash([]);
+      // Arrow pointing at spectrum bar
+      ctx.beginPath();
+      ctx.moveTo(b.wavelengthX-5, H-2);
+      ctx.lineTo(b.wavelengthX,   H-9);
+      ctx.lineTo(b.wavelengthX+5, H-2);
+      ctx.strokeStyle=nmColorAlpha(b.tNm,0.7);
+      ctx.lineWidth=1.5; ctx.stroke();
+    } else if(b.allLines.length === 1 && isDrifting){
+      // Single dot, drifting: faint grey reference line at wavelength position
+      // Shows WHERE it belongs on the bar, but block has wandered — chase it
+      ctx.setLineDash([2,10]);
+      ctx.beginPath();
+      ctx.moveTo(b.wavelengthX, b.y+BH/2+4);
+      ctx.lineTo(b.wavelengthX, H);
+      ctx.strokeStyle='rgba(80,100,130,0.25)';
+      ctx.lineWidth=1; ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    // Multi-dot: NO guide lines — player reads the ring on the block
+    // and matches it to the spectrum bar themselves. That's the whole game.
+  }
+
+  // Time strip on right edge
+  const frac=Math.max(0,1-b.y/PADDLE_Y);
+  ctx.fillStyle=urgency>0.4?`rgba(255,${Math.floor(120*(1-urgency))},0,0.4)`:'rgba(64,192,255,0.18)';
+  ctx.fillRect(bx+BW+3, by+BH*(1-frac), 3, BH*frac);
+}
+
+// ── Draw paddle ───────────────────────────────────────────────────
+function drawPaddle() {
+  const p=getParams(level), pw=p.padDraw, ph=12;
+  const px=paddleX-pw/2, py=PADDLE_Y-ph/2;
+
+  // Check if on target
+  const onT = blocks.some(b=>!b.answered&&Math.abs(paddleX-b.correctX)<=p.paddleW);
+  const padCol = onT ? nmColor(blocks.find(b=>!b.answered&&Math.abs(paddleX-b.correctX)<=p.paddleW)?.tNm||589) : null;
+
+  ctx.shadowBlur=onT?20:14;
+  ctx.shadowColor=onT?(padCol?.replace(',1)',',0.7)')||'rgba(64,192,255,0.5)'):'rgba(64,192,255,0.4)';
+
+  const gr=ctx.createLinearGradient(px,py,px+pw,py);
+  gr.addColorStop(0,'rgba(0,80,160,0.25)');
+  gr.addColorStop(0.5, onT?padCol?.replace(',1)',',0.8)')||'rgba(64,192,255,0.75)':'rgba(64,192,255,0.65)');
+  gr.addColorStop(1,'rgba(0,80,160,0.25)');
+  ctx.fillStyle=gr;
+  rRect(ctx,px,py,pw,ph,4); ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(px+4,py); ctx.lineTo(px+pw-4,py);
+  ctx.strokeStyle=onT?padCol?.replace(',1)',',0.95)')||'rgba(120,220,255,0.9)':'rgba(120,220,255,0.75)';
+  ctx.lineWidth=1.5; ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(paddleX,py+ph/2,3,0,Math.PI*2);
+  ctx.fillStyle='rgba(200,240,255,0.9)'; ctx.fill();
+  ctx.shadowBlur=0;
+
+  // Catch zone ticks
+  const cz=p.paddleW;
+  [paddleX-cz, paddleX+cz].forEach(tx=>{
+    ctx.beginPath(); ctx.moveTo(tx,py-3); ctx.lineTo(tx,py+ph+3);
+    ctx.strokeStyle='rgba(64,192,255,0.2)'; ctx.lineWidth=1; ctx.stroke();
+  });
+
+  // nm readout
+  const frac=paddleX/W, nm=NM_MIN+frac*(NM_MAX-NM_MIN);
+  ctx.font='8px monospace'; ctx.textAlign='center';
+  ctx.fillStyle=onT?padCol?.replace(',1)',',0.9)')||'rgba(64,192,255,0.7)':'rgba(64,192,255,0.4)';
+  ctx.fillText((onT?'✓ ':'')+Math.round(nm)+'nm', paddleX, H-4);
+}
+
+// ── Danger zone ───────────────────────────────────────────────────
+function drawDanger() {
+  const dy=PADDLE_Y-18;
+  ctx.setLineDash([4,4]); ctx.strokeStyle='rgba(255,40,40,0.15)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,dy); ctx.lineTo(W,dy); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(255,15,15,0.04)'; ctx.fillRect(0,dy,W,H-dy);
+  ctx.fillStyle='rgba(140,20,20,0.3)'; ctx.font='8px monospace'; ctx.textAlign='center';
+  ctx.fillText('▼  DANGER ZONE  ▼', W/2, H-18);
+}
+
+// ── Round rect ───────────────────────────────────────────────────
+function rRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
+}
+
+// ── Catch logic ───────────────────────────────────────────────────
+function handleCatch(b) {
+  b.answered=true;
+  const p=getParams(level);
+  const dist=Math.abs(paddleX-b.x); // always compare to visual dot position
+
+  if(dist<=p.paddleW){
+    // CORRECT
+    b.flash='correct'; b.flashTimer=360;
+    const pts=Math.round(100*combo*(1+(level-1)*0.2));
+    score+=pts; combo=Math.min(8,combo+1);
+    totalCaught++; caughtThisLevel++;
+    updateHUD(); updateProgress(); updateCombo();
+    showFlash(`+${pts}`, nmColor(b.tNm));
+    updateHint(`✓ ${b.el.name} (${b.tNm}nm) — ${colorDesc(b.tNm)} · ${b.el.desc}`, '#00c870');
+    playTone(b.tNm,true);
+
+    if(caughtThisLevel>=PER_LEVEL){
+      caughtThisLevel=0; level++;
+      updateHUD(); updateProgress(); updateSpeedBar();
+      showFlash('LEVEL UP!','#ffcc00');
+      updateModeBadge();
+    }
+  } else {
+    // MISS
+    b.flash='wrong'; b.flashTimer=400;
+    combo=1; caughtThisLevel=Math.max(0,caughtThisLevel-1);
+    loseLife(); updateCombo(); updateProgress();
+    showFlash(`✗ ${b.tNm}nm`, '#ff5050');
+    updateHint(`✗ Miss — ${b.el.name} is ${b.tNm}nm, a ${colorDesc(b.tNm)} line`, '#ff6060');
+    playTone(b.tNm,false); shakeCanvas();
+  }
+}
+
+// ── Game loop ─────────────────────────────────────────────────────
+let dualTimer=0;
+function gameLoop(ts){
+  if(!running)return;
+  requestAnimationFrame(gameLoop);
+  const dt=lastTime?Math.min(ts-lastTime,80):16; lastTime=ts;
+  const p=getParams(level);
+
+  // Paddle lerp
+  paddleX+=(targetX-paddleX)*Math.min(1,dt*0.04);
+  paddleX=Math.max(p.padDraw/2,Math.min(W-p.padDraw/2,paddleX));
+
+  // Spawn
+  const active=blocks.filter(b=>!b.answered||b.flash);
+  if(active.length===0){
+    blockTimer+=dt;
+    if(blockTimer>=500){ spawnWave(); blockTimer=0; dualTimer=0; }
+  }
+
+  // Dual pending — stagger second block
+  if(dualPending){
+    dualTimer+=dt;
+    if(dualTimer>=SPAWN_GAP){
+      dualPending=false; dualTimer=0;
+      blocks.push(makeBlock(p, -BH*0.5));
+    }
+  }
+
+  // Move blocks
+  blocks.forEach(b=>{
+    if(!b.answered){
+      b.y+=(p.speed/1000)*dt;
+      if(p.multiDot){
+        // Ease-in: slow at top, accelerates toward bottom
+        // progress 0→1 as block falls; lerp is proportional to progress²
+        const progress = Math.max(0, b.y / PADDLE_Y);
+        const eased = progress * progress; // quadratic ease-in
+        const lerpRate = 0.0008 + eased * 0.004; // very slow at top, quicker near paddle
+        b.x += (b.wavelengthX - b.x) * lerpRate * dt;
+      }
+      if(b.y>=PADDLE_Y-BH/2-4) handleCatch(b);
+    }
+    if(b.flash){
+      b.flashTimer-=dt;
+      if(b.flashTimer<=0){ b.flash=null; if(b.answered) b.y=H+200; }
+    }
+  });
+  blocks=blocks.filter(b=>b.y<H+300);
+
+  // Draw
+  drawBG(ts); drawDanger();
+  blocks.forEach(drawBlock);
+  drawPaddle();
+}
+
+// ── HUD helpers ───────────────────────────────────────────────────
+function updateHUD(){
+  document.getElementById('wc-score-val').textContent=score.toLocaleString();
+  document.getElementById('wc-level-val').textContent=level;
+  const el=document.getElementById('wc-lives-val');
+  el.textContent='♥'.repeat(lives)+'♡'.repeat(Math.max(0,3-lives));
+  el.style.color=lives<=1?'#ff4040':'#40c0ff';
+}
+function updateCombo(){
+  document.getElementById('wc-combo-val').textContent=combo;
+  const d=document.getElementById('wc-combo-disp');
+  d.style.color=combo>=5?'#ffcc00':combo>=3?'#40c0ff':'#304050';
+}
+function updateProgress(){
+  const pct=Math.round((caughtThisLevel/PER_LEVEL)*100);
+  document.getElementById('wc-progress-fill').style.width=pct+'%';
+  document.getElementById('wc-progress-lbl').textContent=caughtThisLevel+'/'+PER_LEVEL;
+}
+function updateSpeedBar(){
+  const p=getParams(level);
+  const pct=Math.min(100,((p.speed-BASE_SPEED)/(560-BASE_SPEED))*100);
+  document.getElementById('wc-speed-fill').style.width=pct+'%';
+  document.getElementById('wc-speed-lbl').textContent='×'+(p.speed/BASE_SPEED).toFixed(1);
+}
+function updateModeBadge(){
+  const p=getParams(level);
+  const b=document.getElementById('wc-mode-badge');
+  if(p.dual&&p.multiDot){
+    b.textContent='— STORM · TWO BLOCKS · MULTI-DOT —'; b.style.color='#ff4080';
+  } else if(p.dual){
+    b.textContent='— DUAL BLOCKS · CATCH BOTH —'; b.style.color='#ff8040';
+  } else if(p.multiDot){
+    b.textContent='— MULTI-DOT · CATCH THE RINGED DOT —'; b.style.color='#ffcc00';
+  } else {
+    b.textContent='— SINGLE BLOCK · ALIGN DOT WITH SPECTRUM —'; b.style.color='#4060a0';
+  }
+}
+let hintClear=null;
+function updateHint(t,c){
+  const el=document.getElementById('wc-hint-text');
+  el.textContent=t; el.style.color=c||'#4a7090';
+  clearTimeout(hintClear);
+  hintClear=setTimeout(()=>{
+    el.textContent='Align the glowing dot with its colour on the spectrum bar';
+    el.style.color='#3a6080';
+  },3200);
+}
+let flashClear=null;
+function showFlash(t,c){
+  const el=document.getElementById('wc-flash-msg');
+  el.textContent=t; el.style.color=c; el.style.opacity='1';
+  clearTimeout(flashClear);
+  flashClear=setTimeout(()=>el.style.opacity='0',950);
+}
+function loseLife(){
+  lives=Math.max(0,lives-1); updateHUD();
+  if(lives===0) setTimeout(endGame,700);
+}
+function shakeCanvas(){
+  let t=0;
+  const iv=setInterval(()=>{
+    canvas.style.transform=`translateX(${(Math.random()-0.5)*6}px)`;
+    if(++t>5){clearInterval(iv);canvas.style.transform='';}
+  },40);
+}
+
+// ── Start / End ───────────────────────────────────────────────────
+function startGame(){
+  initAudio();
+  score=0;lives=3;combo=1;totalCaught=0;level=1;caughtThisLevel=0;
+  blocks=[];blockTimer=0;dualPending=false;dualTimer=0;lastTime=null;
+  paddleX=targetX=W/2;
+  running=true;
+  document.getElementById('wc-overlay').style.display='none';
+  updateHUD();updateCombo();updateProgress();updateSpeedBar();updateModeBadge();
+  updateHint('Move the paddle — the dot falls straight to its wavelength!','#4a7090');
+  setTimeout(startMusic,600);
+  // Request pointer lock when game starts
+  canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
+  if(canvas.requestPointerLock) canvas.requestPointerLock();
+  requestAnimationFrame(gameLoop);
+}
+function endGame(){
+  running=false; stopMusic();
+  const stars=totalCaught>=20?'★★★':totalCaught>=10?'★★☆':'★☆☆';
+  const ov=document.getElementById('wc-overlay');
+  ov.style.display='flex';
+  ov.innerHTML=`
+    <div class="sub">Game Over</div>
+    <h2>Mission Log</h2>
+    <div class="big-score">${score.toLocaleString()}</div>
+    <p>Level ${level} · ${totalCaught} caught · ${stars}<br><br>
+    ${totalCaught>=20?'Expert spectroscopist!':totalCaught>=10?'Good work, scientist.':'Keep practising!'}</p>
+    <button class="ov-btn" id="start-btn">↺ Try Again</button>
+  `;
+  // wired in openCatcher
+}
+
+// ── Input ─────────────────────────────────────────────────────────
+
+
+// wired in openCatcher
+
+// init on open
+
+let _wc_wired=false, _wc_strip=false;
+function _drawStrip(){
+  if(_wc_strip)return; _wc_strip=true;
+  const sc=document.getElementById('wc-spec-canvas'); if(!sc)return;
+  const sctx=sc.getContext('2d'),sw=sc.width,sh=sc.height;
+  sctx.fillStyle='#030408';sctx.fillRect(0,0,sw,sh);
+  for(let x=0;x<sw;x++){const nm=380+(x/sw)*320;sctx.fillStyle=nmColorAlpha(nm,0.1);sctx.fillRect(x,0,1,sh);}
+  for(let nm=400;nm<=700;nm+=20){const x=Math.round(((nm-380)/320)*sw);sctx.beginPath();sctx.moveTo(x,0);sctx.lineTo(x,sh);sctx.strokeStyle=nmColorAlpha(nm,0.3);sctx.lineWidth=1;sctx.stroke();}
+  [{'nm':656,'sym':'H'},{'nm':589,'sym':'Na'},{'nm':546,'sym':'Hg'},{'nm':518,'sym':'Mg'},{'nm':502,'sym':'He'},{'nm':461,'sym':'Sr'},{'nm':404,'sym':'K'},{'nm':393,'sym':'Ca'},{'nm':671,'sym':'Li'},{'nm':585,'sym':'Ne'},{'nm':527,'sym':'Fe'}].forEach(r=>{
+    const x=Math.round(((r.nm-380)/320)*sw);
+    sctx.beginPath();sctx.moveTo(x,0);sctx.lineTo(x,sh*0.5);sctx.strokeStyle=nmColorAlpha(r.nm,0.95);sctx.lineWidth=2.5;sctx.stroke();
+    sctx.fillStyle=nmColorAlpha(r.nm,0.85);sctx.font='bold 7.5px Share Tech Mono,monospace';sctx.textAlign='center';sctx.fillText(r.sym,x,sh-2);
+  });
+}
+function openCatcher(){
+  const panel=document.getElementById('wc-panel');
+  if(!panel) return;
+  panel.classList.add('arcade-active');
+  _drawStrip();
+  if(!_wc_wired){
+    _wc_wired=true;
+    const sb=document.getElementById('wc-start-btn');
+    if(sb) sb.addEventListener('click',startGame);
+    canvas.addEventListener('click',()=>{
+      if(running&&document.pointerLockElement!==canvas) canvas.requestPointerLock();
+    });
+    document.addEventListener('pointerlockchange',()=>{
+      const locked=document.pointerLockElement===canvas;
+      const h=document.getElementById('wc-lock-hint');
+      if(h) h.style.opacity=locked?'0':'1';
+    });
+    canvas.addEventListener('mousemove',e=>{
+      if(document.pointerLockElement===canvas){ targetX=Math.max(0,Math.min(W,targetX+e.movementX)); }
+      else{ const r=canvas.getBoundingClientRect(); targetX=(e.clientX-r.left)*(W/r.width); }
+    });
+    canvas.addEventListener('touchmove',e=>{
+      e.preventDefault();
+      const r=canvas.getBoundingClientRect();
+      targetX=(e.touches[0].clientX-r.left)*(W/r.width);
+    },{passive:false});
+  }
+  drawBG(0); drawDanger();
+}
+function closeCatcher(){
+  running=false; stopMusic();
+  if(document.pointerLockElement===canvas) document.exitPointerLock();
+  const p=document.getElementById('wc-panel');
+  if(p){ p.style.display='none'; p.classList.remove('arcade-active'); }
+  try{ const hi=parseInt(localStorage.getItem('wc_hiscore')||'0');
+       if(score>hi) localStorage.setItem('wc_hiscore',score); }catch(e){}
+}
+return{open:openCatcher,close:closeCatcher};
+})();
+
+
+/* ── STELLAR ARCADE CONTROLLER ─────────────────────────────────── */
+let _arcadeBgInit = false;
+
+function arcadeOpen(){
+  if(window._removeTitleListeners) window._removeTitleListeners();
+  if(window.stopTitleMusic) stopTitleMusic();
+  const ws = document.getElementById('welcome-screen');
+  if(ws) ws.style.display = 'none';
+  const arc = document.getElementById('arcade-screen');
+  if(arc) arc.style.display = 'block';
+  _arcadeShowLobby();
+  _arcadeInitBg();
+  _arcadeUpdateHiScores();
+  setTimeout(_arcadeStartAttract, 200);
+}
+
+function arcadeClose(){
+  try{ MG_Rush.close(); }catch(e){}
+  try{ MG_Catcher.close(); }catch(e){}
+  ['spectra-rush-panel','wc-panel'].forEach(id=>{
+    const p=document.getElementById(id);
+    if(p){
+      p.style.display='none'; p.classList.remove('arcade-active');
+      if(p.parentElement && p.parentElement.id==='arcade-game-area'){
+        document.body.appendChild(p);
+      }
+    }
+  });
+  const arc = document.getElementById('arcade-screen');
+  if(arc) arc.style.display = 'none';
+  if(!window._gameStarted){
+    const ws = document.getElementById('welcome-screen');
+    if(ws) ws.style.display = 'flex';
+    if(window.initTitleMusic) initTitleMusic();
+  }
+}
+
+function arcadeSelectGame(game){
+  const lobby = document.getElementById('arcade-lobby');
+  if(lobby) lobby.classList.add('hidden');
+  const loadEl = document.getElementById('arcade-loading');
+  const titleEl = document.getElementById('arcade-loading-title');
+  const barEl   = document.getElementById('arcade-loading-bar');
+  const coinEl  = document.getElementById('arcade-coin-anim');
+  if(loadEl){ loadEl.style.display='flex'; }
+  if(titleEl){ titleEl.textContent  = game==='rush'?'SPECTRA RUSH':'WAVELENGTH CATCHER';
+               titleEl.style.color   = game==='rush'?'#ff4080':'#40c0ff'; }
+  if(barEl){   barEl.style.background= game==='rush'?'#ff4080':'#40c0ff'; barEl.style.width='0%'; }
+  // Animate progress bar over 3.3s
+  let pct=0;
+  const barAnim=setInterval(()=>{
+    pct+=Math.random()*7+2; if(pct>100)pct=100;
+    if(barEl) barEl.style.width=pct+'%';
+    if(pct>=100) clearInterval(barAnim);
+  },80);
+  // Coin animation
+  const coins=['🪙','✨','⬡','◈','★','·'];
+  let ci=0;
+  const coinAnim=setInterval(()=>{ if(coinEl) coinEl.textContent=coins[ci++%coins.length]; },180);
+  setTimeout(()=>{
+    clearInterval(coinAnim);
+    if(coinEl) coinEl.textContent='';
+    if(loadEl) loadEl.style.display='none';
+    _arcadeShowGameView(game);
+  }, 3400);
+}
+
+function _arcadeShowLobby(){
+  const lobby = document.getElementById('arcade-lobby');
+  const gv    = document.getElementById('arcade-game-view');
+  const ld    = document.getElementById('arcade-loading');
+  if(lobby) lobby.classList.remove('hidden');
+  if(gv)    gv.style.display   = 'none';
+  if(ld)    ld.style.display   = 'none';
+  const nr = document.getElementById('arcade-nav-right');
+  if(nr){ nr.textContent='v1.0'; nr.style.color='#301828'; }
+}
+
+function _arcadeShowGameView(game){
+  const gv = document.getElementById('arcade-game-view');
+  if(gv) gv.style.display = 'block';
+  const nr = document.getElementById('arcade-nav-right');
+  if(nr){ nr.textContent=game==='rush'?'SPECTRA RUSH':'WAVELENGTH CATCHER';
+          nr.style.color=game==='rush'?'#ff4080':'#40c0ff'; }
+  // Move the game panel into arcade-game-area
+  const area = document.getElementById('arcade-game-area');
+  const panelId = game==='rush'?'spectra-rush-panel':'wc-panel';
+  const panel = document.getElementById(panelId);
+  if(area && panel){
+    area.innerHTML = '';
+    area.appendChild(panel);
+    panel.classList.add('arcade-active');
+    panel.style.display = 'block';
+  }
+  if(game==='rush') MG_Rush.open();
+  else MG_Catcher.open();
+}
+
+function arcadeBackToLobby(){
+  try{ MG_Rush.close(); }catch(e){}
+  try{ MG_Catcher.close(); }catch(e){}
+  ['spectra-rush-panel','wc-panel'].forEach(id=>{
+    const p=document.getElementById(id);
+    if(p){
+      p.style.display='none';
+      p.classList.remove('arcade-active');
+      // Move back to body so it's available next time
+      if(p.parentElement && p.parentElement.id==='arcade-game-area'){
+        document.body.appendChild(p);
+      }
+    }
+  });
+  _arcadeShowLobby();
+}
+
+function _arcadeUpdateHiScores(){
+  try{
+    const rHi=parseInt(localStorage.getItem('sr_hiscore')||'0');
+    const cHi=parseInt(localStorage.getItem('wc_hiscore')||'0');
+    const rEl=document.getElementById('lobby-rush-hi');
+    const cEl=document.getElementById('lobby-catcher-hi');
+    if(rEl) rEl.textContent=rHi>0?rHi.toLocaleString():'---';
+    if(cEl) cEl.textContent=cHi>0?cHi.toLocaleString():'---';
+    const lt=document.getElementById('arcade-leaderboard-tease');
+    if(lt) lt.textContent=(rHi>0||cHi>0)?'Your best scores saved locally':'Play to set a score';
+  }catch(e){}
+}
+
+
+/* ── ARCADE ATTRACT MODE ────────────────────────────────────────── */
+function _arcadeStartAttract(){
+  _rushAttract();
+  _catcherAttract();
+}
+function _rushAttract(){
+  const cvs = document.getElementById('rush-attract-canvas');
+  if(!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const W=cvs.width, H=cvs.height;
+  let bars=[], t=0, score=0, ghostX=W/2;
+  const COLS=['#b0c0ff','#80a0ff','#ffe080','#ff8040','#ff4040','#ff80ff','#80ffff'];
+  const LBLS=['O','B','A','F','G','K','M'];
+  function spawnBar(){
+    const ti=Math.floor(Math.random()*7);
+    bars.push({x:Math.random()*(W-30)+15,y:-20,label:LBLS[ti],col:COLS[ti],speed:0.6+Math.random()*0.4});
+  }
+  function draw(){
+    if(!document.getElementById('arcade-screen')||document.getElementById('arcade-screen').style.display==='none') return;
+    if(!document.getElementById('arcade-lobby')||document.getElementById('arcade-lobby').classList.contains('hidden')) return;
+    ctx.fillStyle='rgba(2,4,20,0.4)'; ctx.fillRect(0,0,W,H);
+    // Bars fall
+    bars=bars.filter(b=>{
+      b.y+=b.speed;
+      ctx.fillStyle=b.col; ctx.globalAlpha=0.85;
+      ctx.fillRect(b.x-20,b.y,40,14);
+      ctx.globalAlpha=1; ctx.fillStyle='#000';
+      ctx.font='bold 8px monospace'; ctx.textAlign='center';
+      ctx.fillText(b.label,b.x,b.y+10);
+      return b.y<H+20;
+    });
+    // Ghost paddle follows nearest bar
+    if(bars.length>0){
+      const near=bars.reduce((a,b)=>b.y>a.y?b:a,bars[0]);
+      ghostX+=(near.x-ghostX)*0.08;
+    }
+    // Draw ghost paddle
+    ctx.fillStyle='rgba(255,64,128,0.5)'; ctx.globalAlpha=0.7;
+    ctx.fillRect(ghostX-22,H-12,44,8); ctx.globalAlpha=1;
+    // Score
+    ctx.fillStyle='#ff4080'; ctx.font='7px monospace'; ctx.textAlign='right';
+    ctx.fillText('SCORE '+score,W-4,10);
+    // Spawn
+    if(t%60===0) spawnBar();
+    if(bars.some(b=>b.y>H-20)){ score+=100; }
+    t++; requestAnimationFrame(draw);
+  }
+  spawnBar(); spawnBar();
+  draw();
+}
+function _catcherAttract(){
+  const cvs = document.getElementById('catcher-attract-canvas');
+  if(!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const W=cvs.width, H=cvs.height;
+  const NM_MIN=380,NM_MAX=700;
+  let block={x:W/2,y:0,nm:540,speed:0.5}, paddleX=W/2, score=0, t=0;
+  function nmCol(nm,a=1){
+    if(nm<440) return `rgba(80,0,255,${a})`;
+    if(nm<490) return `rgba(0,80,255,${a})`;
+    if(nm<540) return `rgba(0,230,80,${a})`;
+    if(nm<580) return `rgba(200,220,0,${a})`;
+    if(nm<620) return `rgba(255,120,0,${a})`;
+    return `rgba(220,30,0,${a})`;
+  }
+  function draw(){
+    if(!document.getElementById('arcade-screen')||document.getElementById('arcade-screen').style.display==='none') return;
+    if(!document.getElementById('arcade-lobby')||document.getElementById('arcade-lobby').classList.contains('hidden')) return;
+    ctx.fillStyle='rgba(0,4,14,0.35)'; ctx.fillRect(0,0,W,H);
+    // Draw spectrum bar at bottom
+    for(let x=0;x<W;x++){
+      const nm=NM_MIN+(x/W)*(NM_MAX-NM_MIN);
+      ctx.fillStyle=nmCol(nm,0.6); ctx.fillRect(x,H-8,1,8);
+    }
+    // Target X
+    const targetX=(block.nm-NM_MIN)/(NM_MAX-NM_MIN)*W;
+    paddleX+=(targetX-paddleX)*0.04;
+    // Block
+    block.y+=block.speed;
+    ctx.fillStyle=nmCol(block.nm,0.9);
+    ctx.fillRect(block.x-12,block.y,24,16);
+    // Ghost paddle
+    ctx.fillStyle='rgba(64,192,255,0.6)';
+    ctx.fillRect(paddleX-20,H-18,40,6);
+    // Catch?
+    if(block.y>H-26){ block={x:Math.random()*(W-20)+10,y:0,nm:NM_MIN+Math.random()*(NM_MAX-NM_MIN),speed:0.4+Math.random()*0.4}; score+=10; }
+    // Score
+    ctx.fillStyle='#40c0ff'; ctx.font='7px monospace'; ctx.textAlign='right';
+    ctx.fillText('SCORE '+score,W-4,10);
+    t++; requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function _arcadeInitBg(){
+  if(_arcadeBgInit) return; _arcadeBgInit=true;
+  const cvs=document.getElementById('arcade-bg-canvas');
+  if(!cvs) return;
+  const ctx=cvs.getContext('2d');
+  function resize(){ cvs.width=window.innerWidth; cvs.height=window.innerHeight; }
+  resize(); window.addEventListener('resize',resize);
+  const stars=Array.from({length:200},()=>({
+    x:Math.random(), y:Math.random(),
+    r:Math.random()*1.4+0.2, a:Math.random()*0.5+0.1,
+    tw:Math.random()*Math.PI*2,
+    col:Math.random()<0.08?'255,40,120':Math.random()<0.12?'64,192,255':'180,200,255'
+  }));
+  let t=0;
+  function draw(){
+    const arc=document.getElementById('arcade-screen');
+    if(!arc||arc.style.display==='none'){ _arcadeBgInit=false; return; }
+    ctx.fillStyle='rgba(0,0,8,0.28)'; ctx.fillRect(0,0,cvs.width,cvs.height);
+    stars.forEach(s=>{
+      const a=s.a*(0.5+0.5*Math.sin(t*0.006+s.tw));
+      ctx.beginPath(); ctx.arc(s.x*cvs.width,s.y*cvs.height,Math.max(0.1,s.r),0,Math.PI*2);
+      ctx.fillStyle='rgba('+s.col+','+a+')'; ctx.fill();
+    });
+    t++; requestAnimationFrame(draw);
+  }
+  ctx.fillStyle='#000008'; ctx.fillRect(0,0,cvs.width,cvs.height);
+  draw();
+}
+
+
+
+
+
 
 /* ================================================================
    STARTUP
@@ -15087,6 +16364,9 @@ initTitleMusic();
 resize();
 // loadSector called after guide close or save load
 requestAnimationFrame(drawMain);
+
+
+
 </script>
 </body>
 </html>
