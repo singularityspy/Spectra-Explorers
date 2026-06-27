@@ -2560,10 +2560,19 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
         <span id="combo-disp" style="color:#304050">COMBO ×<span id="combo-val">1</span></span>
       </div>
     
+      <!-- Progress bar (bars answered this round) -->
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
+        <span style="font-size:8px;letter-spacing:2px;color:#00c840;text-transform:uppercase;white-space:nowrap">PROGRESS</span>
+        <div id="progress-bar" style="flex:1;height:6px;background:rgba(0,40,20,0.6);border-radius:3px;overflow:hidden;border:1px solid rgba(0,100,60,0.3)">
+          <div id="progress-fill" style="height:100%;width:0%;background:linear-gradient(90deg,#00c840,#40ffaa);border-radius:3px;transition:width 0.3s"></div>
+        </div>
+        <span id="progress-lbl" style="font-size:8px;letter-spacing:1px;color:#00c840;min-width:28px;text-align:right">0/5</span>
+      </div>
+      <!-- Speed indicator — clearly labeled as danger, not progress -->
       <div id="speed-row">
-        <span>SPEED</span>
+        <span style="color:#ff6040">⚡ SPEED</span>
         <div id="speed-bar"><div id="speed-fill"></div></div>
-        <span id="speed-lbl">×1.0</span>
+        <span id="speed-lbl" style="color:#ff6040">×1.0</span>
       </div>
     </div>
     
@@ -3295,8 +3304,16 @@ function _doLoadSector(sectorId){
   // Centre camera on world middle
   const worldW=mainCanvas.width*3, worldH=mainCanvas.height*3;
   state.mapW=worldW; state.mapH=worldH;
+  // Default: center of world
   state.camX=(worldW-mainCanvas.width)/2;
   state.camY=(worldH-mainCanvas.height)/2;
+  // After jump: move camera to first undiscovered star so it's immediately visible
+  const _newStars = state.sectorStars[sectorId] || [];
+  const _firstStar = _newStars.find(s => !s.discovered) || _newStars[0];
+  if(_firstStar){
+    state.camX = Math.max(0, Math.min(worldW - mainCanvas.width,  _firstStar.x - mainCanvas.width/2));
+    state.camY = Math.max(0, Math.min(worldH - mainCanvas.height, _firstStar.y - mainCanvas.height/2));
+  }
 
   drawBackground(); // refresh tint
   startAmbientAnimation(); // sector-specific ambient particles + comets
@@ -4171,7 +4188,7 @@ const CONTACT_ACTS=[
   {id:'act4',threshold:80,title:'⏱ When Did They Send This?',type:'calculation',
    intro:'Encoded in the signal is a timestamp. Your instruments confirm the source distance: 47.2 light-years.<br><br>The timestamp itself is simple — a count of orbital periods of their planet around their star, converted into a number your computers can cross-reference. What it tells you is when they transmitted. What it asks you to work out is: given that light takes one year to travel one light-year, when did this signal leave their world?',
    question:'If the signal is 47.2 light-years away and travels at the speed of light, when was it sent? (Current year: 2025)',
-   hint:'Light-years = years of travel time. 47.2 light-years means it took 47 years to reach us.',
+   hint:'Formula: <span style="font-family:monospace;color:#60c0ff;font-size:12px">Year sent = 2025 − 47 = ?</span><br>Each light-year = 1 year of travel time at the speed of light.',
    choices:[
     {val:1900,label:'~1900 — before powered flight',correct:false,explain:'That would be 125 years — twice the distance. Check: 2025 − 47 = 1978.'},
     {val:1978,label:'~1978 — the year Voyager 1 launched',correct:true,explain:'1978. As Voyager was leaving our solar system for the first time, someone 47 light-years away decided it was time to reach out. They have been waiting 47 years for us to answer.'},
@@ -4195,7 +4212,6 @@ function checkFirstContact(star,habitabilityResult){
     }
   }
 }
-
 function showContactAct(act,star){
   document.getElementById('signal-panel')?.remove();
   closeAllPanels();
@@ -4235,28 +4251,15 @@ function showContactAct(act,star){
       <div style="font-size:17px;color:#40d0ff;letter-spacing:3px">${act.signal}</div>
       ${act.type==='choice' && act.signal ? '<button onclick="playSignalAudio()" style="margin-top:10px;background:rgba(0,60,100,0.7);border:1px solid rgba(0,160,220,0.4);color:#40d0ff;font-family:inherit;font-size:10px;letter-spacing:2px;padding:6px 16px;border-radius:4px;cursor:pointer">▶ PLAY SIGNAL AS RADIO PULSES</button>' : ''}
       </div></div>`:'';
-    const imageViz=act.type==='image_decode'?`<div style="background:#010208;border:1px solid rgba(40,80,160,0.3);border-radius:4px;padding:12px;margin-bottom:14px;text-align:center">
-      <svg width="240" height="90" viewBox="0 0 240 90">
-        <circle cx="120" cy="45" r="7" fill="#ffee80" opacity="0.9"/>
-        <circle cx="120" cy="45" r="16" fill="none" stroke="#202840" stroke-width="0.6"/>
-        <circle cx="120" cy="45" r="30" fill="none" stroke="#202840" stroke-width="0.6"/>
-        <circle cx="120" cy="45" r="48" fill="none" stroke="#202840" stroke-width="0.6"/>
-        <circle cx="120" cy="45" r="70" fill="none" stroke="#202840" stroke-width="0.6"/>
-        <circle cx="136" cy="45" r="2" fill="#a0b8ff" opacity="0.7"/>
-        <circle cx="150" cy="45" r="2.5" fill="#80c080" opacity="0.8"/>
-        <circle cx="168" cy="45" r="3.2" fill="#60e080" opacity="0.95"/>
-        <circle cx="168" cy="45" r="7" fill="none" stroke="#40d0ff" stroke-width="1.2" opacity="0.7"/>
-        <circle cx="190" cy="45" r="2" fill="#e08040" opacity="0.6"/>
-      </svg>
-      <div style="font-size:9px;color:#203050;letter-spacing:1px;margin-top:4px">BINARY DECODED — 41×41 · Third planet marked</div></div>`:'';
-    const specViz=act.type==='classify_spectrum'?`<div style="background:#010205;border:1px solid rgba(40,80,160,0.3);border-radius:4px;padding:8px;margin-bottom:14px;height:42px;position:relative;overflow:hidden">
-      <div style="position:absolute;inset:0;background:linear-gradient(to right,#380090,#2200ff 8%,#0044ff 16%,#0088ff 25%,#00bbff 33%,#00ffcc 41%,#88ff00 50%,#ffee00 58%,#ffaa00 66%,#ff5500 75%,#dd1100 85%,#880000);opacity:0.5"></div>
-      <div style="position:absolute;top:0;bottom:0;left:23%;width:2px;background:rgba(0,0,0,0.95)"></div>
-      <div style="position:absolute;top:0;bottom:0;left:38%;width:3px;background:rgba(0,0,0,0.95)"></div>
-      <div style="position:absolute;top:0;bottom:0;left:52%;width:2px;background:rgba(0,0,0,0.85)"></div>
-      <div style="position:absolute;top:0;bottom:0;left:63%;width:4px;background:rgba(0,0,0,0.9)"></div>
-      <div style="position:absolute;bottom:3px;left:4px;font-size:8px;color:rgba(120,160,200,0.7)">THEIR STAR — SPECTRAL ANALYSIS</div></div>`:'';
-    const hintViz=act.hint?`<div style="font-size:10px;color:#304060;font-style:italic;margin-bottom:12px;padding:7px 10px;background:rgba(0,0,0,0.2);border-radius:3px">💡 ${act.hint}</div>`:'';
+    const imageViz=act.type==='image_decode'?`<div style="background:#010208;border:1px solid rgba(40,80,160,0.3);border-radius:4px;padding:14px 12px 8px;margin-bottom:14px;text-align:center"><div style="font-size:8px;letter-spacing:2px;color:#305080;margin-bottom:8px;text-transform:uppercase">Binary grid decoded as a solar system diagram</div><svg width="280" height="110" viewBox="0 0 280 110"><circle cx="140" cy="55" r="9" fill="#ffee80" opacity="0.95"/><text x="140" y="18" text-anchor="middle" font-size="7" fill="rgba(255,220,80,0.7)" font-family="monospace">THEIR STAR</text><circle cx="140" cy="55" r="20" fill="none" stroke="rgba(50,90,160,0.6)" stroke-width="1"/><text x="163" y="53" font-size="7" fill="rgba(100,140,220,0.7)" font-family="monospace">1</text><circle cx="140" cy="55" r="35" fill="none" stroke="rgba(50,90,160,0.6)" stroke-width="1"/><text x="178" y="53" font-size="7" fill="rgba(100,140,220,0.7)" font-family="monospace">2</text><circle cx="140" cy="55" r="55" fill="none" stroke="rgba(50,90,160,0.6)" stroke-width="1"/><text x="198" y="53" font-size="7" fill="rgba(100,140,220,0.7)" font-family="monospace">3</text><circle cx="140" cy="55" r="80" fill="none" stroke="rgba(50,90,160,0.6)" stroke-width="1"/><text x="223" y="53" font-size="7" fill="rgba(100,140,220,0.7)" font-family="monospace">4</text><circle cx="160" cy="55" r="2.5" fill="#a0b8ff" opacity="0.8"/><circle cx="175" cy="55" r="3" fill="#80c080" opacity="0.8"/><circle cx="195" cy="55" r="3.5" fill="#40c0ff" opacity="0.95"/><circle cx="195" cy="55" r="7" fill="none" stroke="#40c0ff" stroke-width="1.2" opacity="0.9"/><text x="195" y="76" text-anchor="middle" font-size="7" fill="rgba(64,192,255,0.9)" font-family="monospace">HOME</text><circle cx="220" cy="55" r="2" fill="#c080ff" opacity="0.7"/></svg><div style="font-size:8px;color:#203050;margin-top:4px">Count the numbered orbital rings — how many planets orbit their star?</div></div>`:'';
+    const specViz=act.type==='classify_spectrum'?`<div style="margin-bottom:14px">
+      <div style="font-size:8px;letter-spacing:2px;color:#305080;margin-bottom:6px;text-transform:uppercase">Their star's absorption spectrum — transmitted in the signal</div>
+      <canvas id="contact-spectrum-canvas" width="520" height="48" style="width:100%;height:48px;display:block;border-radius:4px;border:1px solid rgba(40,80,160,0.3)"></canvas>
+      <div style="font-size:8px;color:#304060;margin-top:5px;padding:5px 8px;background:rgba(0,10,30,0.5);border-radius:3px;border-left:2px solid rgba(0,140,200,0.4)">
+        💡 <span style="color:#4080a0">Hint:</span> Strong Ca II lines (393–397nm) + Fe I lines. Compare to your 🔭 Glossary → Element Spectra tab.
+      </div>
+    </div>`:'';
+    const hintViz=act.hint?`<div style="font-size:10px;color:#4080a0;margin-bottom:12px;padding:7px 10px;background:rgba(0,0,0,0.2);border-radius:3px">💡 ${act.hint}</div>`:'';
     // Shuffle choices each time panel opens (prevents pattern recognition)
     const _shuffled = [...act.choices].sort(()=>Math.random()-0.5);
     const choicesHTML=_shuffled.map((c,i)=>`<button class="contact-choice" data-idx="${i}" style="display:block;width:100%;text-align:left;padding:10px 14px;margin-bottom:8px;background:rgba(5,15,50,0.7);border:1px solid rgba(40,80,160,0.3);border-radius:5px;color:#6080a0;cursor:pointer;font-family:inherit;font-size:11px">
@@ -4272,6 +4275,14 @@ function showContactAct(act,star){
   }
   panel.innerHTML=prog+body;
   document.getElementById('ui').appendChild(panel);
+  // Draw spectrum for Act 3 classify_spectrum
+  if(act.type === 'classify_spectrum'){
+    const specCvs = document.getElementById('contact-spectrum-canvas');
+    if(specCvs && typeof drawSpectrum === 'function'){
+      const kCls = STELLAR_CLASSES.find(c=>c.type==='K') || STELLAR_CLASSES[5];
+      drawSpectrum(specCvs, kCls, 48, 'absorption');
+    }
+  }
   showOverlay();
   panel.querySelectorAll('.contact-choice').forEach(btn=>{
     btn.addEventListener('click',()=>{
@@ -11228,6 +11239,24 @@ function buildOrbitalTable(){
   const existing = document.getElementById('orbital-table-overlay');
   if(existing) return;
 
+  // Element symbols by atomic number
+  const SYM = {
+    1:'H',  2:'He', 3:'Li', 4:'Be', 5:'B',  6:'C',  7:'N',  8:'O',  9:'F',  10:'Ne',
+    11:'Na',12:'Mg',13:'Al',14:'Si',15:'P', 16:'S', 17:'Cl',18:'Ar',
+    19:'K', 20:'Ca',21:'Sc',22:'Ti',23:'V', 24:'Cr',25:'Mn',26:'Fe',27:'Co',28:'Ni',
+    29:'Cu',30:'Zn',31:'Ga',32:'Ge',33:'As',34:'Se',35:'Br',36:'Kr',
+    37:'Rb',38:'Sr',39:'Y', 40:'Zr',41:'Nb',42:'Mo',43:'Tc',44:'Ru',45:'Rh',46:'Pd',
+    47:'Ag',48:'Cd',49:'In',50:'Sn',51:'Sb',52:'Te',53:'I', 54:'Xe',
+    55:'Cs',56:'Ba',57:'La',72:'Hf',73:'Ta',74:'W', 75:'Re',76:'Os',77:'Ir',78:'Pt',
+    79:'Au',80:'Hg',81:'Tl',82:'Pb',83:'Bi',84:'Po',85:'At',86:'Rn',
+    87:'Fr',88:'Ra',89:'Ac',104:'Rf',105:'Db',106:'Sg',107:'Bh',108:'Hs',
+    109:'Mt',110:'Ds',111:'Rg',112:'Cn',113:'Nh',114:'Fl',115:'Mc',116:'Lv',117:'Ts',118:'Og',
+    58:'Ce',59:'Pr',60:'Nd',61:'Pm',62:'Sm',63:'Eu',64:'Gd',
+    65:'Tb',66:'Dy',67:'Ho',68:'Er',69:'Tm',70:'Yb',71:'Lu',
+    90:'Th',91:'Pa',92:'U', 93:'Np',94:'Pu',95:'Am',96:'Cm',
+    97:'Bk',98:'Cf',99:'Es',100:'Fm',101:'Md',102:'No',103:'Lr'
+  };
+
   const overlay = document.createElement('div');
   overlay.id = 'orbital-table-overlay';
   overlay.style.cssText = `
@@ -11355,6 +11384,10 @@ function buildOrbitalTable(){
   svgEl.setAttribute('height', gridH);
   svgEl.setAttribute('viewBox', '0 0 ' + gridW + ' ' + gridH);
   svgEl.style.cssText = 'display:block;overflow:visible;width:100%;height:auto;min-width:'+gridW+'px';
+  // Glow filter for element symbols
+  const _defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+  _defs.innerHTML = '<filter id="sym-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
+  svgEl.appendChild(_defs);
 
   const offsetX = 54; // row label width
   const offsetY = 28; // column header height
@@ -11394,18 +11427,32 @@ function buildOrbitalTable(){
     rect.setAttribute('rx','2');
     svgEl.appendChild(rect);
 
-    if(isNoble){
-      const sym = NOBLE_SYMBOLS[el.Z] || '';
-      const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
-      txt.setAttribute('x', x + CS/2);
-      txt.setAttribute('y', y + CS/2 + 4);
-      txt.setAttribute('text-anchor','middle');
-      txt.setAttribute('font-size','9');
-      txt.setAttribute('fill','rgba(220,240,255,0.95)');
-      txt.setAttribute('font-weight','bold');
-      txt.setAttribute('font-family','Share Tech Mono,Courier New');
-      txt.textContent = sym;
-      svgEl.appendChild(txt);
+    // Symbol text for every element (with atomic number above)
+    const symStr = SYM[el.Z] || '';
+    if(symStr){
+      // Atomic number — tiny, top-left of cell
+      const ztxt = document.createElementNS('http://www.w3.org/2000/svg','text');
+      ztxt.setAttribute('x', x + 3);
+      ztxt.setAttribute('y', y + 7);
+      ztxt.setAttribute('text-anchor','start');
+      ztxt.setAttribute('font-size','6');
+      ztxt.setAttribute('fill','rgba(120,160,200,0.65)');
+      ztxt.setAttribute('font-family','Share Tech Mono,Courier New');
+      ztxt.textContent = el.Z;
+      svgEl.appendChild(ztxt);
+
+      // Element symbol — centered in cell, bold
+      const stxt = document.createElementNS('http://www.w3.org/2000/svg','text');
+      stxt.setAttribute('x', x + CS/2);
+      stxt.setAttribute('y', y + CS - 5);
+      stxt.setAttribute('text-anchor','middle');
+      stxt.setAttribute('font-size', CS >= 22 ? '10' : '8');
+      stxt.setAttribute('font-weight','bold');
+      stxt.setAttribute('font-family','Share Tech Mono,Courier New');
+      stxt.setAttribute('fill', isNoble ? 'rgba(220,240,255,0.98)' : 'rgba(180,225,245,0.95)');
+      stxt.setAttribute('filter','url(#sym-glow)');
+      stxt.textContent = symStr;
+      svgEl.appendChild(stxt);
     }
   });
 
@@ -13303,23 +13350,19 @@ if(typeof ResizeObserver !== 'undefined'){
 // Scope/telescope buttons
 // scope-aim handler: Repoint button in new HTML handles this
 document.getElementById('scope-scan').addEventListener('click', ()=>{
+  // Credit check only — deduction happens inside executeTelescope()
   if(state.credits < 50){
     showFlash('Not enough credits (need 50)', '#ff6060');
     return;
   }
-  state.credits -= 50;
-  updateHUD();
-  // Trigger prism analysis then show result
-  if(!_scopeSpectrumRect){
-    animateScopeView();
-    showFlash('⊞ Prism analysis — result incoming…', '#40c0ff');
-    setTimeout(()=>{
-      if(_scopeSpectrumRect) executeTelescopeEnhance();
-      else showFlash('Re-aim and try again', '#ff8060');
-    }, 4000);
-  } else {
-    executeTelescopeEnhance();
-  }
+  // Disable button immediately to prevent double-click
+  document.getElementById('scope-scan').disabled = true;
+  // Run prism animation, then telescope scan
+  animateScopeView();
+  showFlash('⊞ Prism analysis…', '#40c0ff');
+  setTimeout(()=>{
+    executeTelescope();
+  }, 4200);
 });
 // scope-enhance listener removed (element gone)
 // scope-close-btn: Close button in new HTML handles this
@@ -14516,13 +14559,13 @@ function drawBar(bar) {
 
   // Flash overlay
   if (bar.flash === 'correct') {
-    SR_ctx.shadowBlur = 24; SR_ctx.shadowColor = 'rgba(0,255,120,0.8)';
+    SR_ctx.shadowBlur = 24; SR_ctx.shadowColor = getRushAccent('glow');
   } else if (bar.flash === 'wrong') {
     SR_ctx.shadowBlur = 18; SR_ctx.shadowColor = 'rgba(255,40,40,0.7)';
   }
 
   // Border
-  const borderCol = bar.flash === 'correct' ? '#00ff80'
+  const borderCol = bar.flash === 'correct' ? getRushAccent('correct')
                   : bar.flash === 'wrong'   ? '#ff4040'
                   : `rgba(${hexToRGB(bar.cls.color)},0.7)`;
   SR_ctx.strokeStyle = borderCol;
@@ -14762,8 +14805,9 @@ function resolveCorrect(bar, cls) {
   combo = Math.min(8, combo + 1);
   totalCorrect++;
   barsThisRound++;
-  showFlash(`+${pts}`, '#00ff90');
-  updateHint(`✓ ${bar.cls.type}-type · ${bar.cls.tempLabel} · ${bar.cls.desc}`, '#00c870');
+  updateProgress();
+  showFlash(`+${pts}`, getRushAccent('pts'));
+  updateHint(`✓ ${bar.cls.type}-type · ${bar.cls.tempLabel} · ${bar.cls.desc}`, getRushAccent('correct'));
   updateCombo();
   checkRoundEnd();
 
@@ -14782,12 +14826,14 @@ function resolveWrong(bar, guessedType) {
   showFlash(`✗ Was ${bar.cls.type}`, '#ff5050');
   updateHint(`✗ ${guessedType} incorrect — it was ${bar.cls.type} · ${bar.cls.desc}`, '#ff6060');
   barsThisRound++;
+  updateProgress();
   checkRoundEnd();
 }
 
 function checkRoundEnd() {
   if (barsThisRound >= BARS_PER_ROUND) {
     barsThisRound = 0;
+    updateProgress();
     round++;
     roundMode = roundMode === 'A' ? 'B' : 'A';
     baseSpeed = roundMode === 'A' ? BASE_A : BASE_B;
@@ -14817,13 +14863,21 @@ function updateCombo() {
   const el = document.getElementById('combo-val');
   el.textContent = combo;
   const disp = document.getElementById('combo-disp');
-  disp.style.color = combo >= 5 ? '#ffcc00' : combo >= 3 ? '#00c8c8' : '#304050';
+  disp.style.color = combo >= 5 ? getRushAccent('combo') : combo >= 3 ? getRushAccent('pts') : '#304050';
 }
 
 function updateSpeedBar() {
   const pct = Math.min(100, ((fallSpeed - baseSpeed) / (baseSpeed * 2.8)) * 100);
   document.getElementById('speed-fill').style.width = pct + '%';
   document.getElementById('speed-lbl').textContent = '×' + (fallSpeed / baseSpeed).toFixed(1);
+}
+
+function updateProgress() {
+  const pct = Math.min(100, Math.round((barsThisRound / BARS_PER_ROUND) * 100));
+  const pf = document.getElementById('progress-fill');
+  const pl = document.getElementById('progress-lbl');
+  if(pf) pf.style.width = pct + '%';
+  if(pl) pl.textContent = barsThisRound + '/' + BARS_PER_ROUND;
 }
 
 function updateRoundBadge() {
@@ -14853,6 +14907,24 @@ function updateHint(text, color) {
 }
 
 let flashClear = null;
+// Style-aware colour palette for Rush feedback
+function getRushAccent(type) {
+  // type: 'correct', 'wrong', 'combo', 'pts'
+  const s = window._scorePopStyle || window._scorePopStyleSession || 'sp-classic';
+  const PALETTES = {
+    'sp-classic': { correct:'#00ff90', wrong:'#ff4060', combo:'#00c8c8', pts:'#00ffcc', glow:'rgba(0,220,180,0.8)' },
+    'sp-red':     { correct:'#ff6060', wrong:'#ff2020', combo:'#ff8080', pts:'#ff4060', glow:'rgba(255,60,60,0.9)' },
+    'sp-blue':    { correct:'#40c0ff', wrong:'#ff5060', combo:'#60b0ff', pts:'#80d0ff', glow:'rgba(40,140,255,0.8)' },
+    'sp-rainbow': { correct:'#40ff80', wrong:'#ff4060', combo:'#ffcc00', pts:'#ff80cc', glow:'rgba(200,160,255,0.7)' },
+    'sp-gold':    { correct:'#ffd700', wrong:'#ff6030', combo:'#ffee60', pts:'#ffe040', glow:'rgba(255,200,0,0.9)' },
+    'sp-neon':    { correct:'#c0ff60', wrong:'#ff20ff', combo:'#ffffff', pts:'#c060ff', glow:'rgba(180,60,255,0.9)' },
+    'sp-pixel':   { correct:'#40ff80', wrong:'#ff2040', combo:'#40ff80', pts:'#00ff60', glow:'rgba(40,255,80,0.8)' },
+    'sp-damage':  { correct:'#ff8020', wrong:'#ff2040', combo:'#ffcc00', pts:'#ff6020', glow:'rgba(255,80,20,0.9)' },
+    'sp-cosmic':  { correct:'#c080ff', wrong:'#ff4080', combo:'#e0c0ff', pts:'#b060ff', glow:'rgba(160,60,255,0.8)' },
+  };
+  return (PALETTES[s] || PALETTES['sp-classic'])[type];
+}
+
 function showFlash(text, color) {
   const el = document.getElementById('flash-msg');
   el.textContent = text; el.style.color = color; el.style.opacity = '1';
@@ -14967,6 +15039,9 @@ function openRush(){
   showOverlay();
   document.getElementById('spectra-rush-panel').style.display = 'block';
   if(gameRunning){ gameRunning = false; stopMusic(); }
+  // Apply style-aware progress bar colour
+  const _pf = document.getElementById('progress-fill');
+  if(_pf) _pf.style.background = `linear-gradient(90deg, ${getRushAccent('pts')}, ${getRushAccent('combo')})`;
   resizeRush();
   setTimeout(startGame, 80);
 }
