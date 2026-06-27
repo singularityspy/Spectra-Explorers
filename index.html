@@ -875,7 +875,7 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
 /* ── SPECTRA RUSH mini-game styles ─────────────────────────────── */
 
 
-#spectra-rush-panel #game-wrap{ position:relative;width:min(560px,98vw); }
+#spectra-rush-panel #game-wrap{ position:relative;width:min(680px,98vw); }
 
 /* ── HUD ── */
 #spectra-rush-panel #hud{
@@ -893,7 +893,7 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
 }
 
 /* ── CANVAS ── */
-#spectra-rush-panel #game-canvas{
+#spectra-rush-panel #game-#spectra-rush-panel #spectra-rush-panel #spectra-rush-panel canvas{
   display:block;width:100%;
   border:1px solid rgba(0,160,200,0.35);border-radius:6px;
   background:#000812;
@@ -943,7 +943,7 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
 #spectra-rush-panel .ref-choice:hover{border-color:rgba(0,200,220,0.7);box-shadow:0 0 12px rgba(0,180,200,0.3);transform:translateY(-1px)}
 #spectra-rush-panel .ref-choice.correct{border-color:#00e080;box-shadow:0 0 16px rgba(0,220,100,0.5)}
 #spectra-rush-panel .ref-choice.wrong{border-color:#ff4040;box-shadow:0 0 12px rgba(255,60,60,0.4)}
-#spectra-rush-panel .ref-canvas{display:block;width:100%;height:44px;border-radius:3px}
+#spectra-rush-panel .ref-#spectra-rush-panel #spectra-rush-panel canvas{display:block;width:100%;height:44px;border-radius:3px}
 #spectra-rush-panel .ref-label{font-size:9px;letter-spacing:2px;color:#3a6080;text-transform:uppercase}
 
 /* ── HINT / COMBO ── */
@@ -962,13 +962,13 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
 #spectra-rush-panel #speed-fill{height:100%;width:0%;background:linear-gradient(90deg,#00c8c8,#ff4080);transition:width 0.5s}
 
 /* ── OVERLAY ── */
-#spectra-rush-panel #overlay{
+#spectra-rush-panel #sr-overlay{
   position:absolute;inset:0;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   background:rgba(0,2,14,0.94);border-radius:6px;z-index:20;gap:14px;
 }
-#spectra-rush-panel #overlay h2{font-size:17px;letter-spacing:6px;color:#00c8c8;text-shadow:0 0 20px rgba(0,200,200,0.7);text-transform:uppercase}
-#spectra-rush-panel #overlay p{font-size:10px;letter-spacing:1.5px;color:#4a7090;text-align:center;max-width:360px;line-height:1.9}
+#spectra-rush-panel #sr-overlay h2{font-size:17px;letter-spacing:6px;color:#00c8c8;text-shadow:0 0 20px rgba(0,200,200,0.7);text-transform:uppercase}
+#spectra-rush-panel #sr-overlay p{font-size:10px;letter-spacing:1.5px;color:#4a7090;text-align:center;max-width:360px;line-height:1.9}
 #spectra-rush-panel .big-score{font-size:30px;color:#00ffcc;text-shadow:0 0 24px rgba(0,255,180,0.6);letter-spacing:4px}
 #spectra-rush-panel .ov-btn{padding:10px 30px;background:rgba(0,140,160,0.2);border:1px solid rgba(0,200,220,0.5);border-radius:5px;color:#00c8c8;font-family:inherit;font-size:10px;letter-spacing:3px;cursor:pointer;text-transform:uppercase;transition:all 0.15s}
 #spectra-rush-panel .ov-btn:hover{background:rgba(0,180,200,0.3);box-shadow:0 0 14px rgba(0,180,200,0.4)}
@@ -1168,6 +1168,7 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
       <button class="pbtn pbtn-close" onclick="closeAllPanels()" style="flex:1">Close</button>
     </div>
   </div>
+</div><!-- end telescope-panel -->
 
   <!-- ==========================================================
        ACT 1: EMISSION MATCH
@@ -2497,7 +2498,7 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
        MINI-GAME: SPECTRA RUSH
        Remove by deleting from here to END SPECTRA RUSH comment below
   ================================================================ -->
-  <div class="panel" id="spectra-rush-panel" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(600px,96vw);max-height:96vh;overflow-y:auto;z-index:35;padding:20px;background:rgba(2,5,18,0.98);border-color:rgba(0,160,200,0.4)">
+  <div class="panel" id="spectra-rush-panel" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(720px,96vw);max-height:96vh;overflow:hidden;z-index:35;padding:20px;background:rgba(2,5,18,0.98);border-color:rgba(0,160,200,0.4)">
     <div id="game-wrap">
       <div id="sr-hud">
         <div class="title">⬡ Spectra Rush</div>
@@ -2516,7 +2517,7 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
       </div>
     
       <div style="position:relative">
-        <canvas id="sr-game-canvas" width="560" height="780"></canvas>
+        <canvas id="sr-game-canvas" width="560" height="480"></canvas>
         <div id="flash-msg"></div>
         <div id="sr-overlay">
           <div class="sub">Mini-Game · Spectra Explorers</div>
@@ -2570,7 +2571,6 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
     <div style="text-align:center;margin-top:10px">
       <button class="pbtn pbtn-close" onclick="MG_Rush.close();closeAllPanels()">✕ Close</button>
     </div>
-  </div>
   <!-- END SPECTRA RUSH -->
 </div><!-- end #ui -->
 
@@ -14267,13 +14267,13 @@ window.MG_Rush = (function(){
 // ── Canvas + constants ────────────────────────────────────────────
 const SR_canvas = document.getElementById('sr-game-canvas');
 const SR_ctx = SR_canvas.getContext('2d');
-const SR_W = SR_canvas.width;
-const SR_H = SR_canvas.height;
+let SR_W = SR_canvas.width;
+let SR_H = SR_canvas.height;
 
 const BAR_H  = 60;   // taller spectrum strips
-const BAR_W  = SR_W - 40;
+let BAR_W  = SR_W - 40;
 const BAR_X  = 20;
-const DANGER_Y = SR_H - 55;
+let DANGER_Y = SR_H - 55;
 
 // ── Game state ────────────────────────────────────────────────────
 let gameRunning = false;
@@ -14462,7 +14462,7 @@ function drawSpectrum(targetCtx, cls, x, y, w, h, flip) {
 }
 
 // ── Background starfield ──────────────────────────────────────────
-const SR_bgStars = Array.from({length: 90}, () => ({
+let SR_bgStars = Array.from({length: 90}, () => ({
   x: Math.random() * SR_W,
   y: Math.random() * SR_H,
   r: Math.random() * 1.3 + 0.2,
@@ -14917,6 +14917,37 @@ document.addEventListener('keydown', e => {
   }
 });
 
+function resizeRush(){
+  // Calculate available canvas height: viewport - panel chrome
+  const vh = window.innerHeight;
+  const panelPadding = 40;    // 20px top + 20px bottom
+  const hudH     = 32;
+  const badgeH   = 24;
+  const dirH     = 24;
+  const ansZoneH = 90;  // answer buttons
+  const hintH    = 40;
+  const speedH   = 22;
+  const closeH   = 44;
+  const chrome = panelPadding + hudH + badgeH + dirH + ansZoneH + hintH + speedH + closeH;
+  const availH = Math.max(240, Math.floor(vh * 0.94) - chrome);
+  const availW = Math.min(680, Math.floor(window.innerWidth * 0.96) - panelPadding);
+
+  SR_canvas.width  = availW;
+  SR_canvas.height = availH;
+  SR_W = availW;
+  SR_H = availH;
+  BAR_W = SR_W - 40;
+  DANGER_Y = SR_H - 55;
+
+  // Reinit background stars for new size
+  SR_bgStars.length = 0;
+  for(let i=0;i<90;i++) SR_bgStars.push({
+    x: Math.random()*SR_W, y: Math.random()*SR_H,
+    r: Math.random()*1.3+0.2, a: Math.random()*0.45+0.08,
+    tw: Math.random()*Math.PI*2
+  });
+}
+
 let _rushWired = false;
 function openRush(){
   if(!window._gameStarted) return;
@@ -14936,6 +14967,7 @@ function openRush(){
   showOverlay();
   document.getElementById('spectra-rush-panel').style.display = 'block';
   if(gameRunning){ gameRunning = false; stopMusic(); }
+  resizeRush();
   setTimeout(startGame, 80);
 }
 
