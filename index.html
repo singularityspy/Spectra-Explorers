@@ -1,44 +1,4 @@
-<div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center">
-
-      <!-- Arcade section header -->
-      <div style="text-align:center;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(0,160,200,0.3);width:100%">
-        <div style="font-size:18px;margin-bottom:4px">⬡</div>
-        <div style="font-size:11px;letter-spacing:4px;color:#00c8c8;text-transform:uppercase;margin-bottom:4px">Stellar Arcade</div>
-        <div style="font-size:10px;color:#3a6080;line-height:1.7">Skill-based science mini-games.<br>No story — just reflexes and learning.</div>
-      </div>
-
-      <!-- Games preview list -->
-      <div style="width:100%;margin-bottom:24px">
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,80,100,0.2)">
-          <span style="font-size:16px;color:#ff4080">⬡</span>
-          <div>
-            <div style="font-size:9px;letter-spacing:2px;color:#c04060;text-transform:uppercase">Spectra Rush</div>
-            <div style="font-size:9px;color:#303050">Classify falling stellar spectra</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,80,100,0.2)">
-          <span style="font-size:16px;color:#40c0ff">◈</span>
-          <div>
-            <div style="font-size:9px;letter-spacing:2px;color:#2060a0;text-transform:uppercase">Wavelength Catcher</div>
-            <div style="font-size:9px;color:#303050">Catch element emission lines</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;opacity:0.4">
-          <span style="font-size:16px;color:#505070">⚡</span>
-          <div>
-            <div style="font-size:9px;letter-spacing:2px;color:#404060;text-transform:uppercase">Ion Storm</div>
-            <div style="font-size:9px;color:#252540">Coming soon</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Single CTA -->
-      <div onclick="arcadeOpen()" style="width:100%;background:rgba(0,0,0,0.6);border:2px solid rgba(0,160,200,0.5);border-radius:10px;padding:18px;cursor:pointer;text-align:center;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(0,220,240,0.9)';this.style.background='rgba(0,30,50,0.7)'" onmouseout="this.style.borderColor='rgba(0,160,200,0.5)';this.style.background='rgba(0,0,0,0.6)'">
-        <div style="font-size:11px;letter-spacing:5px;color:#00c8c8;text-transform:uppercase;margin-bottom:4px">⬡ Enter the Arcade</div>
-        <div style="font-size:9px;color:#205060;letter-spacing:1px">Pick your game · Set a high score</div>
-      </div>
-
-    </div><!DOCTYPE html>
+<!DOCTYPE html>
 <!--
   -================================================================-
   |              SPECTRA EXPLORERS — v3.0                             |
@@ -199,6 +159,12 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 .pbtn{flex:1;padding:9px;font-family:inherit;font-size:11px;letter-spacing:1px;cursor:pointer;border-radius:4px;transition:all 0.15s;text-transform:uppercase}
 .pbtn-close{background:transparent;border:1px solid rgba(120,40,200,0.4);color:#8050a0}
 .pbtn-close:hover{border-color:#a060d0;color:#c080e0}
+
+/* -- CREW DIALOGUE ------------------------------------------------ */
+#crew-dialogue{animation:crewSlideUp 0.35s ease}
+@keyframes crewSlideUp{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+#crew-dialogue-lines{max-height:260px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(40,80,160,0.3) transparent}
+#crew-dialogue-next:hover{border-color:rgba(100,180,255,0.6);color:#90c0f0;background:rgba(20,50,120,0.8)}
 .pbtn-action{background:rgba(60,0,120,0.8);border:1px solid rgba(160,40,255,0.5);color:#c080ff}
 .pbtn-action:hover{background:rgba(100,0,180,0.8);border-color:#c060ff}
 .pbtn-action:disabled{opacity:0.3;cursor:default}
@@ -232,15 +198,32 @@ body{background:#020510;color:#e0e8ff;font-family:'Share Tech Mono','Courier New
 #classify-star-name{font-size:18px;color:#ffe0b0;margin-bottom:6px}
 #classify-summary{font-size:10px;color:#604020;line-height:1.6;margin-bottom:14px;padding:10px 12px;background:rgba(30,15,5,0.6);border:1px solid rgba(0,100,120,0.3);border-radius:5px}
 #classify-summary span{color:#d09050}
-#obafgkm-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px}
-.cls-btn{background:rgba(20,10,5,0.8);border:1px solid rgba(0,100,120,0.35);color:#806040;padding:10px 4px;font-family:inherit;font-size:11px;cursor:pointer;border-radius:5px;text-align:center;transition:all 0.15s}
-.cls-btn:hover{border-color:#d09050;color:#e0c080;background:rgba(40,20,5,0.8)}
-.cls-btn.selected{border-color:#f0b040;color:#ffe090;background:rgba(50,25,5,0.9)}
-.cls-btn.correct-reveal{border-color:#40d060!important;background:rgba(5,40,15,0.9)!important}
-.cls-btn.wrong-reveal{border-color:#d03030!important;background:rgba(40,5,5,0.9)!important}
-.cls-btn .cb-letter{font-size:20px;font-weight:bold;display:block;margin-bottom:2px}
-.cls-btn .cb-temp{font-size:8px;display:block;opacity:0.6;line-height:1.3}
-.cls-btn .cb-color{width:10px;height:10px;border-radius:50%;display:block;margin:4px auto 0}
+.cls-btn{
+  background:linear-gradient(180deg,rgba(8,4,24,0.97),rgba(4,2,16,0.97));
+  border:1px solid rgba(80,40,160,0.3);
+  color:#604090;padding:10px 4px;font-family:inherit;font-size:11px;
+  cursor:pointer;border-radius:6px;text-align:center;transition:all 0.15s;
+  position:relative;overflow:hidden;
+  box-shadow:0 2px 6px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.cls-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(160,80,255,0.25),transparent);}
+.cls-btn:hover:not(:disabled){
+  border-color:rgba(180,90,255,0.6);color:#d090ff;
+  background:linear-gradient(180deg,rgba(20,8,55,0.97),rgba(12,4,36,0.97));
+  box-shadow:0 0 14px rgba(160,60,255,0.2),0 2px 6px rgba(0,0,0,0.4);
+}
+.cls-btn.selected{
+  border-color:#c080ff;color:#f0c0ff;
+  background:linear-gradient(180deg,rgba(30,10,70,0.98),rgba(20,6,50,0.98));
+  box-shadow:0 0 16px rgba(180,80,255,0.35),0 2px 6px rgba(0,0,0,0.4);
+}
+.cls-btn.correct-reveal{border-color:#00ff80!important;color:#00ff80!important;background:rgba(0,30,15,0.98)!important;box-shadow:0 0 14px rgba(0,255,128,0.4)!important;}
+.cls-btn.wrong-reveal{border-color:#ff3068!important;color:#ff3068!important;background:rgba(30,0,10,0.98)!important;box-shadow:0 0 10px rgba(255,48,104,0.3)!important;}
+.cls-btn .cb-letter{font-size:22px;font-weight:bold;display:block;margin-bottom:3px;text-shadow:0 0 8px currentColor;}
+.cls-btn .cb-temp{font-size:7px;display:block;opacity:0.55;line-height:1.4;letter-spacing:0.5px;}
+.cls-btn .cb-color{width:11px;height:11px;border-radius:50%;display:block;margin:4px auto 0;box-shadow:0 0 6px currentColor;}
+#obafgkm-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:14px;}
 #classify-hint{font-size:10px;color:#504030;line-height:1.5;margin-bottom:12px}
 
 /* -- ACT 4 CIVILIZATION ----------------------------------------- */
@@ -1434,6 +1417,25 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
   <div id="overlay"></div>
 
   <!-- ==========================================================
+       CREW DIALOGUE PANEL (StoryDirector system)
+  ========================================================== -->
+  <div id="crew-dialogue" style="display:none;position:fixed;bottom:100px;left:50%;transform:translateX(-50%);width:min(600px,92vw);z-index:200;pointer-events:all">
+    <div style="background:rgba(2,4,18,0.97);border:1px solid rgba(80,160,255,0.25);border-radius:10px;padding:0;overflow:hidden;box-shadow:0 0 40px rgba(0,160,200,0.15)">
+      <!-- Header bar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:rgba(5,15,45,0.9);border-bottom:1px solid rgba(40,80,160,0.2)">
+        <div style="font-size:9px;letter-spacing:3px;color:#305080;text-transform:uppercase">Crew Channel</div>
+        <button id="crew-dialogue-close" onclick="DialogueSystem.close()" style="background:none;border:none;color:#304060;font-size:14px;cursor:pointer;padding:2px 6px;font-family:inherit">✕</button>
+      </div>
+      <!-- Lines container -->
+      <div id="crew-dialogue-lines" style="padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-height:80px"></div>
+      <!-- Continue button -->
+      <div style="padding:10px 16px;border-top:1px solid rgba(20,40,80,0.4);text-align:right">
+        <button id="crew-dialogue-next" onclick="DialogueSystem.next()" style="background:rgba(10,30,80,0.8);border:1px solid rgba(60,120,220,0.4);color:#6090d0;padding:7px 20px;font-family:inherit;font-size:10px;letter-spacing:2px;cursor:pointer;border-radius:4px;text-transform:uppercase">Continue ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================
        SECTOR SELECT PANEL
   ========================================================== -->
   <div class="panel" id="sector-panel">
@@ -1459,14 +1461,14 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
   <!-- ==========================================================
        TELESCOPE PANEL
   ========================================================== -->
-  <div class="panel" id="telescope-panel">
+  <div class="panel" id="telescope-panel" style="width:min(640px,96vw);padding:20px 22px;top:50%;left:50%;transform:translate(-50%,-50%)">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
       <span style="font-size:22px">◉</span>
       <div>
         <div style="font-size:10px;letter-spacing:3px;color:#00a0b0;text-transform:uppercase;margin-bottom:2px">DEEP FIELD TELESCOPE</div>
         <div style="font-size:11px;color:#5080a0">Aim at uncharted sky · Detect exotic stars</div>
       </div>
-    
+    </div>
 
     <!-- Prism animation canvas -->
     <canvas id="scope-canvas" style="width:100%;height:160px;background:#000810;border:1px solid rgba(0,160,200,0.3);border-radius:6px;display:block;margin-bottom:14px"></canvas>
@@ -2651,11 +2653,18 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
             <div style="font-size:9px;color:#401850;margin-top:2px">Match · Fuse · Shatter · Chain combos to attack</div>
           </div>
         </div>
-        <div style="background:rgba(0,0,0,0.4);border:1px dashed rgba(60,60,100,0.3);border-radius:6px;padding:10px 14px;display:flex;align-items:center;gap:12px;opacity:0.45">
-          <span style="font-size:20px">🚀</span>
+        <div style="background:rgba(0,14,18,0.5);border:1px solid rgba(0,232,216,0.3);border-left:3px solid #00e8d8;border-radius:6px;padding:10px 14px;display:flex;align-items:center;gap:12px">
+          <span style="font-size:20px;filter:drop-shadow(0 0 6px #00e8d8)">⬡</span>
           <div style="flex:1">
-            <div style="font-size:10px;letter-spacing:3px;color:#404060;text-transform:uppercase">Space Battles</div>
-            <div style="font-size:9px;color:#252540;margin-top:2px">Coming soon!</div>
+            <div style="font-size:10px;letter-spacing:3px;color:#00e8d8;text-transform:uppercase;text-shadow:0 0 8px rgba(0,232,216,0.5)">Space Battle</div>
+            <div style="font-size:9px;color:#004848;margin-top:2px">Navigate · Fire · Survive · 24×24 tactical grid</div>
+          </div>
+        </div>
+        <div style="background:rgba(0,14,6,0.5);border:1px solid rgba(0,255,128,0.3);border-left:3px solid #00ff80;border-radius:6px;padding:10px 14px;display:flex;align-items:center;gap:12px">
+          <span style="font-size:20px;filter:drop-shadow(0 0 6px #00ff80)">⬡</span>
+          <div style="flex:1">
+            <div style="font-size:10px;letter-spacing:3px;color:#00ff80;text-transform:uppercase;text-shadow:0 0 8px rgba(0,255,128,0.5)">Nebula Rumble</div>
+            <div style="font-size:9px;color:#004820;margin-top:2px">Fire · Match · Combo · Plasma Orb Combat</div>
           </div>
         </div>
       </div>
@@ -3178,32 +3187,113 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
           <div style="margin-top:10px;font-size:9px;letter-spacing:2px;color:#1a0a30">HI-SCORE <span id="lobby-pd-hi" style="color:#c060ff">---</span></div>
         </div>
 
-        <!-- SPACE BATTLES COMING SOON -->
-        <div style="display:flex;flex-direction:column;align-items:center;opacity:0.35;pointer-events:none;user-select:none">
+        <!-- SPACE BATTLE CABINET -->
+        <div onclick="arcadeSelectGame('spacebattle')" style="display:flex;flex-direction:column;align-items:center;cursor:pointer;user-select:none" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'">
           <div style="width:100%;position:relative">
-            <div style="background:linear-gradient(180deg,#080808 0%,#101010 50%,#080808 100%);border:2px solid #404040;border-radius:14px 14px 4px 4px;overflow:hidden">
-              <div style="background:linear-gradient(90deg,#1a1a1a,#505050,#383838,#505050,#1a1a1a);padding:9px 12px;text-align:center">
-                <div style="font-size:11px;letter-spacing:4px;color:#888;text-transform:uppercase;font-weight:700">SPACE BATTLES</div>
+            <div style="position:absolute;left:-8px;top:20px;bottom:16px;width:8px;background:linear-gradient(180deg,#001020,#000818,#001020);border-radius:4px 0 0 4px;border:1px solid #00d8c8;box-shadow:inset -2px 0 4px rgba(0,0,0,0.5)"></div>
+            <div style="position:absolute;right:-8px;top:20px;bottom:16px;width:8px;background:linear-gradient(180deg,#001020,#000818,#001020);border-radius:0 4px 4px 0;border:1px solid #00d8c8;box-shadow:inset 2px 0 4px rgba(0,0,0,0.5)"></div>
+            <div style="background:linear-gradient(180deg,#000810 0%,#001020 35%,#000810 70%,#000408 100%);border:2px solid #00e8d8;border-radius:14px 14px 4px 4px;overflow:hidden;box-shadow:0 0 24px rgba(0,232,216,0.25),0 0 60px rgba(0,180,200,0.1)">
+              <!-- Marquee -->
+              <div style="background:linear-gradient(90deg,#001830,#00e8d8,#006858,#00e8d8,#001830);padding:9px 12px;text-align:center;position:relative">
+                <div style="font-size:12px;letter-spacing:4px;color:#000810;text-transform:uppercase;font-weight:700;text-shadow:0 0 8px rgba(0,255,240,0.4)">SPACE BATTLE</div>
+                <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(90deg,transparent,transparent 8px,rgba(0,0,0,0.08) 8px,rgba(0,0,0,0.08) 9px);pointer-events:none"></div>
               </div>
-              <div style="height:5px;background:repeating-linear-gradient(90deg,#505050 0,#505050 7px,#1a1a1a 7px,#1a1a1a 14px)"></div>
-              <div style="margin:10px 12px;background:#0a0a0a;border:5px solid #1a1a1a;border-radius:6px;height:160px;display:flex;align-items:center;justify-content:center">
-                <div style="text-align:center">
-                  <div style="font-size:20px;margin-bottom:8px">🚀</div>
-                  <div style="font-size:9px;letter-spacing:3px;color:#606060;text-transform:uppercase">Coming Soon!</div>
+              <!-- Pattern strip: teal + pink -->
+              <div style="height:5px;background:linear-gradient(90deg,#00e8d8,#ff3068,#c060ff,#00e8d8,#ff3068,#c060ff,#00e8d8)"></div>
+              <!-- Screen -->
+              <div style="margin:10px 12px;background:#000206;border:4px solid #001828;border-radius:6px;box-shadow:inset 0 0 24px rgba(0,0,0,0.9),0 0 14px rgba(0,232,216,0.12)">
+                <div style="position:relative;background:#000206;border-radius:2px;overflow:hidden">
+                  <canvas id="sb-attract-canvas" width="220" height="160" style="display:block;width:100%;image-rendering:pixelated"></canvas>
+                  <div style="position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.025),transparent);pointer-events:none"></div>
+                  <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.07) 3px,rgba(0,0,0,0.07) 4px);pointer-events:none"></div>
                 </div>
               </div>
-              <div style="background:linear-gradient(180deg,#101010,#080808);padding:10px 14px;border-top:2px solid #404040">
+              <!-- Control panel -->
+              <div style="background:linear-gradient(180deg,#001020,#000810);padding:10px 14px;border-top:2px solid #00a898">
+                <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:10px">
+                  <!-- D-pad -->
+                  <div style="position:relative;width:28px;height:28px">
+                    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:24px;background:linear-gradient(180deg,#003848,#002030);border-radius:2px;border:1px solid #006858"></div>
+                    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:24px;height:8px;background:linear-gradient(90deg,#003848,#002030);border-radius:2px;border:1px solid #006858"></div>
+                  </div>
+                  <!-- Teal button -->
+                  <div style="width:16px;height:16px;background:radial-gradient(circle at 35% 35%,#40ffee,#00a898);border-radius:50%;border:2px solid #00e8d8;box-shadow:0 0 12px rgba(0,232,216,0.8),0 2px 3px rgba(0,0,0,0.5)"></div>
+                  <!-- Pink button -->
+                  <div style="width:16px;height:16px;background:radial-gradient(circle at 35% 35%,#ff80a0,#c02048);border-radius:50%;border:2px solid #ff3068;box-shadow:0 0 12px rgba(255,48,104,0.8),0 2px 3px rgba(0,0,0,0.5)"></div>
+                </div>
                 <div style="text-align:center">
-                  <div style="display:inline-block;background:#1a1a1a;color:#404040;font-size:11px;letter-spacing:4px;padding:8px 28px;border-radius:24px;font-weight:700;text-transform:uppercase;border:1px solid #404040">LOCKED</div>
+                  <div style="display:inline-block;background:linear-gradient(180deg,#00e8d8,#006858);color:#000810;font-size:11px;letter-spacing:4px;padding:8px 28px;border-radius:24px;font-weight:700;text-transform:uppercase;border:1px solid #40fff0;box-shadow:0 0 18px rgba(0,232,216,0.6),0 3px 6px rgba(0,0,0,0.4)">▶ PLAY</div>
+                </div>
+              </div>
+            </div>
+            <!-- Legs -->
+            <div style="display:flex;justify-content:space-between;padding:0 12%">
+              <div style="width:16%;height:16px;background:linear-gradient(180deg,#001020,#000408);border:1px solid #00a898;border-top:none;border-radius:0 0 4px 4px"></div>
+              <div style="width:16%;height:16px;background:linear-gradient(180deg,#001020,#000408);border:1px solid #00a898;border-top:none;border-radius:0 0 4px 4px"></div>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:9px;letter-spacing:2px;color:#003840">HI-SCORE <span id="lobby-sb-hi" style="color:#00e8d8">---</span></div>
+        </div>
+
+        <!-- NEBULA RUMBLE CABINET — Tri-color: green/magenta/cyan -->
+        <div onclick="arcadeSelectGame('nebularumble')" style="display:flex;flex-direction:column;align-items:center;cursor:pointer;user-select:none" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'">
+          <div style="width:100%;position:relative">
+            <div style="position:absolute;left:-8px;top:20px;bottom:16px;width:8px;background:linear-gradient(180deg,#001a08,#000c04,#001a08);border-radius:4px 0 0 4px;border:1px solid #00ff80;box-shadow:inset -2px 0 4px rgba(0,0,0,0.5)"></div>
+            <div style="position:absolute;right:-8px;top:20px;bottom:16px;width:8px;background:linear-gradient(180deg,#001a08,#000c04,#001a08);border-radius:0 4px 4px 0;border:1px solid #00ff80;box-shadow:inset 2px 0 4px rgba(0,0,0,0.5)"></div>
+            <div style="background:linear-gradient(180deg,#000a04 0%,#001408 35%,#000a04 70%,#000602 100%);border:2px solid #00ff80;border-radius:14px 14px 4px 4px;overflow:hidden;box-shadow:0 0 24px rgba(0,255,128,0.25),0 0 60px rgba(0,200,100,0.1)">
+              <div style="background:linear-gradient(90deg,#001a08,#00ff80,#003018,#ff00c8,#001a08);padding:9px 12px;text-align:center;position:relative">
+                <div style="font-size:12px;letter-spacing:4px;color:#000a04;text-transform:uppercase;font-weight:700;text-shadow:0 0 8px rgba(0,255,200,0.4)">NEBULA RUMBLE</div>
+              </div>
+              <div style="height:5px;background:linear-gradient(90deg,#00ff80,#ff00c8,#00e8ff,#c8ff00,#ff8000,#a000ff,#00ff80)"></div>
+              <div style="height:2px;background:linear-gradient(90deg,rgba(0,255,128,0.4),rgba(255,0,200,0.4),rgba(0,232,255,0.4))"></div>
+              <div style="margin:10px 12px;background:#000602;border:4px solid #001408;border-radius:6px;box-shadow:inset 0 0 24px rgba(0,0,0,0.9),0 0 14px rgba(0,255,128,0.12)">
+                <canvas id="nr-attract-canvas" width="220" height="160" style="display:block;width:100%;image-rendering:pixelated"></canvas>
+              </div>
+              <div style="background:linear-gradient(180deg,#001408,#000602);padding:10px 14px;border-top:2px solid #00c860">
+                <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:10px">
+                  <div style="position:relative;width:28px;height:28px">
+                    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:24px;background:linear-gradient(180deg,#003818,#001a08);border-radius:2px;border:1px solid #00c860"></div>
+                    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:24px;height:8px;background:linear-gradient(90deg,#003818,#001a08);border-radius:2px;border:1px solid #00c860"></div>
+                  </div>
+                  <div style="width:16px;height:16px;background:radial-gradient(circle at 35% 35%,#80ffb0,#00c860);border-radius:50%;border:2px solid #00ff80;box-shadow:0 0 12px rgba(0,255,128,0.8),0 2px 3px rgba(0,0,0,0.5)"></div>
+                  <div style="width:16px;height:16px;background:radial-gradient(circle at 35% 35%,#ff80e8,#c000a0);border-radius:50%;border:2px solid #ff00c8;box-shadow:0 0 12px rgba(255,0,200,0.8),0 2px 3px rgba(0,0,0,0.5)"></div>
+                </div>
+                <div style="text-align:center">
+                  <div style="display:inline-block;background:linear-gradient(180deg,#00ff80,#006830);color:#000a04;font-size:11px;letter-spacing:4px;padding:8px 28px;border-radius:24px;font-weight:700;text-transform:uppercase;border:1px solid #80ffc0;box-shadow:0 0 18px rgba(0,255,128,0.6),0 3px 6px rgba(0,0,0,0.4)">▶ PLAY</div>
                 </div>
               </div>
             </div>
             <div style="display:flex;justify-content:space-between;padding:0 12%">
-              <div style="width:16%;height:16px;background:#0a0a0a;border:1px solid #404040;border-top:none;border-radius:0 0 4px 4px"></div>
-              <div style="width:16%;height:16px;background:#0a0a0a;border:1px solid #404040;border-top:none;border-radius:0 0 4px 4px"></div>
+              <div style="width:16%;height:16px;background:linear-gradient(180deg,#001408,#000602);border:1px solid #00c860;border-top:none;border-radius:0 0 4px 4px"></div>
+              <div style="width:16%;height:16px;background:linear-gradient(180deg,#001408,#000602);border:1px solid #00c860;border-top:none;border-radius:0 0 4px 4px"></div>
             </div>
           </div>
-          <div style="margin-top:10px;font-size:9px;letter-spacing:2px;color:#303030">Space Battles! Coming soon!</div>
+          <div style="margin-top:10px;font-size:9px;letter-spacing:2px;color:#003820">HI-SCORE <span id="lobby-nr-hi" style="color:#00ff80">---</span></div>
+        </div>
+
+        <!-- MORE COMING SOON placeholder -->
+        <div style="display:flex;flex-direction:column;align-items:center;opacity:0.28;pointer-events:none;user-select:none">
+          <div style="width:100%;position:relative">
+            <div style="background:linear-gradient(180deg,#080808 0%,#101010 50%,#080808 100%);border:2px solid #252525;border-radius:14px 14px 4px 4px;overflow:hidden">
+              <div style="background:linear-gradient(90deg,#0a0a0a,#222,#181818,#222,#0a0a0a);padding:9px 12px;text-align:center">
+                <div style="font-size:10px;letter-spacing:3px;color:#444;text-transform:uppercase;font-weight:700">MORE GAMES</div>
+              </div>
+              <div style="height:5px;background:repeating-linear-gradient(90deg,#252525 0,#252525 7px,#0a0a0a 7px,#0a0a0a 14px)"></div>
+              <div style="margin:10px 12px;background:#060606;border:4px solid #111;border-radius:6px;height:160px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
+                <div style="font-size:18px;opacity:0.3">✦</div>
+                <div style="font-size:8px;letter-spacing:3px;color:#333;text-transform:uppercase">Coming Soon</div>
+                <div style="font-size:7px;letter-spacing:2px;color:#252525;text-transform:uppercase">Stay tuned</div>
+              </div>
+              <div style="background:linear-gradient(180deg,#0a0a0a,#060606);padding:10px 14px;border-top:2px solid #222">
+                <div style="text-align:center"><div style="display:inline-block;background:#111;color:#303030;font-size:10px;letter-spacing:3px;padding:8px 28px;border-radius:24px;font-weight:700;border:1px solid #222">LOCKED</div></div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:0 12%">
+              <div style="width:16%;height:16px;background:#080808;border:1px solid #222;border-top:none;border-radius:0 0 4px 4px"></div>
+              <div style="width:16%;height:16px;background:#080808;border:1px solid #222;border-top:none;border-radius:0 0 4px 4px"></div>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:9px;letter-spacing:2px;color:#1a1a1a">More Stellar Games!</div>
         </div>
 
       </div>
@@ -3337,6 +3427,31 @@ canvas.pd-bcanvas.pdenemy{border-color:rgba(255,80,200,0.4);box-shadow:0 0 14px 
       </div>
     </div>
   </div>
+
+  <!-- NEBULA RUMBLE PANEL -->
+  <div id="nr-panel" style="display:none;width:100%;height:100%;background:#010602;overflow:hidden;position:relative;flex-direction:column;align-items:center;justify-content:center;">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:20px;font-family:'Share Tech Mono',monospace;text-align:center;">
+      <div style="font-size:14px;letter-spacing:6px;color:#00ff80;text-transform:uppercase;text-shadow:0 0 20px rgba(0,255,128,0.8);">⬡ Nebula Rumble</div>
+      <div style="font-size:10px;letter-spacing:2px;color:rgba(0,180,80,0.5);text-transform:uppercase;max-width:400px;line-height:1.8;">Plasma Orb Combat · Chain Reactions<br>Open in a new tab to play.</div>
+      <button onclick="(function(){var loc=window.location.href;var base=loc.substring(0,loc.lastIndexOf('/')+1);window.location.href=base+'nebula-rumble-demo.html';})() " style="padding:12px 32px;background:linear-gradient(180deg,rgba(0,60,30,0.5),rgba(0,30,15,0.5));border:1px solid rgba(0,255,128,0.5);border-radius:5px;color:#00ff80;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;box-shadow:0 0 18px rgba(0,255,128,0.2);">▶ Launch Nebula Rumble</button>
+      <canvas id="nr-preview-canvas" width="400" height="220" style="border:1px solid rgba(0,200,80,0.2);border-radius:6px;box-shadow:0 0 20px rgba(0,255,128,0.06);"></canvas>
+      <button onclick="arcadeBackToLobby()" style="background:rgba(60,0,30,0.2);border:1px solid rgba(180,0,100,0.3);color:rgba(200,0,120,0.7);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:6px 16px;border-radius:3px;cursor:pointer;text-transform:uppercase;">✕ Back to Arcade</button>
+    </div>
+  </div>
+
+  <!-- SPACE BATTLE PANEL -->
+  <div id="sb-panel" style="display:none;width:100%;height:100%;background:#000205;overflow:hidden;position:relative;flex-direction:column;align-items:center;justify-content:center;">
+    <div id="sb-inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:20px;font-family:'Share Tech Mono',monospace;text-align:center;">
+      <div style="font-size:14px;letter-spacing:6px;color:#00e8d8;text-transform:uppercase;text-shadow:0 0 20px rgba(0,232,216,0.8);">⬡ Space Battle</div>
+      <div style="font-size:10px;letter-spacing:2px;color:rgba(0,180,200,0.5);text-transform:uppercase;max-width:400px;line-height:1.8;">
+        Space Battle runs as a standalone game.<br>Open it in a new tab to play.
+      </div>
+      <button onclick="(function(){var loc=window.location.href;var base=loc.substring(0,loc.lastIndexOf('/')+1);window.location.href=base+'space-battle-demo.html';})() " style="padding:12px 32px;background:linear-gradient(180deg,rgba(0,60,140,0.4),rgba(0,30,80,0.4));border:1px solid rgba(0,232,216,0.6);border-radius:5px;color:#00e8d8;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;box-shadow:0 0 18px rgba(0,232,216,0.2);">▶ Launch Space Battle</button>
+      <canvas id="sb-preview-canvas" width="400" height="220" style="border:1px solid rgba(0,200,216,0.2);border-radius:6px;box-shadow:0 0 20px rgba(0,232,216,0.08);"></canvas>
+      <button onclick="arcadeBackToLobby()" style="background:rgba(140,14,14,0.2);border:1px solid rgba(255,50,30,0.35);color:rgba(200,50,50,0.7);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:6px 16px;border-radius:3px;cursor:pointer;text-transform:uppercase;">✕ Back to Arcade</button>
+    </div>
+  </div>
+
 </div><!-- end #ui -->
 
 
@@ -4234,6 +4349,7 @@ function _doLoadSector(sectorId){
   state.currentSectorId=sectorId;
   state._scopeHintShown = false; // reset telescope hint
   if(sectorId !== 'home') state._hasJumpedSector = true;
+  if(sectorId !== 'home') setTimeout(()=> _storyOnSectorJump(), 1500);
   state.selected=null;
   document.getElementById('scan-btn').disabled=true;
   document.getElementById('info-bar').innerHTML='Click a star to target it — then SCAN<br><span style="font-size:9px;color:#253550">Drag to pan the galaxy map</span>';
@@ -5142,14 +5258,24 @@ const CONTACT_ACTS=[
 function checkFirstContact(star,habitabilityResult){
   if(!star||habitabilityResult!=='habitable') return;
   const decodeAmt=12+Math.floor(Math.random()*8);
-  state._signalDecoded=Math.min(100,(state._signalDecoded||0)+decodeAmt);
+  const prevDecoded = state._signalDecoded || 0;
+  state._signalDecoded=Math.min(100, prevDecoded + decodeAmt);
+  // Fire story signal event on first detection
+  if(prevDecoded === 0) setTimeout(()=> _storyOnSignal(), 500);
   state._habitableLog=(state._habitableLog||[]);
   state._habitableLog.push(star.name);
   state._contactStarDist=state._contactStarDist||(47+Math.random()*20).toFixed(1);
   const prev=state._signalDecoded-decodeAmt;
   for(const act of CONTACT_ACTS){
     if(prev<act.threshold&&state._signalDecoded>=act.threshold){
-      setTimeout(()=>showContactAct(act,star),1400); break;
+      // Wait until summary panel is hidden before showing contact
+      const _showContact=()=>{
+        const sumPanel=document.getElementById('summary-panel');
+        const sumVisible=sumPanel&&sumPanel.style.display!=='none';
+        if(sumVisible){ setTimeout(_showContact,400); return; }
+        showContactAct(act,star);
+      };
+      setTimeout(_showContact,1600); break;
     }
   }
 }
@@ -5215,6 +5341,7 @@ function showContactAct(act,star){
       <button id="signal-close" class="pbtn pbtn-action" style="display:none;margin-top:12px;width:100%">Continue Survey</button>`;
   }
   panel.innerHTML=prog+body;
+  panel._shuffledChoices=_shuffled||null; // Fix: store shuffled order for click handler
   document.getElementById('ui').appendChild(panel);
   // Draw spectrum for Act 3 classify_spectrum
   if(act.type === 'classify_spectrum'){
@@ -5404,6 +5531,9 @@ function openAct1(star){
   if(shouldShowTutorial()){
     setTimeout(()=> runFirstScanTutorial(null), 400);
   }
+
+  // ── STORY DIRECTOR: fire scan-level narrative triggers ──
+  setTimeout(()=> _storyOnScan(star), 800);
 
   // -- LORE & SPECIAL EVENTS --
   const loreEl  = document.getElementById('sp-lore');
@@ -6067,7 +6197,11 @@ function openAct4(star){
       const surveyV = state.surveyData?.correctVerdict;
       if(surveyV === 'habitable'){
         checkFirstContact(state.currentStar, 'habitable');
+        // Story Director: first habitable colony
+        setTimeout(()=> _storyOnHabitable(), 1200);
       }
+      // Story Director: colony narrative
+      setTimeout(()=> _storyOnColony(), 2000);
       // Colony pulse fires after debrief button appears — use centre of screen
       // so it's visible regardless of panel position or map scroll
       setTimeout(()=> playColonyPulse(null), 650);
@@ -7221,18 +7355,16 @@ function animateScopeView(){
     ctx.restore();
   }
 
-  let _prismLast=0;
   function frame(t){
-    if(t-_prismLast<33) return; _prismLast=t;
     const elapsed = (performance.now()-START)/1000; // seconds
     ctx.clearRect(0,0,W,H);
     ctx.fillStyle='#010208'; ctx.fillRect(0,0,W,H);
 
-    if(elapsed < 5.5){
-      // ── Prism animation phases ──────────────────────────────────────────
+    if(elapsed < 2.8){
+      // ── Prism animation phases — 2× faster ──────────────────────────
 
-      // Phase 1: white beam travelling left → prism (0–2s)
-      const beam1prog = Math.min(1, elapsed/2);
+      // Phase 1: white beam travelling left → prism (0–1s, was 0-2s)
+      const beam1prog = Math.min(1, elapsed/1.0);
       const beamEndX = PRISM_X - PRISM_SIZE*0.86;
       if(beam1prog > 0){
         const tipX = 10 + (beamEndX-10)*beam1prog;
@@ -7242,18 +7374,17 @@ function animateScopeView(){
         beamGrad.addColorStop(1,'rgba(255,255,255,0.9)');
         ctx.beginPath(); ctx.moveTo(10,PRISM_Y); ctx.lineTo(tipX,PRISM_Y);
         ctx.strokeStyle=beamGrad; ctx.lineWidth=3; ctx.stroke();
-        // beam glow
         ctx.beginPath(); ctx.moveTo(10,PRISM_Y); ctx.lineTo(tipX,PRISM_Y);
         ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=12; ctx.stroke();
       }
 
-      // Prism appears with beam (fades in by 1.5s)
-      const prismAlpha = Math.min(1, elapsed/1.5);
+      // Prism appears (fades in by 0.75s)
+      const prismAlpha = Math.min(1, elapsed/0.75);
       drawPrism(ctx, PRISM_X, PRISM_Y, PRISM_SIZE, prismAlpha);
 
-      // Phase 2+3: rainbow beams fan out from prism (starts at 1.8s)
-      if(elapsed > 1.8){
-        const rainbowProg = Math.min(1, (elapsed-1.8)/2.0);
+      // Phase 2+3: rainbow beams fan out from prism (starts at 0.9s, was 1.8s)
+      if(elapsed > 0.9){
+        const rainbowProg = Math.min(1, (elapsed-0.9)/1.0);
         const rainbowLen = (W-PRISM_X-20) * rainbowProg;
         RAINBOW.forEach(({col,angle})=>{
           const endX = PRISM_X + rainbowLen * Math.cos(angle);
@@ -7268,9 +7399,9 @@ function animateScopeView(){
           ctx.globalAlpha = 1;
         });
 
-        // Phase 3: as beams reach right edge, spectrum bar appears (3.5s–5.5s)
-        if(elapsed > 3.5){
-          const specProg = Math.min(1, (elapsed-3.5)/2);
+        // Phase 3: spectrum bar appears as rainbow reaches right (~1.75s)
+        if(elapsed > 1.75){
+          const specProg = Math.min(1, (elapsed-1.75)/1.0);
           // Store spectrum rect for enhance animation
           _scopeSpectrumRect = {x:W*0.68, y:H*0.5-9, w:W*0.28, h:18};
           // Spectrum bar fade-in at the observation line (right side)
@@ -7301,9 +7432,9 @@ function animateScopeView(){
 
       scopeAnim = requestAnimationFrame(frame);
 
-    } else if(elapsed < 5.5){
+    } else if(elapsed < 4.0){
       // Spectrum is showing, prism fully visible — show ENHANCE button
-      if(elapsed > 5.0){
+      if(elapsed > 3.2){
         const enhBtn = document.getElementById('scope-controls-enhance');
         const defBtn = document.getElementById('scope-controls-default');
         if(enhBtn && defBtn && enhBtn.style.display === 'none'){
@@ -7315,7 +7446,7 @@ function animateScopeView(){
       return; // hold the spectrum frame
     } else {
       // Phase 4: transition to normal star field view (if no enhance clicked)
-      const fadeProg = Math.min(1,(elapsed-5.5)/0.8);
+      const fadeProg = Math.min(1,(elapsed-4.0)/0.8);
       // Star field
       fieldStars.forEach(s=>{
         ctx.beginPath(); ctx.arc(s.x,s.y,Math.max(0.1,s.r),0,Math.PI*2);
@@ -7383,6 +7514,9 @@ function executeTelescope(){
 
   // Play reveal sound
   playTelescopeRevealSound();
+
+  // Story Director: first telescope deep-field anomaly
+  if(isMystery) setTimeout(()=> _storyOnTelescopeAnomaly(), 2000);
 
   // ── PRISM ANIMATION — white light → prism → rainbow → spectrum ──
   const canvas=document.getElementById('scope-canvas');
@@ -10707,6 +10841,259 @@ function updateMinimap(){
 }
 
 /* ================================================================
+   STORY DIRECTOR — central event bus for narrative moments
+   Fires each named event exactly once per session.
+   Usage: StoryDirector.trigger('FIRST_G_STAR', star)
+================================================================ */
+window.StoryDirector = {
+  played: new Set(),
+
+  trigger(event, payload){
+    if(this.played.has(event)) return;
+    this.played.add(event);
+    switch(event){
+      case 'FIRST_SCAN':
+        DialogueSystem.play('first_scan'); break;
+      case 'FIRST_G_STAR':
+        DialogueSystem.play('first_g_star'); break;
+      case 'FIRST_HABITABLE':
+        DialogueSystem.play('first_habitable'); break;
+      case 'FIRST_COLONY':
+        DialogueSystem.play('first_colony'); break;
+      case 'FIRST_SECTOR_JUMP':
+        DialogueSystem.play('first_sector_jump'); break;
+      case 'FIRST_BINARY':
+        DialogueSystem.play('first_binary'); break;
+      case 'FIRST_RED_GIANT':
+        DialogueSystem.play('first_red_giant'); break;
+      case 'FIRST_WHITE_DWARF':
+        DialogueSystem.play('first_white_dwarf'); break;
+      case 'FIRST_TELESCOPE_ANOMALY':
+        DialogueSystem.play('first_telescope_anomaly'); break;
+      case 'FIRST_MYSTERY_OBJECT':
+        DialogueSystem.play('first_mystery_object'); break;
+      case 'FIVE_COLONIES':
+        DialogueSystem.play('five_colonies'); break;
+      case 'FIRST_SIGNAL':
+        DialogueSystem.play('first_signal'); break;
+    }
+  }
+};
+
+/* ================================================================
+   CREW DIALOGUE SYSTEM
+   Three crew members with distinct voices:
+     ELENA  — science officer. Precise, excited, finds beauty in data.
+     WARD   — pilot. Deadpan, dry humour, grounded.
+     ITZEL  — mission historian. Philosophy, Mesoamerican lens, poetry.
+   play(scriptKey) — shows the dialogue panel and runs the script.
+   next()          — advances to the next line.
+   close()         — dismisses the panel.
+================================================================ */
+window.DialogueSystem = (function(){
+  // Crew colours
+  const CREW = {
+    ELENA: { color:'#40d0c0', label:'ELENA' },
+    WARD:  { color:'#a0b0c0', label:'WARD'  },
+    ITZEL: { color:'#d0a040', label:'ITZEL' }
+  };
+
+  // All crew dialogue scripts
+  const SCRIPTS = {
+    first_scan: [
+      { who:'ELENA', line:'First spectra acquisition complete. The absorption lines are beautiful — each dark band is an element saying "I\'m here."' },
+      { who:'WARD',  line:'Lines on a graph. Sure.' },
+      { who:'ELENA', line:'Ward. Those lines are the reason we know what stars are made of without ever leaving Earth.' },
+      { who:'ITZEL', line:'The Maya watched the same light and tracked Venus to within minutes of precision. Different tools. Same impulse.' },
+      { who:'WARD',  line:'Okay. That\'s actually cool.' }
+    ],
+    first_g_star: [
+      { who:'ELENA', line:'G-type confirmed. Same spectral class as the Sun. Calcium H and K lines, iron bands, balanced hydrogen.' },
+      { who:'ITZEL', line:'The Mexica called the Sun Tonatiuh — the Fifth Sun. He required sacrifice to keep moving.' },
+      { who:'WARD',  line:'We\'re not doing that.' },
+      { who:'ITZEL', line:'I meant philosophically. What do we give up to keep exploring?' },
+      { who:'ELENA', line:'Sleep, mostly.' }
+    ],
+    first_habitable: [
+      { who:'ELENA', line:'Conditions confirmed habitable. Liquid water range. Stable orbit. Breathable atmospheric candidate.' },
+      { who:'WARD',  line:'So... someone could live there.' },
+      { who:'ITZEL', line:'"Could" is doing a lot of work in that sentence. But yes.' },
+      { who:'ELENA', line:'Hydrogen. Helium. Carbon. Everything we are was forged inside stars and scattered across systems just like this one.' },
+      { who:'WARD',  line:'Comforting.' },
+      { who:'ITZEL', line:'The Mexica believed the Fifth Sun required sacrifice to survive. Hopefully ours doesn\'t.' }
+    ],
+    first_colony: [
+      { who:'WARD',  line:'Colony beacon deployed. We\'ve officially put something permanent out there.' },
+      { who:'ELENA', line:'It\'s a relay transmitter. But symbolically — yes.' },
+      { who:'ITZEL', line:'The Aztec founded Tenochtitlan on a swamp island because an eagle landed on a cactus. We\'re founding ours because the spectral lines looked right.' },
+      { who:'WARD',  line:'More defensible reasoning.' },
+      { who:'ITZEL', line:'Both required someone to say: here. This is where we begin.' }
+    ],
+    first_sector_jump: [
+      { who:'ELENA', line:'Sector transition complete. New stellar population on sensors — different temperature distribution, different composition ratios.' },
+      { who:'WARD',  line:'It felt like stepping through a door.' },
+      { who:'ITZEL', line:'Carl Sagan wrote that we are a way for the universe to know itself. I think about that every time we jump.' },
+      { who:'ELENA', line:'The spectra here will be harder. New element combinations we haven\'t calibrated for.' },
+      { who:'WARD',  line:'Good. The easy ones were getting boring.' }
+    ],
+    first_binary: [
+      { who:'ELENA', line:'Composite spectrum — two overlapping line sets. Binary system. The absorption patterns from both stars are arriving simultaneously.' },
+      { who:'WARD',  line:'Two stars, one light. That\'s going to make the classification harder.' },
+      { who:'ELENA', line:'Significantly. You\'re looking for the primary class — the dominant pattern — and ignoring the contaminating signal.' },
+      { who:'ITZEL', line:'Two voices speaking at once. You have to learn to hear only one.' }
+    ],
+    first_red_giant: [
+      { who:'ELENA', line:'K or M giant confirmed — that radius, that luminosity. This star exhausted its core hydrogen and expanded.' },
+      { who:'ITZEL', line:'The Mexica would have read this as a dying sun. An age ending.' },
+      { who:'WARD',  line:'How long until it goes full giant?' },
+      { who:'ELENA', line:'Millions of years, probably. The expansion is geological in timescale to us.' },
+      { who:'ITZEL', line:'All things end slowly, then suddenly.' }
+    ],
+    first_white_dwarf: [
+      { who:'ELENA', line:'White dwarf confirmed. What you\'re seeing is the exposed core of a dead star. Roughly Earth-sized. Solar mass. No fusion — just stored heat, cooling for eternity.' },
+      { who:'WARD',  line:'Eternity\'s a long time.' },
+      { who:'ITZEL', line:'The Aztec Fifth Sun is supposed to end in earthquakes. This one ended quietly. I\'m not sure which is worse.' },
+      { who:'ELENA', line:'Our Sun will become one of these in about five billion years.' },
+      { who:'WARD',  line:'Should we be doing something about that?' },
+      { who:'ELENA', line:'Probably not today.' }
+    ],
+    first_telescope_anomaly: [
+      { who:'ELENA', line:'The deep field scan is returning something I don\'t have a clean classification for. The spectral signature is... complex.' },
+      { who:'WARD',  line:'Complex how? Instrument error?' },
+      { who:'ELENA', line:'No. Deliberate pattern. Repeating. This isn\'t noise.' },
+      { who:'ITZEL', line:'The Mexica looked for patterns in everything — in the stars, in the calendar, in the movement of planets. They believed the universe was trying to communicate.' },
+      { who:'WARD',  line:'What are you saying?' },
+      { who:'ITZEL', line:'I\'m saying we should listen.' }
+    ],
+    first_mystery_object: [
+      { who:'ELENA', line:'Anomalous classification. The spectral profile doesn\'t match any standard OBAFGKM type cleanly. Could be a T Tauri pre-main-sequence, a brown dwarf, or something else entirely.' },
+      { who:'WARD',  line:'"Something else entirely" is my least favourite category.' },
+      { who:'ITZEL', line:'The Aztec had a category for objects that didn\'t fit: they called them tezcatlipoca — mirror-smoke. Things that showed you something but hid the reality.' },
+      { who:'ELENA', line:'Log it as anomalous. That\'s the correct scientific answer when the data is genuinely ambiguous.' }
+    ],
+    five_colonies: [
+      { who:'ELENA', line:'Five colonies established. We\'ve now seeded five distinct stellar systems with human presence.' },
+      { who:'ITZEL', line:'The Fifth Sun. Tonatiuh. In Aztec cosmology, we are living in the fifth age of the world — the age of movement.' },
+      { who:'WARD',  line:'Is that good or bad?' },
+      { who:'ITZEL', line:'It\'s the age that\'s supposed to end in earthquakes. But it\'s also the age that lasted the longest.' },
+      { who:'ELENA', line:'So: unstable, but persistent. I\'ll take it.' }
+    ],
+    first_signal: [
+      { who:'ELENA', line:'Signal acquisition confirmed. This is structured data — mathematical relationships embedded in electromagnetic pulses.' },
+      { who:'WARD',  line:'Someone sent this.' },
+      { who:'ELENA', line:'Something sent this. We don\'t know enough to say someone yet.' },
+      { who:'ITZEL', line:'The Mexica calendar was a message to future generations encoded in stone. Whoever built this was doing the same thing.' },
+      { who:'WARD',  line:'Encoded in starlight instead of stone.' },
+      { who:'ITZEL', line:'The medium changes. The impulse doesn\'t.' }
+    ]
+  };
+
+  let _currentScript = null;
+  let _lineIndex     = 0;
+  let _panel         = null;
+  let _linesEl       = null;
+
+  function _getEls(){
+    _panel   = _panel   || document.getElementById('crew-dialogue');
+    _linesEl = _linesEl || document.getElementById('crew-dialogue-lines');
+  }
+
+  function _renderLine(entry){
+    _getEls();
+    const crew = CREW[entry.who] || CREW.ELENA;
+    const div  = document.createElement('div');
+    div.style.cssText = 'display:flex;flex-direction:column;gap:3px;opacity:0;transition:opacity 0.4s';
+    div.innerHTML = `
+      <div style="font-size:9px;letter-spacing:3px;color:${crew.color};text-transform:uppercase">${crew.label}</div>
+      <div style="font-size:11px;color:#c0d0e8;line-height:1.65;padding-left:10px;border-left:2px solid ${crew.color}40">${entry.line}</div>
+    `;
+    _linesEl.appendChild(div);
+    // Trigger fade-in
+    requestAnimationFrame(()=>{ div.style.opacity = '1'; });
+    // Scroll to bottom
+    _linesEl.scrollTop = _linesEl.scrollHeight;
+  }
+
+  function play(scriptKey){
+    const script = SCRIPTS[scriptKey];
+    if(!script || !script.length) return;
+    _getEls();
+    if(!_panel) return;
+    _currentScript = script;
+    _lineIndex     = 0;
+    _linesEl.innerHTML = '';
+    _panel.style.display = 'block';
+    // Show first two lines immediately for context
+    _renderLine(script[0]);
+    if(script[1]) { setTimeout(()=>_renderLine(script[1]), 500); _lineIndex = 1; }
+    // Update button
+    const btn = document.getElementById('crew-dialogue-next');
+    if(btn) btn.textContent = _lineIndex >= script.length - 1 ? 'Close ✕' : 'Continue ▶';
+  }
+
+  function next(){
+    if(!_currentScript) return;
+    _lineIndex++;
+    if(_lineIndex >= _currentScript.length){
+      close(); return;
+    }
+    _renderLine(_currentScript[_lineIndex]);
+    const btn = document.getElementById('crew-dialogue-next');
+    if(btn) btn.textContent = _lineIndex >= _currentScript.length - 1 ? 'Close ✕' : 'Continue ▶';
+  }
+
+  function close(){
+    _getEls();
+    if(_panel) _panel.style.display = 'none';
+    if(_linesEl) _linesEl.innerHTML = '';
+    _currentScript = null;
+    _lineIndex     = 0;
+  }
+
+  return { play, next, close };
+})();
+
+/* ================================================================
+   STORY TRIGGER HOOKS — call these from existing game events
+   These wrap StoryDirector.trigger() so each fires at most once.
+================================================================ */
+function _storyOnScan(star){
+  // First ever scan
+  StoryDirector.trigger('FIRST_SCAN');
+  // Stellar class triggers
+  if(star && star.cls){
+    const t = star.cls.type;
+    if(t === 'G') StoryDirector.trigger('FIRST_G_STAR');
+    if(['K','M'].includes(t) && star.cls.lum > 10) StoryDirector.trigger('FIRST_RED_GIANT');
+    if(t === 'WD') StoryDirector.trigger('FIRST_WHITE_DWARF');
+    if(star._mystery) StoryDirector.trigger('FIRST_MYSTERY_OBJECT');
+  }
+  // Binary detection
+  if(star && star.secondaryCls) StoryDirector.trigger('FIRST_BINARY');
+}
+
+function _storyOnHabitable(){
+  StoryDirector.trigger('FIRST_HABITABLE');
+}
+
+function _storyOnColony(){
+  StoryDirector.trigger('FIRST_COLONY');
+  if(state.colonies >= 5) StoryDirector.trigger('FIVE_COLONIES');
+}
+
+function _storyOnSectorJump(){
+  StoryDirector.trigger('FIRST_SECTOR_JUMP');
+}
+
+function _storyOnTelescopeAnomaly(){
+  StoryDirector.trigger('FIRST_TELESCOPE_ANOMALY');
+}
+
+function _storyOnSignal(){
+  StoryDirector.trigger('FIRST_SIGNAL');
+}
+
+/* ================================================================
    STAR LORE — flavour text shown during scans
 ================================================================ */
 const STAR_LORE = {
@@ -12509,6 +12896,44 @@ const STAR_FACTS = {
   'Alpha Centauri A': {fact:'Alpha Centauri A is the largest of the three Alpha Centauri stars and is nearly identical to our Sun in size and temperature. It is the closest star system visible to the naked eye from Earth.', src:'ESO'},
 }
 
+
+const ELEMENT_FACTS = [
+  {fact:'Hydrogen is the most abundant element in the universe, making up about 75% of all normal matter. Stars spend most of their lives fusing hydrogen into helium in their cores.',src:'NASA/NIST'},
+  {fact:'Helium was discovered in the Sun\'s spectrum in 1868 before it was found on Earth — named after Helios, the Greek god of the Sun.',src:'Royal Society'},
+  {fact:'Calcium absorption lines (Ca II K & H at 393–396 nm) are among the strongest spectral features in solar-type stars and are used to measure stellar activity.',src:'AAVSO'},
+  {fact:'Iron produces over 4,000 spectral lines in stellar spectra. The large number of iron lines makes it one of the most studied elements in stellar astrophysics.',src:'NIST Atomic Spectra Database'},
+  {fact:'Sodium\'s characteristic yellow doublet at 589 nm (the D lines) is so bright that it dominates street lighting and is one of the easiest spectral lines to observe.',src:'NIST'},
+  {fact:'Magnesium lines in stellar spectra indicate a star\'s metallicity — the proportion of elements heavier than hydrogen and helium, a key indicator of stellar age.',src:'ESA'},
+  {fact:'Carbon and nitrogen are produced in stellar interiors and returned to space when stars die. Every carbon atom in your body was forged inside a star.',src:'Carl Sagan, Cosmos'},
+  {fact:'Lithium is destroyed by nuclear reactions inside stars, so its abundance in a star\'s spectrum indicates how much mixing has occurred between the surface and the hot interior.',src:'ESO'},
+  {fact:'Oxygen is the third most abundant element in the universe. The oxygen you breathe was created inside massive stars that exploded as supernovae billions of years ago.',src:'NASA'},
+  {fact:'Silicon is the second most abundant element in Earth\'s crust. In stellar spectra, silicon lines help classify hot B-type stars and track their chemical evolution.',src:'NIST'},
+];
+
+const SCIENTIST_FACTS = [
+  {name:'Annie Jump Cannon',fact:'Annie Jump Cannon classified over 350,000 stars and created the OBAFGKM spectral classification system still used today. She could classify three stars per minute by eye.',src:'Harvard College Observatory'},
+  {name:'Cecilia Payne-Gaposchkin',fact:'Cecilia Payne discovered in 1925 that stars are made primarily of hydrogen and helium — contradicting scientific consensus. Her dissertation was called "the most brilliant PhD thesis ever written in astronomy."',src:'Harvard CfA'},
+  {name:'Carl Sagan',fact:'Carl Sagan was the first to calculate that a nuclear war could cause a "nuclear winter." He championed the search for extraterrestrial intelligence and wrote Contact (1985).',src:'NASA/Cornell University'},
+  {name:'Edwin Hubble',fact:'Edwin Hubble proved in 1925 that the Andromeda Nebula was a separate galaxy, fundamentally changing our understanding of the universe\'s scale.',src:'Carnegie Institution'},
+  {name:'Vera Rubin',fact:'Vera Rubin\'s observations of galaxy rotation curves provided the first strong evidence for dark matter, one of the most important discoveries in 20th-century astronomy.',src:'DTM Carnegie'},
+  {name:'Jocelyn Bell Burnell',fact:'Jocelyn Bell Burnell discovered pulsars in 1967 as a PhD student. Her supervisor was awarded the Nobel Prize for the discovery — she was not, in one of astronomy\'s most controversial omissions.',src:'Royal Astronomical Society'},
+  {name:'Subrahmanyan Chandrasekhar',fact:'Chandrasekhar calculated the maximum mass a white dwarf star can have (1.4 solar masses) before collapsing. This "Chandrasekhar limit" governs the fate of all stars like our Sun.',src:'Nobel Prize Committee'},
+  {name:'Henrietta Swan Leavitt',fact:'Henrietta Swan Leavitt discovered the period-luminosity relationship for Cepheid variable stars — a cosmic ruler that made it possible to measure vast distances in the universe.',src:'Harvard College Observatory'},
+];
+
+const MYSTERY_OBJECTS = [
+  {cls:{type:'G',color:'#ffe066',lines:[656,589,527,518,430,393],tempLabel:'5,000–6,000 K',lum:1,rad:1,habIdx:80},
+   explanation:'A T Tauri star — a young pre-main-sequence star still contracting. Strong Hα emission at 656 nm reveals active accretion from a surrounding disk.',
+   correctType:'Anomalous',note:'Pre-main-sequence T Tauri star. Classify as Anomalous.'},
+  {cls:{type:'K',color:'#ff9933',lines:[656,589,527,518,430,393,361],tempLabel:'3,500–5,000 K',lum:0.1,rad:0.7,habIdx:70},
+   explanation:'A flare star — an M or K dwarf that occasionally brightens dramatically due to magnetic reconnection events, mimicking a hotter spectral class during outbursts.',
+   correctType:'Anomalous',note:'Variable flare star. Strong UV emission during outbursts.'},
+  {cls:{type:'A',color:'#a0c8ff',lines:[486,434,410,397,393,388],tempLabel:'7,500–10,000 K',lum:14,rad:1.8,habIdx:20},
+   explanation:'An Ap (peculiar A) star with anomalously strong silicon and strontium lines caused by diffusion of heavy elements in a stable magnetic atmosphere.',
+   correctType:'Anomalous',note:'Chemically peculiar A-type star. Classify as Anomalous.'},
+];
+
+
 function getNextFact(star){
   const cat = state.factCategory % 3;
   state.factCategory++;
@@ -13570,6 +13995,7 @@ function initTitleMusic(){
     );
   };
 }
+/* ── stopTitleMusic (consolidated — was duplicated, second def overwrote callback support) ── */
 function stopTitleMusic(onDone){
   if(window._removeTitleListeners) window._removeTitleListeners();
   window._titleMusicInitialized = true;
@@ -13579,19 +14005,12 @@ function stopTitleMusic(onDone){
   try{
     node.volNode.gain.cancelScheduledValues(node.ac.currentTime);
     node.volNode.gain.setValueAtTime(0.28, node.ac.currentTime);
-    node.volNode.gain.linearRampToValueAtTime(0, node.ac.currentTime + 2.5);
-    setTimeout(()=>{ try{ node.ac.close(); }catch(e){} }, 2600);
+    // Use a 2.5s fade when a callback is provided (scene transition), 1.2s for quick stops
+    const fadeTime = onDone ? 2.5 : 1.2;
+    node.volNode.gain.linearRampToValueAtTime(0, node.ac.currentTime + fadeTime);
+    setTimeout(()=>{ try{ node.ac.close(); }catch(e){} }, (fadeTime + 0.1) * 1000);
   }catch(e){}
-  setTimeout(()=>{ if(onDone) onDone(); }, 1800);
-}
-
-function stopTitleMusic(){
-  if(!titleMusicNode) return;
-  try{
-    titleMusicNode.volNode.gain.linearRampToValueAtTime(0, titleMusicNode.ac.currentTime+1.2);
-    setTimeout(()=>{ try{ titleMusicNode.ac.close(); }catch(e){} }, 1300);
-  }catch(e){}
-  titleMusicNode = null;
+  if(onDone) setTimeout(onDone, 1800);
 }
 
 /* ================================================================
@@ -16702,7 +17121,7 @@ return{open:openCatcher,close:closeCatcher};
 
 
 /* ── STELLAR ARCADE CONTROLLER ─────────────────────────────────── */
-let _arcadeBgInit = false, _rushAttractRAF = null, _catcherAttractRAF = null, _hbAttractRAF = null, _pdAttractRAF = null;
+let _arcadeBgInit = false, _rushAttractRAF = null, _catcherAttractRAF = null, _hbAttractRAF = null, _pdAttractRAF = null, _sbAttractRAF = null;
 
 
 /* ================================================================
@@ -16962,23 +17381,17 @@ function makeHole(lv){
   const grid=Array.from({length:rows},()=>Array(cols).fill(false));
   let minPieces=0;
 
-  if(lv<=2){
-    // Early levels: use simple rectangular starter shapes
-    const shape=RECT_HOLES[Math.floor(Math.random()*RECT_HOLES.length)];
-    const maxC=Math.max(...shape.map(x=>x[0]));
-    const maxR=Math.max(...shape.map(x=>x[1]));
-    // Center it
-    const oC=Math.floor((cols-maxC-1)/2);
-    const oR=Math.floor((rows-maxR-1)/2);
-    shape.forEach(([dc,dr])=>{ grid[oR+dr][oC+dc]=true; });
-    minPieces=1;
-  } else {
-    // Higher levels: stamp pieces to build the hole
-    const numPieces=Math.min(4,2+Math.floor(lv/2));
+  {
+    // Levels 1-3: use only simple 2x2 and L-shaped blocks (no rare pieces)
+    // Level 4+: use full tetromino/pentomino set with 4-6 pieces
+    const numPieces=Math.max(4,Math.min(6,2+Math.floor(lv/2)));
+    const useSimpleOnly = lv <= 3;
     let att=0;
     while(minPieces<numPieces&&att<200){
       att++;
-      const tIdx=Math.floor(Math.random()*TETROMINOS.length);
+      // For early levels, use only the first 4 tetrominoes (O, I, L, T — most common)
+      const maxTet = useSimpleOnly ? Math.min(4, TETROMINOS.length) : TETROMINOS.length;
+      const tIdx=Math.floor(Math.random()*maxTet);
       const orients=_allOrientations(TETROMINOS[tIdx].cells);
       const orient=orients[Math.floor(Math.random()*orients.length)];
       const maxC=Math.max(...orient.map(x=>x[0]));
@@ -17010,6 +17423,21 @@ function makeHole(lv){
     const cr=Math.floor(rows/2),cc=Math.floor(cols/2);
     [[0,0],[1,0],[0,1],[1,1]].forEach(([dc,dr])=>grid[cr+dr][cc+dc]=true);
     minPieces=1;
+  }
+
+  // Remove isolated cells that create unfillable gaps (cells with 0 neighbors)
+  let _gapChanged=true;
+  while(_gapChanged){
+    _gapChanged=false;
+    for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+      if(!grid[r][c])continue;
+      let adj=0;
+      [[0,1],[0,-1],[1,0],[-1,0]].forEach(([dr,dc])=>{
+        const nr=r+dr,nc=c+dc;
+        if(nr>=0&&nr<rows&&nc>=0&&nc<cols&&grid[nr][nc])adj++;
+      });
+      if(adj===0){grid[r][c]=false;_gapChanged=true;} // isolated = unfillable
+    }
   }
 
   return {grid,placed:{},complete:false,cols,rows,touched:false,growTimer:0,level:lv,minPieces,piecesUsed:0,lastTouched:Date.now()};
@@ -18061,7 +18489,9 @@ function arcadeClose(){
   try{ MG_Catcher.close(); }catch(e){}
   try{ MG_HullBreach.close(); }catch(e){}
   try{ MG_PlasmaDuel.close(); }catch(e){}
-  ['spectra-rush-panel','wc-panel','hb-panel','pd-panel'].forEach(id=>{
+  try{ MG_SpaceBattle.close(); }catch(e){}
+  try{ MG_NebulaRumble.close(); }catch(e){}
+  ['spectra-rush-panel','wc-panel','hb-panel','pd-panel','sb-panel','nr-panel'].forEach(id=>{
     const p=document.getElementById(id);
     if(p){
       p.style.display='none'; p.classList.remove('arcade-active');
@@ -18087,8 +18517,8 @@ function arcadeSelectGame(game){
   const barEl   = document.getElementById('arcade-loading-bar');
   const coinEl  = document.getElementById('arcade-coin-anim');
   if(loadEl){ loadEl.style.display='flex'; }
-  const gameTitle = game==='rush'?'SPECTRA RUSH':game==='hullbreach'?'HULL BREACH':game==='plasmaduel'?'PLASMA DUEL':'WAVELENGTH CATCHER';
-  const gameColor = game==='rush'?'#ff4080':game==='hullbreach'?'#00ff80':game==='plasmaduel'?'#c060ff':'#40c0ff';
+  const gameTitle = game==='rush'?'SPECTRA RUSH':game==='hullbreach'?'HULL BREACH':game==='plasmaduel'?'PLASMA DUEL':game==='spacebattle'?'SPACE BATTLE':game==='nebularumble'?'NEBULA RUMBLE':'WAVELENGTH CATCHER';
+  const gameColor = game==='rush'?'#ff4080':game==='hullbreach'?'#00ff80':game==='plasmaduel'?'#c060ff':game==='spacebattle'?'#00e8d8':game==='nebularumble'?'#00ff80':'#40c0ff';
   if(titleEl){ titleEl.textContent=gameTitle; titleEl.style.color=gameColor; }
   if(barEl){   barEl.style.background=gameColor; barEl.style.width='0%'; }
   // Animate progress bar over 3.3s
@@ -18121,29 +18551,36 @@ function _arcadeShowLobby(){
   const nr = document.getElementById('arcade-nav-right');
   if(nr){ nr.textContent='v1.0'; nr.style.color='#301828'; }
   // Restart attract animations (they stop while a game is playing)
-  setTimeout(()=>{ _rushAttract(); _catcherAttract(); _hbAttract(); _pdAttract(); }, 100);
+  setTimeout(()=>{
+    _rushAttract(); _catcherAttract(); _hbAttract(); _pdAttract();
+    // sb and nr defined in later script blocks — call safely
+    if(typeof _sbAttract==='function') _sbAttract();
+    if(typeof _nrAttract==='function') _nrAttract();
+  }, 100);
 }
 
 function _arcadeShowGameView(game){
   // Hide ALL game panels first to prevent stacking
-  ['spectra-rush-panel','wc-panel','hb-panel','pd-panel'].forEach(id=>{
+  // Hide ALL game panels — must use display:none on fixed-position panels too
+  ['spectra-rush-panel','wc-panel','hb-panel','pd-panel','sb-panel','nr-panel'].forEach(id=>{
     const p=document.getElementById(id);
-    if(p){ p.style.display='none'; p.classList.remove('arcade-active'); }
+    if(p){ p.style.display='none'; p.style.visibility='hidden'; p.classList.remove('arcade-active'); }
   });
   const gv = document.getElementById('arcade-game-view');
   if(gv) gv.style.display = 'block';
   const nr = document.getElementById('arcade-nav-right');
-  const gameTitle = game==='rush'?'SPECTRA RUSH':game==='hullbreach'?'HULL BREACH':game==='plasmaduel'?'PLASMA DUEL':'WAVELENGTH CATCHER';
-  const gameColor = game==='rush'?'#ff4080':game==='hullbreach'?'#00ff80':game==='plasmaduel'?'#c060ff':'#40c0ff';
+  const gameTitle = game==='rush'?'SPECTRA RUSH':game==='hullbreach'?'HULL BREACH':game==='plasmaduel'?'PLASMA DUEL':game==='spacebattle'?'SPACE BATTLE':game==='nebularumble'?'NEBULA RUMBLE':'WAVELENGTH CATCHER';
+  const gameColor = game==='rush'?'#ff4080':game==='hullbreach'?'#00ff80':game==='plasmaduel'?'#c060ff':game==='spacebattle'?'#00e8d8':game==='nebularumble'?'#00ff80':'#40c0ff';
   if(nr){ nr.textContent=gameTitle; nr.style.color=gameColor; }
   const area = document.getElementById('arcade-game-area');
-  const panelId = game==='rush'?'spectra-rush-panel':game==='hullbreach'?'hb-panel':game==='plasmaduel'?'pd-panel':'wc-panel';
+  const panelId = game==='rush'?'spectra-rush-panel':game==='hullbreach'?'hb-panel':game==='plasmaduel'?'pd-panel':game==='spacebattle'?'sb-panel':game==='nebularumble'?'nr-panel':'wc-panel';
   const panel = document.getElementById(panelId);
   if(area && panel){
     area.innerHTML = '';
     area.appendChild(panel);
     panel.classList.add('arcade-active');
     panel.style.display = 'block';
+    panel.style.visibility = 'visible';
   }
   if(game==='rush') MG_Rush.open();
   else if(game==='hullbreach'){
@@ -18151,6 +18588,8 @@ function _arcadeShowGameView(game){
     setTimeout(()=>{ _hbAutoScale(); setTimeout(_hbAutoScale, 100); }, 50);
   }
   else if(game==='plasmaduel') MG_PlasmaDuel.open();
+  else if(game==='spacebattle') MG_SpaceBattle.open();
+  else if(game==='nebularumble') MG_NebulaRumble.open();
   else MG_Catcher.open();
 }
 
@@ -18187,8 +18626,9 @@ function arcadeBackToLobby(){
   try{ MG_Catcher.close(); }catch(e){}
   try{ MG_HullBreach.close(); }catch(e){}
   try{ MG_PlasmaDuel.close(); }catch(e){}
+  try{ MG_SpaceBattle.close(); }catch(e){}
   // Move panels back to body
-  ['spectra-rush-panel','wc-panel','hb-panel','pd-panel'].forEach(id=>{
+  ['spectra-rush-panel','wc-panel','hb-panel','pd-panel','sb-panel'].forEach(id=>{
     const p=document.getElementById(id);
     if(p){
       p.style.display='none';
@@ -18218,7 +18658,13 @@ function _arcadeUpdateHiScores(){
     if(lt) lt.textContent=(rHi>0||cHi>0||hbHi>0)?'Your best scores saved locally':'Play to set a score';
     try{const pdHi=localStorage.getItem('pd2_hi');
     const pdEl=document.getElementById('lobby-pd-hi');
-    if(pdEl&&pdHi)pdEl.textContent=parseInt(pdHi).toLocaleString();}catch(e){}
+    if(pdEl&&pdHi)pdEl.textContent=parseInt(pdHi).toLocaleString();  try{const sbHi=localStorage.getItem('sb_hi');
+    const sbEl=document.getElementById('lobby-sb-hi');
+    if(sbEl&&sbHi)sbEl.textContent=parseInt(sbHi).toLocaleString();  try{const nrHi=localStorage.getItem('nr_hi');
+    const nrEl=document.getElementById('lobby-nr-hi');
+    if(nrEl&&nrHi)nrEl.textContent=parseInt(nrHi).toLocaleString();}catch(e){}
+}catch(e){}
+}catch(e){}
 }catch(e){}
 }
 
@@ -18422,63 +18868,80 @@ function _pdAttract(){
   const W=cvs.width, H=cvs.height;
   const ACOLS=['#9060ff','#20e0c0','#ffcc00','#ff5060'];
   let t=0;
-  // Two mini boards side by side, dropping crystal pairs
-  let cellsA=[], cellsB=[], pairA={c:1,r:0,col:0}, pairB={c:4,r:0,col:2};
-  function spawnPair(p){ p.c=Math.floor(Math.random()*5)+0; p.r=0; p.col=Math.floor(Math.random()*4); }
-  spawnPair(pairA); spawnPair(pairB);
+  // Pre-built valid board state — looks like a real mid-game
+  // Left board: player, Right board: bot
+  const CS=11, OX1=6, OX2=W/2+4, OY=8, COLS2=6, ROWS2=13;
+  // Static settled cells that look like valid pairs (always 2 matching adjacent)
+  const boardA=[
+    {c:0,r:12,col:2},{c:1,r:12,col:2}, // yellow pair bottom
+    {c:2,r:12,col:0},{c:3,r:12,col:0}, // purple pair
+    {c:4,r:12,col:1},{c:5,r:12,col:1}, // teal pair
+    {c:0,r:11,col:3},{c:1,r:11,col:3}, // red pair
+    {c:2,r:11,col:2},{c:3,r:11,col:2},
+    {c:0,r:10,col:1},{c:0,r:9,col:1},  // teal vertical pair
+    {c:1,r:10,col:0},{c:2,r:10,col:0},
+    {c:3,r:10,col:3},{c:4,r:10,col:3},
+  ];
+  const boardB=[
+    {c:0,r:12,col:3},{c:1,r:12,col:3},
+    {c:2,r:12,col:1},{c:3,r:12,col:1},
+    {c:4,r:12,col:0},{c:5,r:12,col:0},
+    {c:0,r:11,col:2},{c:1,r:11,col:2},
+    {c:2,r:11,col:3},{c:3,r:11,col:3},
+    {c:4,r:11,col:1},{c:4,r:10,col:1}, // vertical
+    {c:5,r:11,col:0},{c:5,r:10,col:0},
+  ];
+  // Falling pairs: always a vertical pair (valid in Plasma Duel)
+  let pairA={c:2,r:-1,col:0}, pairB={c:3,r:-1,col:2};
 
   function draw(){
     const arc=document.getElementById('arcade-screen');
     const lobby=document.getElementById('arcade-lobby');
-    if(!arc||arc.style.display==='none'||!lobby||lobby.classList.contains('hidden')){
-      _pdAttractRAF=null; return;
-    }
-    ctx.fillStyle='rgba(2,0,10,0.4)'; ctx.fillRect(0,0,W,H);
-    // Draw two mini boards
-    const CS=12, OX1=8, OX2=W/2+4, OY=10, COLS2=5, ROWS2=11;
+    const arcHidden=!arc||arc.style.display==='none'||arc.classList.contains('hidden');
+    const lobbyHidden=!lobby||lobby.classList.contains('hidden');
+    if(arcHidden||lobbyHidden){_pdAttractRAF=null;return;}
+
+    ctx.fillStyle='rgba(2,0,10,0.5)'; ctx.fillRect(0,0,W,H);
+    // Draw two boards
     [OX1,OX2].forEach(ox=>{
-      ctx.strokeStyle='rgba(80,20,140,0.2)'; ctx.lineWidth=0.5;
+      ctx.fillStyle='rgba(4,0,16,0.9)'; ctx.fillRect(ox,OY,COLS2*CS,ROWS2*CS);
+      ctx.strokeStyle='rgba(80,20,140,0.25)'; ctx.lineWidth=0.5;
       for(let c=0;c<=COLS2;c++){ctx.beginPath();ctx.moveTo(ox+c*CS,OY);ctx.lineTo(ox+c*CS,OY+ROWS2*CS);ctx.stroke();}
       for(let r=0;r<=ROWS2;r++){ctx.beginPath();ctx.moveTo(ox,OY+r*CS);ctx.lineTo(ox+COLS2*CS,OY+r*CS);ctx.stroke();}
-      ctx.strokeStyle='rgba(160,80,255,0.3)'; ctx.lineWidth=1;
+      ctx.strokeStyle='rgba(160,80,255,0.4)'; ctx.lineWidth=1.2;
       ctx.strokeRect(ox,OY,COLS2*CS,ROWS2*CS);
     });
-    // Draw settled cells
-    cellsA.forEach(({c,r,col})=>{
-      const x=OX1+c*CS,y=OY+r*CS;
-      ctx.fillStyle=ACOLS[col]; ctx.globalAlpha=0.8;
-      ctx.fillRect(x+1,y+1,CS-2,CS-2); ctx.globalAlpha=1;
-    });
-    cellsB.forEach(({c,r,col})=>{
-      const x=OX2+c*CS,y=OY+r*CS;
-      ctx.fillStyle=ACOLS[col]; ctx.globalAlpha=0.8;
-      ctx.fillRect(x+1,y+1,CS-2,CS-2); ctx.globalAlpha=1;
-    });
-    // Draw falling pairs
-    const pulse=0.7+0.3*Math.sin(t*0.05);
-    [[pairA,OX1],[pairB,OX2]].forEach(([p,ox])=>{
-      ctx.fillStyle=ACOLS[p.col]; ctx.globalAlpha=0.9*pulse;
-      ctx.fillRect(ox+p.c*CS+1,OY+p.r*CS+1,CS-2,CS-2);
-      ctx.fillRect(ox+p.c*CS+1,OY+(p.r+1)*CS+1,CS-2,CS-2);
-      ctx.globalAlpha=1;
-    });
-    // Step pairs
-    if(t%18===0){
-      [pairA,pairB].forEach((p,i)=>{
-        const cells=i===0?cellsA:cellsB;
-        const blocked=cells.some(ce=>ce.c===p.c&&ce.r===p.r+2)||p.r+2>=ROWS2;
-        if(blocked){
-          if(p.r>=0){cells.push({c:p.c,r:p.r,col:p.col});cells.push({c:p.c,r:p.r+1,col:p.col});}
-          // Keep max 20 cells
-          while(cells.length>20) cells.shift();
-          spawnPair(p);
-        } else { p.r++; }
+    // Draw settled cells with glow
+    const drawCell=(brd,ox)=>{
+      brd.forEach(({c,r,col})=>{
+        const x=ox+c*CS+1,y=OY+r*CS+1,s=CS-2;
+        ctx.shadowBlur=4; ctx.shadowColor=ACOLS[col];
+        ctx.fillStyle=ACOLS[col]; ctx.globalAlpha=0.85;
+        ctx.fillRect(x,y,s,s);
+        ctx.fillStyle='rgba(255,255,255,0.2)'; ctx.fillRect(x,y,s,s*0.3);
+        ctx.globalAlpha=1; ctx.shadowBlur=0;
       });
+    };
+    drawCell(boardA,OX1); drawCell(boardB,OX2);
+    // Falling pair (vertical — always valid in Plasma Duel)
+    const pulse=0.75+0.25*Math.sin(t*0.06);
+    [[pairA,OX1],[pairB,OX2]].forEach(([p,ox])=>{
+      if(p.r<0)return;
+      ctx.shadowBlur=8; ctx.shadowColor=ACOLS[p.col];
+      ctx.fillStyle=ACOLS[p.col]; ctx.globalAlpha=0.9*pulse;
+      ctx.fillRect(ox+p.c*CS+1,OY+p.r*CS+1,CS-2,CS-2);     // top cell
+      ctx.fillRect(ox+p.c*CS+1,OY+(p.r+1)*CS+1,CS-2,CS-2); // bottom cell
+      ctx.globalAlpha=1; ctx.shadowBlur=0;
+    });
+    // Drop pairs
+    if(t%22===0){
+      pairA.r++;
+      pairB.r++;
+      if(pairA.r>10){pairA={c:Math.floor(Math.random()*5),r:-1,col:Math.floor(Math.random()*4)};}
+      if(pairB.r>10){pairB={c:Math.floor(Math.random()*5),r:-1,col:Math.floor(Math.random()*4)};}
     }
-    // Beam flash occasionally
-    if(t%120===0){
-      ctx.fillStyle='rgba(192,96,255,0.15)'; ctx.fillRect(0,0,W,H);
-    }
+    // Purple flash
+    if(t%140<5){ctx.fillStyle='rgba(192,96,255,0.12)';ctx.fillRect(0,0,W,H);}
     t++; _pdAttractRAF=requestAnimationFrame(draw);
   }
   ctx.fillStyle='#02000a'; ctx.fillRect(0,0,W,H);
@@ -18563,7 +19026,6 @@ requestAnimationFrame(drawMain);
 
 window.MG_PlasmaDuel = (function(){
 'use strict';
-'use strict';
 // ── Constants ──────────────────────────────────────────────────
 const PD_COLS=6,PD_ROWS=13,PD_CELL=30;
 const PD_COLORS=['violet','cyan','gold','red'];
@@ -18612,6 +19074,8 @@ function pdPivotOff(ori){return ori===0?[1,0]:ori===1?[0,1]:ori===2?[-1,0]:[0,-1
 
 const pdP={board:null,piece:null,next:null,col:2,row:-1,pendingAttacks:[],drops:0};
 const pdB={board:null,piece:null,next:null,col:2,row:-1,pendingAttacks:[],drops:0};
+// Aliases so legacy code using P/B still works
+const P=pdP, B=pdB;
 
 // Visual-only arrays (never affect logic)
 let pdFallAnims=[];   // [{ctx,fromY,toY,x,cell,t,dur}]  — pixel positions
@@ -18982,7 +19446,7 @@ function pdBotHard(){
 
 // ── HUD ────────────────────────────────────────────────────────
 function pdUpdateHUD(){
-  document.getElementById('pdScore-val').textContent=pdScore.toLocaleString();
+  const _pdSEl=document.getElementById('pd-score');if(_pdSEl)_pdSEl.textContent=pdScore.toLocaleString();
   const pq=P.pendingAttacks.reduce((s,a)=>s+a.size,0);
   const bq=B.pendingAttacks.reduce((s,a)=>s+a.size,0);
   document.getElementById('pd-player-attack').style.width=Math.min(100,bq*10)+'%';
@@ -18991,6 +19455,7 @@ function pdUpdateHUD(){
 let _ft=null;
 function pdShowFlash(msg,col){
   const el=document.getElementById('pd-flash');
+  if(!el)return;
   el.textContent=msg;el.style.color=col||'#c060ff';el.style.opacity='1';
   clearTimeout(_ft);_ft=setTimeout(()=>el.style.opacity='0',1200);
 }
@@ -19002,12 +19467,15 @@ function pdEndGame(result){
   if(pdBotInterval)clearInterval(pdBotInterval);
   try{const h=parseInt(localStorage.getItem('pd2_hi')||'0');if(pdScore>h)localStorage.setItem('pd2_hi',pdScore);}catch(e){}
   const ov=document.getElementById('pd-overlay-screen');
+  if(!ov)return;
   const box=ov.querySelector('.ov-box');
-  document.getElementById('pd-ov-title').textContent=result==='win'?'Victory!':'Defeated';
-  document.getElementById('pd-ov-title').style.color=result==='win'?'#80ffb0':'#ff6080';
+  const _pdTitle=document.getElementById('pd-ov-title');
+  if(_pdTitle){_pdTitle.textContent=result==='win'?'Victory!':'Defeated';_pdTitle.style.color=result==='win'?'#80ffb0':'#ff6080';}
   pdShowFlash((result==='win'?'Victory! ':'Defeated · ')+'Score: '+pdScore.toLocaleString(),result==='win'?'#80ffb0':'#ff6080');
-  document.querySelectorAll('#pd-overlay-screen button').forEach(b=>{if(b.textContent.includes('Begin')||b.textContent.includes('Again')){b.textContent='▶ Play Again';}});
-  box.querySelector('.ov-btn').onclick=pdStartGame;
+  if(box){
+    box.querySelectorAll('button').forEach(b=>{if(b.textContent.includes('Begin')||b.textContent.includes('Again')){b.textContent='▶ Play Again';}});
+    const _ovBtn=box.querySelector('.ov-btn');if(_ovBtn)_ovBtn.onclick=pdStartGame;
+  }
   result==='win'?pdSfxWin():pdSfxLose();
   ov.style.display='flex';
 }
@@ -19240,5 +19708,306 @@ return {open:pd_open,close:pd_close};
 })();
 
 </script>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// MG_SpaceBattle — Arcade wrapper (loads space-battle-demo.html in iframe)
+// ══════════════════════════════════════════════════════════════
+window.MG_SpaceBattle = (function(){
+  'use strict';
+  let _open = false, _previewRAF = null;
+  function open(){
+    _open = true;
+    // Start preview animation on the sb-preview-canvas
+    setTimeout(_runSbPreview, 50);
+  }
+  function close(){
+    _open = false;
+    if(_previewRAF){ cancelAnimationFrame(_previewRAF); _previewRAF=null; }
+  }
+  function _runSbPreview(){
+    if(!_open) return;
+    const cvs = document.getElementById('sb-preview-canvas');
+    if(!cvs) return;
+    const ctx2 = cvs.getContext('2d');
+    const W=cvs.width, H=cvs.height;
+    const TILE_W=20, TILE_H=10;
+    const GRID=12;
+    function gToS(gx,gy){return{x:(gx-gy)*TILE_W/2+W/2-20, y:(gx+gy)*TILE_H/2+H*0.18};}
+    let t=0;
+    function draw(){
+      if(!_open){_previewRAF=null;return;}
+      ctx2.fillStyle='#000205'; ctx2.fillRect(0,0,W,H);
+      // Stars
+      for(let i=0;i<60;i++){
+        const sx=(i*137.5)%W, sy=(i*97.3)%H;
+        const b=0.04+0.04*Math.sin(t*0.03+i*0.5);
+        ctx2.fillStyle=`rgba(180,220,255,${b})`; ctx2.fillRect(sx,sy,0.8,0.8);
+      }
+      // Iso grid
+      for(let gy=0;gy<GRID;gy++) for(let gx=0;gx<GRID;gx++){
+        const{x,y}=gToS(gx,gy);
+        const tw=TILE_W/2,th=TILE_H/2;
+        ctx2.beginPath();
+        ctx2.moveTo(x,y-th);ctx2.lineTo(x+tw,y);ctx2.lineTo(x,y+th);ctx2.lineTo(x-tw,y);
+        ctx2.closePath();
+        ctx2.fillStyle='rgba(0,12,25,0.85)'; ctx2.fill();
+        ctx2.strokeStyle='rgba(0,180,200,0.15)'; ctx2.lineWidth=0.5; ctx2.stroke();
+      }
+      // Two ships
+      const angle=t*0.02;
+      const orb=3.5, cx2=GRID/2-0.5, cy2=GRID/2-0.5;
+      const p1gx=cx2+Math.cos(angle)*orb, p1gy=cy2+Math.sin(angle)*orb;
+      const p2gx=cx2-Math.cos(angle)*orb, p2gy=cy2-Math.sin(angle)*orb;
+      [[p1gx,p1gy,'#00e8d8','rgba(0,232,216,0.8)'],[p2gx,p2gy,'#ff3068','rgba(255,48,104,0.8)']].forEach(([gx,gy,col,glow])=>{
+        const{x,y}=gToS(gx,gy);
+        ctx2.shadowBlur=10; ctx2.shadowColor=glow;
+        ctx2.fillStyle=col; ctx2.beginPath(); ctx2.arc(x,y-4,4,0,Math.PI*2); ctx2.fill();
+        ctx2.shadowBlur=0;
+      });
+      // Laser flash
+      if(t%200<8){
+        const{x:x1,y:y1}=gToS(p1gx,p1gy);
+        const{x:x2,y:y2}=gToS(p2gx,p2gy);
+        const prog=(t%200)/8;
+        ctx2.shadowBlur=14; ctx2.shadowColor='rgba(0,232,216,0.9)';
+        ctx2.strokeStyle='#00e8d8'; ctx2.lineWidth=2;
+        ctx2.beginPath(); ctx2.moveTo(x1,y1-4); ctx2.lineTo(x1+(x2-x1)*prog,y1-4+(y2-y1)*prog); ctx2.stroke();
+        ctx2.shadowBlur=0;
+      }
+      t++; _previewRAF=requestAnimationFrame(draw);
+    }
+    draw();
+  }
+  return { open, close };
+})();
+
+// ── Space Battle attract animation ────────────────────────────
+// _sbAttractRAF declared in main block above
+function _sbAttract(){
+  if(_sbAttractRAF) cancelAnimationFrame(_sbAttractRAF);
+  const cvs = document.getElementById('sb-attract-canvas');
+  if(!cvs) return;
+  const ctx2 = cvs.getContext('2d');
+  const W = cvs.width, H = cvs.height;
+  // Mini 8×8 iso grid with two tiny ships orbiting each other
+  let t = 0;
+  const TILE_W = 14, TILE_H = 7;
+  function gToS(gx,gy){ return {x:(gx-gy)*TILE_W/2+W/2, y:(gx+gy)*TILE_H/2+H*0.22}; }
+  const GRID = 8;
+  function draw(){
+    const lobby = document.getElementById('arcade-lobby');
+    const arc = document.getElementById('arcade-screen');
+    // Check both style and visibility — arcade-screen uses both
+    const arcHidden = !arc || arc.style.display==='none' || arc.classList.contains('hidden') || getComputedStyle(arc).display==='none';
+    const lobbyHidden = !lobby || lobby.classList.contains('hidden') || lobby.style.display==='none';
+    if(arcHidden || lobbyHidden){
+      _sbAttractRAF = null; return;
+    }
+    // Background
+    ctx2.fillStyle = '#000206'; ctx2.fillRect(0,0,W,H);
+    // Stars
+    ctx2.fillStyle = 'rgba(180,220,255,0.08)';
+    for(let i=0;i<40;i++){
+      const sx=(i*137.5)%(W), sy=(i*97.3)%(H);
+      ctx2.fillRect(sx,sy,0.8,0.8);
+    }
+    // Iso grid
+    for(let gy=0;gy<GRID;gy++) for(let gx=0;gx<GRID;gx++){
+      const {x,y} = gToS(gx,gy);
+      const tw=TILE_W/2, th=TILE_H/2;
+      ctx2.beginPath();
+      ctx2.moveTo(x,y-th); ctx2.lineTo(x+tw,y); ctx2.lineTo(x,y+th); ctx2.lineTo(x-tw,y);
+      ctx2.closePath();
+      ctx2.fillStyle = 'rgba(0,14,28,0.85)'; ctx2.fill();
+      ctx2.strokeStyle = 'rgba(0,180,200,0.18)'; ctx2.lineWidth=0.5; ctx2.stroke();
+    }
+    // Two ships orbiting
+    const angle = t * 0.018;
+    const orbitR = 2.8;
+    const cx = GRID/2 - 0.5, cy = GRID/2 - 0.5;
+    const p1gx = cx + Math.cos(angle)*orbitR, p1gy = cy + Math.sin(angle)*orbitR;
+    const p2gx = cx - Math.cos(angle)*orbitR, p2gy = cy - Math.sin(angle)*orbitR;
+    [[p1gx,p1gy,'#00e8d8','rgba(0,232,216,0.8)'],[p2gx,p2gy,'#ff3068','rgba(255,48,104,0.8)']].forEach(([gx,gy,col,glow])=>{
+      const {x,y} = gToS(gx,gy);
+      ctx2.shadowBlur=8; ctx2.shadowColor=glow;
+      ctx2.fillStyle=col;
+      ctx2.beginPath(); ctx2.arc(x,y-3,3,0,Math.PI*2); ctx2.fill();
+      // Thruster trail
+      const tx2=gToS(gx-Math.cos(angle)*0.4,gy-Math.sin(angle)*0.4);
+      ctx2.fillStyle=`${col}55`;
+      ctx2.beginPath(); ctx2.arc(tx2.x,tx2.y-3,1.5,0,Math.PI*2); ctx2.fill();
+      ctx2.shadowBlur=0;
+    });
+    // Laser flash occasionally
+    if(t%180 < 6){
+      const {x:x1,y:y1}=gToS(p1gx,p1gy);
+      const {x:x2,y:y2}=gToS(p2gx,p2gy);
+      const prog=(t%180)/6;
+      const lx=x1+(x2-x1)*prog, ly=(y1-3)+(y2-3-y1+3)*prog;
+      ctx2.shadowBlur=12; ctx2.shadowColor='rgba(0,232,216,0.9)';
+      ctx2.strokeStyle='#00e8d8'; ctx2.lineWidth=1.5;
+      ctx2.beginPath(); ctx2.moveTo(x1,y1-3); ctx2.lineTo(lx,ly); ctx2.stroke();
+      ctx2.shadowBlur=0;
+    }
+    // Teal/pink glow border
+    const pulse=0.5+0.5*Math.sin(t*0.04);
+    ctx2.strokeStyle=`rgba(0,232,216,${pulse*0.4})`; ctx2.lineWidth=1;
+    ctx2.strokeRect(1,1,W-2,H-2);
+    t++; _sbAttractRAF = requestAnimationFrame(draw);
+  }
+  ctx2.fillStyle='#000206'; ctx2.fillRect(0,0,W,H);
+  draw();
+}
+
+// Hook into arcade attract starter
+const _origArcadeAttract = typeof startLobbyMusic !== 'undefined' ? null : null;
+// Patch arcade attract list
+const _origSbAttractStart = window._sbAttractPatched;
+if(!_origSbAttractStart){
+  window._sbAttractPatched = true;
+  const origAttract = setTimeout;
+  // Safely hook: add _sbAttract to the attract calls
+  // sb attract fires from main arcadeBackToLobby safely
+}
+</script>
+
+
+
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// MG_NebulaRumble — Arcade wrapper
+// ══════════════════════════════════════════════════════════════
+window.MG_NebulaRumble = (function(){
+  'use strict';
+  let _open=false,_previewRAF=null;
+  function open(){
+    _open=true;
+    setTimeout(_runNrPreview,50);
+  }
+  function close(){
+    _open=false;
+    if(_previewRAF){cancelAnimationFrame(_previewRAF);_previewRAF=null;}
+  }
+  function _runNrPreview(){
+    if(!_open)return;
+    const cvs=document.getElementById('nr-preview-canvas');
+    if(!cvs)return;
+    const ctx2=cvs.getContext('2d');
+    const W=cvs.width,H=cvs.height;
+    // Mini orb field preview
+    const ORBS=['#00ff80','#ff00c8','#00e8ff','#c8ff00','#ff8000','#a000ff'];
+    const orbGrid=[];
+    for(let r=0;r<6;r++){for(let c=0;c<9;c++){orbGrid.push({x:24+c*44+(r%2===1?22:0),y:20+r*34,col:ORBS[Math.floor(Math.random()*ORBS.length)],pop:0});}}
+    let t=0;
+    function draw(){
+      if(!_open){_previewRAF=null;return;}
+      ctx2.fillStyle='#010602';ctx2.fillRect(0,0,W,H);
+      // Stars
+      for(let i=0;i<40;i++){
+        const sx=(i*137+7)%W,sy=(i*97+3)%H;
+        ctx2.fillStyle=`rgba(0,255,128,${0.03+0.04*Math.sin(t*0.04+i*0.5)})`;
+        ctx2.beginPath();ctx2.arc(sx,sy,0.7,0,Math.PI*2);ctx2.fill();
+      }
+      // Pop random orbs
+      if(t%60===0&&orbGrid.length>10){
+        const idx=Math.floor(Math.random()*orbGrid.length);
+        orbGrid.splice(idx,1);
+        // Burst
+        ctx2.shadowBlur=20;ctx2.shadowColor=ORBS[Math.floor(Math.random()*ORBS.length)];
+        ctx2.fillStyle='rgba(255,255,255,0.3)';
+        ctx2.beginPath();ctx2.arc(W/2,H/2,30,0,Math.PI*2);ctx2.fill();
+        ctx2.shadowBlur=0;
+      }
+      // Draw orbs
+      orbGrid.forEach(o=>{
+        const pulse=0.85+0.15*Math.sin(t*0.05+o.x*0.1);
+        ctx2.shadowBlur=10;ctx2.shadowColor=o.col;
+        const g=ctx2.createRadialGradient(o.x-4,o.y-4,1,o.x,o.y,16);
+        g.addColorStop(0,o.col+'ee');g.addColorStop(0.6,o.col+'88');g.addColorStop(1,'#010602');
+        ctx2.fillStyle=g;
+        ctx2.beginPath();ctx2.arc(o.x,o.y,Math.max(0.1,15*pulse),0,Math.PI*2);ctx2.fill();
+        ctx2.shadowBlur=0;
+      });
+      // Launcher orbs at bottom
+      [[W*0.28,'#00ff80'],[W*0.72,'#ff00c8']].forEach(([x,col])=>{
+        ctx2.shadowBlur=14;ctx2.shadowColor=col;
+        const g=ctx2.createRadialGradient(x-5,H-40-5,1,x,H-40,15);
+        g.addColorStop(0,col+'ee');g.addColorStop(1,'#010602');
+        ctx2.fillStyle=g;
+        ctx2.beginPath();ctx2.arc(x,H-40,15,0,Math.PI*2);ctx2.fill();
+        ctx2.shadowBlur=0;
+        // Aim line
+        ctx2.strokeStyle=col+'50';ctx2.lineWidth=1;ctx2.setLineDash([4,6]);
+        ctx2.beginPath();ctx2.moveTo(x,H-40);ctx2.lineTo(x,30);ctx2.stroke();
+        ctx2.setLineDash([]);
+      });
+      // Border pulse
+      const bp=0.4+0.3*Math.sin(t*0.04);
+      ctx2.strokeStyle=`rgba(0,255,128,${bp})`;ctx2.lineWidth=1;
+      ctx2.strokeRect(1,1,W-2,H-2);
+      t++;_previewRAF=requestAnimationFrame(draw);
+    }
+    draw();
+  }
+  return{open,close};
+})();
+
+// ── Nebula Rumble attract canvas in lobby ──
+let _nrAttractRAF=null;
+function _nrAttract(){
+  if(_nrAttractRAF)cancelAnimationFrame(_nrAttractRAF);
+  const cvs=document.getElementById('nr-attract-canvas');
+  if(!cvs)return;
+  const ctx2=cvs.getContext('2d');
+  const W=cvs.width,H=cvs.height;
+  const ORBS=['#00ff80','#ff00c8','#00e8ff','#c8ff00','#ff8000','#a000ff'];
+  // Simple orb grid
+  const grid=[];
+  for(let r=0;r<4;r++)for(let c=0;c<7;c++)grid.push({x:16+c*28+(r%2?14:0),y:12+r*26,col:ORBS[(r*7+c)%ORBS.length]});
+  let t=0;
+  function draw(){
+    const arc=document.getElementById('arcade-screen');
+    const lobby=document.getElementById('arcade-lobby');
+    const arcH=!arc||arc.style.display==='none'||arc.classList.contains('hidden');
+    const lobH=!lobby||lobby.classList.contains('hidden')||lobby.style.display==='none';
+    if(arcH||lobH){_nrAttractRAF=null;return;}
+    ctx2.fillStyle='#010602';ctx2.fillRect(0,0,W,H);
+    grid.forEach(o=>{
+      const p=0.8+0.2*Math.sin(t*0.05+o.x*0.08);
+      ctx2.shadowBlur=7;ctx2.shadowColor=o.col;
+      const g=ctx2.createRadialGradient(o.x-3,o.y-3,0,o.x,o.y,11);
+      g.addColorStop(0,o.col+'ee');g.addColorStop(1,'#010602');
+      ctx2.fillStyle=g;
+      ctx2.beginPath();ctx2.arc(o.x,o.y,Math.max(0.1,10*p),0,Math.PI*2);ctx2.fill();
+      ctx2.shadowBlur=0;
+    });
+    // Two launcher orbs
+    [[W*0.3,'#00ff80'],[W*0.7,'#ff00c8']].forEach(([x,col])=>{
+      ctx2.shadowBlur=12;ctx2.shadowColor=col;
+      const g=ctx2.createRadialGradient(x-3,H-25-3,0,x,H-25,10);
+      g.addColorStop(0,col+'ee');g.addColorStop(1,'#010602');
+      ctx2.fillStyle=g;ctx2.beginPath();ctx2.arc(x,H-25,10,0,Math.PI*2);ctx2.fill();
+      ctx2.shadowBlur=0;
+    });
+    const bp=0.3+0.25*Math.sin(t*0.04);
+    ctx2.strokeStyle=`rgba(0,255,128,${bp})`;ctx2.lineWidth=0.8;ctx2.strokeRect(0.5,0.5,W-1,H-1);
+    t++;_nrAttractRAF=requestAnimationFrame(draw);
+  }
+  ctx2.fillStyle='#010602';ctx2.fillRect(0,0,W,H);draw();
+}
+
+// Hook into arcade attract
+const _origArcadeBTL=window.arcadeBackToLobby;
+if(_origArcadeBTL&&!window._nrAttractPatched){
+  window._nrAttractPatched=true;
+  window.arcadeBackToLobby=function(){
+    _origArcadeBTL();
+    setTimeout(_nrAttract,160);
+  };
+}
+</script>
+
 </body>
 </html>
