@@ -1083,9 +1083,10 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
 
 /* ── STELLAR ARCADE SCREEN ── */
 #arcade-screen{background:#000008}
-#arcade-screen #arcade-game-view{display:none}
-#arcade-screen.game-active #arcade-lobby{display:none}
-#arcade-screen.game-active #arcade-game-view{display:flex!important}
+/* arcade-game-view is now a permanent transparent nav-bar overlay inside arcade-screen.
+   It no longer needs display toggling — inline style handles it. */
+#arcade-screen #arcade-game-view{ display:block; pointer-events:none; }#arcade-screen.game-active #arcade-lobby{display:none}
+/* game-active class now managed by panel visibility, not arcade-game-view display */
 #arcade-game-area .panel{position:relative!important;transform:none!important;
   top:auto!important;left:auto!important;width:100%!important;
   max-height:none!important;border-radius:0!important;
@@ -1327,6 +1328,87 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
 </style>
 </head>
 <body>
+
+<!-- ================================================================
+     AUDIO ELEMENTS — MP3 tracks (files uploaded by creator)
+     Replace src="" with actual paths e.g. src="audio/main-menu.mp3"
+     preload="none" until files exist — avoids 404 errors.
+================================================================ -->
+<audio id="music-main-menu"    src="audio/spectra-rush.mp3" loop preload="auto" style="display:none"></audio>
+<audio id="music-exploration"  src="" loop preload="none" style="display:none"></audio>
+<audio id="music-arcade-lobby" src="" loop preload="none" style="display:none"></audio>
+<audio id="music-spectra-rush" src="" loop preload="none" style="display:none"></audio>
+<audio id="music-wavelength"   src="" loop preload="none" style="display:none"></audio>
+<audio id="music-hull-breach"  src="" loop preload="none" style="display:none"></audio>
+<audio id="music-plasma-duel"  src="" loop preload="none" style="display:none"></audio>
+<audio id="music-space-battle" src="" loop preload="none" style="display:none"></audio>
+<audio id="music-nebula-rumble"src="" loop preload="none" style="display:none"></audio>
+<audio id="music-cinematic"    src="" loop preload="none" style="display:none"></audio>
+
+<script>
+/* ================================================================
+   MUSIC MANAGER — HTML audio track router (per dev recommendation)
+   Drop-in replacement for procedural WebAudio music.
+   src="" = placeholder until MP3 files are uploaded.
+   When ready: document.getElementById('music-main-menu').src = 'audio/main-menu.mp3'
+   or just set the src= attribute in the HTML above.
+================================================================ */
+window.MusicManager = {
+  current: null,
+  _vol: 0.65,
+  _ready: false,
+
+  _trackIds: {
+    mainMenu:'music-main-menu', exploration:'music-exploration',
+    arcadeLobby:'music-arcade-lobby', spectraRush:'music-spectra-rush',
+    wavelength:'music-wavelength', hullBreach:'music-hull-breach',
+    plasmaDuel:'music-plasma-duel', spaceBattle:'music-space-battle',
+    nebulaRumble:'music-nebula-rumble', cinematic:'music-cinematic'
+  },
+
+  _init(){
+    if(this._ready) return;
+    this._ready = true;
+    this.tracks = {};
+    for(const [name, id] of Object.entries(this._trackIds)){
+      this.tracks[name] = document.getElementById(id);
+    }
+  },
+
+  play(name, vol){
+    this._init();
+    const next = this.tracks[name];
+    // Skip if element missing or has no src (file not uploaded yet)
+    if(!next || !next.getAttribute('src')) return;
+    if(this.current && this.current !== next){
+      this.current.pause(); this.current.currentTime = 0;
+    }
+    this.current = next;
+    next.volume = (typeof safeAudio === 'function') ? safeAudio(vol || this._vol, 0.65) : (vol || this._vol);
+    next.play().catch(e => {});
+  },
+
+  stop(){
+    if(!this.current) return;
+    this.current.pause(); this.current.currentTime = 0; this.current = null;
+  },
+
+  setVolume(v){
+    this._vol = v;
+    if(this.current) this.current.volume = v;
+  },
+
+  fadeOut(ms){
+    if(!this.current) return;
+    const track = this.current; this.current = null;
+    const step = track.volume / Math.max(1, ms/50);
+    const iv = setInterval(()=>{
+      if(track.volume > step){ track.volume -= step; }
+      else{ track.pause(); track.currentTime=0; track.volume=this._vol; clearInterval(iv); }
+    }, 50);
+  }
+};
+</script>
 <canvas id="bg"></canvas>
 <canvas id="main"></canvas>
 <canvas id="parallax-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0;transition:opacity 1s"></canvas>
@@ -1449,24 +1531,25 @@ transform:skewX(-20deg);transition:left 0s;pointer-events:none;}
   <!-- ==========================================================
        CREW DIALOGUE PANEL (StoryDirector system) — draggable
   ========================================================== -->
-  <div id="crew-dialogue" style="display:none;position:fixed;bottom:80px;right:20px;width:min(420px,92vw);z-index:200;pointer-events:all;cursor:move;user-select:none">
-    <div style="background:rgba(2,4,18,0.97);border:1px solid rgba(80,160,255,0.25);border-radius:10px;padding:0;overflow:hidden;box-shadow:0 0 40px rgba(0,160,200,0.15)">
+  <div id="crew-dialogue" style="display:none;position:fixed;bottom:20px;right:20px;width:min(520px,94vw);z-index:200;pointer-events:all;cursor:move;user-select:none">
+    <div style="background:rgba(2,5,22,0.97);border:1px solid rgba(80,160,255,0.2);border-radius:12px;padding:0;overflow:hidden;box-shadow:0 0 60px rgba(0,100,200,0.15),0 20px 40px rgba(0,0,0,0.6)">
       <!-- Drag handle / header bar -->
-      <div id="crew-dialogue-header" style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(5,15,45,0.95);border-bottom:1px solid rgba(40,80,160,0.2);cursor:move">
+      <div id="crew-dialogue-header" style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:rgba(4,10,36,0.98);border-bottom:1px solid rgba(40,80,160,0.2);cursor:move">
         <div style="display:flex;align-items:center;gap:8px">
-          <div style="width:6px;height:6px;background:rgba(0,160,200,0.5);border-radius:50%"></div>
-          <div style="font-size:8px;letter-spacing:3px;color:#305080;text-transform:uppercase">Crew Channel</div>
+          <div style="width:7px;height:7px;background:rgba(0,200,255,0.5);border-radius:50%;box-shadow:0 0 6px rgba(0,200,255,0.5)"></div>
+          <div style="font-size:8px;letter-spacing:4px;color:rgba(80,140,200,0.6);text-transform:uppercase;font-family:'Share Tech Mono',monospace">Crew Channel</div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="font-size:8px;color:rgba(60,100,140,0.4);letter-spacing:1px">⠿ drag</div>
-          <button id="crew-dialogue-close" onclick="DialogueSystem.close()" style="background:none;border:none;color:#304060;font-size:14px;cursor:pointer;padding:2px 4px;font-family:inherit;line-height:1">✕</button>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="font-size:8px;color:rgba(60,100,140,0.3);letter-spacing:1px">⠿ drag</div>
+          <button id="crew-dialogue-close" onclick="DialogueSystem.close()" style="background:none;border:none;color:rgba(80,120,160,0.5);font-size:16px;cursor:pointer;padding:2px 4px;font-family:inherit;line-height:1;transition:color 0.2s" onmouseover="this.style.color='#ff6080'" onmouseout="this.style.color='rgba(80,120,160,0.5)'">✕</button>
         </div>
       </div>
-      <!-- Lines container -->
-      <div id="crew-dialogue-lines" style="padding:12px 14px;display:flex;flex-direction:column;gap:10px;min-height:60px;max-height:220px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(40,80,160,0.3) transparent"></div>
+      <!-- Lines container — larger, typewriter-ready -->
+      <div id="crew-dialogue-lines" style="padding:18px 20px;display:flex;flex-direction:column;gap:14px;min-height:90px;max-height:320px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(40,80,160,0.3) transparent"></div>
       <!-- Continue button -->
-      <div style="padding:8px 14px;border-top:1px solid rgba(20,40,80,0.4);text-align:right">
-        <button id="crew-dialogue-next" onclick="DialogueSystem.next()" style="background:rgba(10,30,80,0.8);border:1px solid rgba(60,120,220,0.4);color:#6090d0;padding:6px 18px;font-family:inherit;font-size:10px;letter-spacing:2px;cursor:pointer;border-radius:4px;text-transform:uppercase">Continue ▶</button>
+      <div style="padding:10px 20px 14px;border-top:1px solid rgba(20,40,80,0.4);display:flex;align-items:center;justify-content:space-between">
+        <div id="crew-dialogue-counter" style="font-size:8px;color:rgba(60,100,140,0.4);letter-spacing:2px;font-family:'Share Tech Mono',monospace"></div>
+        <button id="crew-dialogue-next" onclick="DialogueSystem.next()" style="background:rgba(10,30,80,0.9);border:1px solid rgba(60,120,220,0.4);color:#6090d0;padding:8px 24px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;cursor:pointer;border-radius:5px;text-transform:uppercase;transition:all 0.2s" onmouseover="this.style.background='rgba(20,50,130,0.9)';this.style.borderColor='rgba(80,160,255,0.6)';this.style.color='#90c0ff'" onmouseout="this.style.background='rgba(10,30,80,0.9)';this.style.borderColor='rgba(60,120,220,0.4)';this.style.color='#6090d0'">Continue ▶</button>
       </div>
     </div>
   </div>
@@ -5796,6 +5879,8 @@ function generateSectorStars(sectorId){
   }
 }
 function loadSector(sectorId){
+  // Clear stale pings from previous sector
+  drawMain.pingStars = null;
   const isJump = state.currentSectorId && state.currentSectorId !== sectorId;
   if(isJump && !reduceMotion && document.getElementById('hyperspace-canvas')){
     stopAmbientAnimation(); stopParallax(); stopConstellations(); playHyperspaceJump(sectorId, ()=> _doLoadSector(sectorId));
@@ -13806,20 +13891,54 @@ window.DialogueSystem = (function(){
     }
   }
 
+  function _typewriter(el, text, speed=22){
+    el.textContent = '';
+    let i = 0;
+    function tick(){
+      if(i < text.length){ el.textContent += text[i++]; setTimeout(tick, speed); }
+    }
+    tick();
+  }
+
   function _renderLine(entry){
     _getEls();
     const crew = CREW[entry.who] || CREW.ELENA;
     const div  = document.createElement('div');
-    div.style.cssText = 'display:flex;flex-direction:column;gap:3px;opacity:0;transition:opacity 0.4s';
-    div.innerHTML = `
-      <div style="font-size:9px;letter-spacing:3px;color:${crew.color};text-transform:uppercase">${crew.label}</div>
-      <div style="font-size:11px;color:#c0d0e8;line-height:1.65;padding-left:10px;border-left:2px solid ${crew.color}40">${entry.line}</div>
-    `;
+    div.style.cssText = 'display:flex;gap:14px;align-items:flex-start;opacity:0;transition:opacity 0.35s;padding:4px 0';
+
+    // Portrait circle with initial
+    const initial = (crew.label.match(/\b([A-Z])/g)||['?'])[0];
+    const portrait = `<div style="width:40px;height:40px;min-width:40px;border-radius:50%;background:rgba(${hexToRgb(crew.color)},0.12);border:2px solid ${crew.color}60;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:${crew.color};font-family:'Share Tech Mono',monospace;flex-shrink:0;box-shadow:0 0 12px ${crew.color}30">${initial}</div>`;
+
+    // Message block
+    const msgId = 'cdl_' + Date.now() + Math.random().toString(36).slice(2,6);
+    div.innerHTML = `${portrait}
+      <div style="flex:1;min-width:0">
+        <div style="font-size:8px;letter-spacing:3px;color:${crew.color};text-transform:uppercase;margin-bottom:5px;font-family:'Share Tech Mono',monospace">${crew.label}</div>
+        <div id="${msgId}" style="font-size:13px;color:#d0e0f8;line-height:1.75;padding-left:12px;border-left:2px solid ${crew.color}55;word-break:break-word"></div>
+      </div>`;
+
     _linesEl.appendChild(div);
-    // Trigger fade-in
     requestAnimationFrame(()=>{ div.style.opacity = '1'; });
-    // Scroll to bottom
+
+    // Typewriter on the message text
+    const msgEl = div.querySelector('#'+msgId);
+    if(msgEl) _typewriter(msgEl, entry.line, 18);
+
     _linesEl.scrollTop = _linesEl.scrollHeight;
+
+    // Update line counter
+    const counter = document.getElementById('crew-dialogue-counter');
+    if(counter && _currentScript){
+      counter.textContent = `${_lineIndex+1} / ${_currentScript.length}`;
+    }
+  }
+
+  // Helper: convert #rrggbb to "r,g,b" for rgba()
+  function hexToRgb(hex){
+    const m = hex.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i);
+    if(!m) return '128,128,128';
+    return `${parseInt(m[1],16)},${parseInt(m[2],16)},${parseInt(m[3],16)}`;
   }
 
   function play(scriptKey){
@@ -15363,9 +15482,10 @@ async function pushLeaderboardEntry(){
       sector:   state.currentSectorId,
       updatedAt: Date.now()
     });
-    await window.storage.set(LB_PREFIX + playerName, entry); // private storage — no shared popup
+    await window.storage.set(LB_PREFIX + playerName, entry);
   } catch(err) {
-    console.warn('Leaderboard push failed:', err);
+    // Storage unavailable in this environment — not a game error
+    console.info('[Leaderboard] Storage unavailable:', err?.message||err);
   }
 }
 
@@ -17434,7 +17554,10 @@ document.getElementById('save-btn').addEventListener('click', () => {
   });
   window.storage.set('spectra-save:'+playerName, payload)
     .then(()=>showFlash('✓ Saved','#40e060'))
-    .catch(()=>showFlash('Save failed','#e04040'));
+    .catch(e=>{
+      console.info('[Save] Storage unavailable:', e?.message||e);
+      showFlash('Save unavailable','#806040');
+    });
 });
 
 // Leaderboard button
@@ -18164,17 +18287,21 @@ function pingStars(){
     }, 300);
   }
 
-  // Flash all undiscovered stars with a bright ring for 2.5s
-  const stars = state.sectorStars[state.currentSectorId] || [];
+  // Record the sector at ping time — used to discard stale pings after sector jump
+  const pingSectorId = state.currentSectorId;
   const pingStart = Date.now();
   const PING_DUR = 2500;
 
   let _pingLast=0;
   function pingFrame(t){
     if(t && t-_pingLast<33) return; if(t)_pingLast=t;
+    // Discard if player has jumped to a different sector
+    if(state.currentSectorId !== pingSectorId){ drawMain.pingStars = null; return; }
     const el = (Date.now() - pingStart);
     if(el > PING_DUR){ drawMain.pingStars = null; return; }
-    drawMain.pingStars = stars.filter(s => !s.discovered);
+    // Read live stars each frame — never stale after sector change
+    const liveStars = state.sectorStars[state.currentSectorId] || [];
+    drawMain.pingStars = liveStars.filter(s => !s.discovered);
     drawMain.pingProgress = el / PING_DUR;
     requestAnimationFrame(pingFrame);
   }
@@ -18449,6 +18576,7 @@ function _showCTB(){
       },1000);
     }
     stopTitleMusic(()=>{ try{ startMusic(); }catch(e){}; });
+    MusicManager.stop(); MusicManager.play("exploration"); // exploration music when src set
     // Opening cinematic plays first; fires crew dialogue at end internally
     setTimeout(()=>{
       if(window.CinematicPlayer && !window._cinematicPlayed){
@@ -19206,6 +19334,7 @@ function resizeRush(){
 
 let _rushWired = false;
 function openRush(){
+  console.log('[openRush]', performance.now().toFixed(0)+'ms', 'AppScreen:', AppScreen.current, 'GameModes:', window.GameModes?.current);
   // Visibility is handled by _showArcadeGame() — do not touch display/classList here
   if(!_rushWired){
     _rushWired = true;
@@ -19223,7 +19352,11 @@ function openRush(){
   const pf=document.getElementById('progress-fill');
   if(pf) pf.style.background=`linear-gradient(90deg,${getRushAccent('pts')},${getRushAccent('combo')})`;
   resizeRush();
-  setTimeout(startGame,80);
+  MusicManager.play("spectraRush"); // MP3 track
+  _rushStartTimer = setTimeout(()=>{
+    _rushStartTimer = null;
+    if(window.GameModes && window.GameModes.current === 'rush') startGame();
+  }, 80);
 }
 
 function closeRush(){
@@ -19942,6 +20075,8 @@ return{open:openCatcher,close:closeCatcher};
 
 /* ── STELLAR ARCADE CONTROLLER ─────────────────────────────────── */
 let _arcadeBgInit = false, _rushAttractRAF = null, _catcherAttractRAF = null, _hbAttractRAF = null, _pdAttractRAF = null, _sbAttractRAF = null, _nrAttractRAF = null;
+let _arcadeSelectTimer = null;  // tracks the 3.4s loading → game open timeout
+let _rushStartTimer    = null;  // tracks the 80ms → startGame timeout in openRush
 
 
 /* ================================================================
@@ -21351,6 +21486,7 @@ window.AppScreen = {
 
   show(screen){
     this.current = screen;
+    console.log('[AppScreen] show:', screen);
     // Hide panels that shouldn't be visible
     _hideAllArcadeGames && _hideAllArcadeGames();
     switch(screen){
@@ -21374,6 +21510,7 @@ window.AppScreen = {
 
   // Call before entering arcade from any screen — hides everything correctly
   enterArcade(){
+    console.log('[AppScreen] enterArcade — from:', this.current);
     this._el('welcome-screen')  && (this._el('welcome-screen').style.display  = 'none');
     this._el('guide-panel')     && (this._el('guide-panel').style.display     = 'none');
     this._el('guide-backdrop')  && (this._el('guide-backdrop').style.display  = 'none');
@@ -21383,6 +21520,7 @@ window.AppScreen = {
 
   // Call when leaving arcade — restores correct screen based on game state
   exitArcade(){
+    console.log('[AppScreen] exitArcade — _gameStarted:', window._gameStarted, '(type:', typeof window._gameStarted, ')');
     this._el('arcade-screen') && (this._el('arcade-screen').style.display = 'none');
     if(window._gameStarted){
       this.show('adventure');
@@ -21396,16 +21534,23 @@ window.AppScreen = {
 function arcadeOpen(){
   if(window._removeTitleListeners) window._removeTitleListeners();
   if(window.stopTitleMusic) stopTitleMusic();
-  // Use AppScreen to correctly hide whatever screen is currently showing
   AppScreen.enterArcade();
   _arcadeShowLobby();
   _arcadeInitBg();
   _arcadeUpdateHiScores();
   setTimeout(_arcadeStartAttract, 200);
-  setTimeout(startLobbyMusic, 300);
+  // MP3 music (when files loaded); falls back silently to procedural if no src
+  MusicManager.play('arcadeLobby');
+  setTimeout(startLobbyMusic, 300); // procedural fallback
 }
 
 function arcadeClose(){
+  // Cancel any pending game-open timers FIRST
+  if(_arcadeSelectTimer){ clearTimeout(_arcadeSelectTimer); _arcadeSelectTimer = null; }
+  if(_rushStartTimer)   { clearTimeout(_rushStartTimer);    _rushStartTimer    = null; }
+  console.log('[arcadeClose] AppScreen:', AppScreen.current, '_gameStarted:', window._gameStarted);
+  MusicManager.stop();
+  stopLobbyMusic(true); // stop procedural fallback too
   if(window.GameModes) window.GameModes.exitCurrentGame();
   stopLobbyMusic(true);
   try{ MG_Rush.close(); }catch(e){}
@@ -21443,7 +21588,8 @@ function arcadeSelectGame(game){
   const coins=['🪙','✨','⬡','◈','★','·'];
   let ci=0;
   const coinAnim=setInterval(()=>{ if(coinEl) coinEl.textContent=coins[ci++%coins.length]; },180);
-  setTimeout(()=>{
+  _arcadeSelectTimer = setTimeout(()=>{
+    _arcadeSelectTimer = null;
     clearInterval(coinAnim);
     if(coinEl) coinEl.textContent='';
     if(loadEl) loadEl.style.display='none';
@@ -21562,10 +21708,18 @@ function _hideAllArcadeGames(){
 function _showArcadeGame(panelId){
   _hideAllArcadeGames();
   const p = document.getElementById(panelId);
-  if(!p) return;
+  if(!p){ console.warn('[_showArcadeGame] panel not found:', panelId); return; }
   p.style.display = 'block';
   p.style.visibility = 'visible';
   p.classList.add('arcade-active');
+  // Debug: log panel computed state after showing
+  console.log('[_showArcadeGame]', panelId, {
+    display: getComputedStyle(p).display,
+    visibility: getComputedStyle(p).visibility,
+    opacity: getComputedStyle(p).opacity,
+    zIndex: getComputedStyle(p).zIndex,
+    rect: p.getBoundingClientRect()
+  });
 }
 
 function _validateCanvas(canvas, fallbackW, fallbackH){
@@ -21577,6 +21731,7 @@ function _validateCanvas(canvas, fallbackW, fallbackH){
 }
 
 function _arcadeShowGameView(game){
+  console.log('[_arcadeShowGameView]', game, performance.now().toFixed(0)+'ms', 'AppScreen:', AppScreen.current);
   // Close whatever was running before
   if(window.GameModes) window.GameModes.exitCurrentGame();
   if(window.GameModes) window.GameModes.current = game;
@@ -21635,6 +21790,9 @@ window.addEventListener('resize', ()=>{
 });
 
 function arcadeBackToLobby(){
+  if(_arcadeSelectTimer){ clearTimeout(_arcadeSelectTimer); _arcadeSelectTimer = null; }
+  if(_rushStartTimer)   { clearTimeout(_rushStartTimer);    _rushStartTimer    = null; }
+  console.log('[arcadeBackToLobby] GameModes.current:', window.GameModes?.current);
   if(window.GameModes) window.GameModes.exitCurrentGame();
   stopLobbyMusic(true);
   try{ MG_Rush.close(); }catch(e){}
@@ -21645,7 +21803,8 @@ function arcadeBackToLobby(){
   try{ MG_NebulaRumble.close(); }catch(e){}
   _hideAllArcadeGames();
   _arcadeShowLobby();
-  setTimeout(startLobbyMusic, 200);
+  MusicManager.play('arcadeLobby');
+  setTimeout(startLobbyMusic, 200); // procedural fallback
 }
 
 
